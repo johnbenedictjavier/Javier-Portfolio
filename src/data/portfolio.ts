@@ -1,4 +1,12 @@
 // Edit this file to replace all portfolio text, links, and personal details.
+const dostSeiScholarship = {
+  date: "2024",
+  title: "DOST-SEI Merit Scholar",
+  organization: "Department of Science and Technology - Science Education Institute",
+  description:
+    "Selected as a DOST-SEI Merit Scholar in 2024 while pursuing a Bachelor of Science in Computer Science.",
+} as const;
+
 export const portfolio = {
   name: "John Benedict Javier",
   initials: "JBJ",
@@ -12,6 +20,7 @@ export const portfolio = {
   summary:
     "I'm a third-year Computer Science student building educational games and practical web platforms through thoughtful engineering and people-first leadership.",
   availability: "Open to opportunities",
+  primaryCredential: dostSeiScholarship,
   location: "Lipa City, Batangas",
   email: "johnbenedictjavier15@gmail.com",
   profileImage: "images/profile/john-benedict-javier.jpg",
@@ -47,23 +56,19 @@ export const portfolio = {
     { value: "02", label: "Featured projects" },
     { value: "18", label: "Skills and tools" },
     { value: "04", label: "Leadership roles" },
-    { value: "03", label: "Academic distinctions" },
+    { value: "04", label: "Recognitions & distinctions" },
   ],
   awardGroups: [
     {
       id: "recognition",
       label: "Awards & Recognitions",
-      fallbackImage: "images/awards/recognition-placeholder.svg",
+      fallbackImage: "images/awards/dost-sei-scholar-placeholder.svg",
       cards: [
         {
-          date: "Add date",
-          title: "Add an Award or Recognition",
-          organization: "Issuing organization",
-          description:
-            "Add the story behind this recognition, what it celebrated, and why it was meaningful.",
-          image: "images/awards/recognition-01.jpg",
-          imageAlt: "Add a photo of this award or recognition",
-          isPlaceholder: true,
+          ...dostSeiScholarship,
+          image: "images/awards/dost-sei-scholar.jpg",
+          imageAlt: "John Benedict Javier's DOST-SEI Merit Scholarship recognition",
+          isPlaceholder: false,
         },
       ],
     },

@@ -478,6 +478,14 @@ img {
   color: var(--accent);
 }
 
+.hero-facts .hero-credential {
+  padding: 7px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;

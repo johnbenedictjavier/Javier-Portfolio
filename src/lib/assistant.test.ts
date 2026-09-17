@@ -29,4 +29,10 @@ describe("getAssistantResponse", () => {
     expect(response).toContain("Senior High School Rank 1");
     expect(response).not.toContain("Add an Award");
   });
+
+  it("answers questions about the DOST-SEI scholarship", () => {
+    const response = getAssistantResponse("Are you a DOST scholar?");
+    expect(response).toContain("DOST-SEI Merit Scholar");
+    expect(response).toContain("2024");
+  });
 });

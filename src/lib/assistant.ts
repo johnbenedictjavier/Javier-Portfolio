@@ -38,6 +38,11 @@ const intents: readonly Intent[] = [
         .join(", ")}. You can find the responsibilities and impact in the Journey section.`,
   },
   {
+    keywords: ["dost", "dost sei", "scholar", "scholarship", "merit scholar"],
+    answer: () =>
+      `Javier has been a ${portfolio.primaryCredential.title} since ${portfolio.primaryCredential.date}. ${portfolio.primaryCredential.description}`,
+  },
+  {
     keywords: ["award", "awards", "achievement", "achievements", "recognition", "honor", "honours"],
     answer: () => {
       const confirmedAwards: Array<{
@@ -50,7 +55,7 @@ const intents: readonly Intent[] = [
           if (!award.isPlaceholder) confirmedAwards.push(award);
         }
       }
-      return `His highlighted academic distinctions are ${confirmedAwards
+      return `His highlighted recognitions and academic distinctions are ${confirmedAwards
         .map((award) => `${award.title} from ${award.organization} (${award.date})`)
         .join(", ")}.`;
     },

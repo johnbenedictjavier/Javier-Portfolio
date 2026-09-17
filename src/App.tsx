@@ -332,6 +332,7 @@ function Hero({ onOpenAssistant }: HeroProps) {
           <div className="hero-facts hero-enter hero-enter-five">
             <span><GraduationCap size={16} /> {portfolio.course}</span>
             <span><MapPin size={16} /> {portfolio.location}</span>
+            <span className="hero-credential"><Award size={16} /> {portfolio.primaryCredential.title} · {portfolio.primaryCredential.date}</span>
           </div>
           <div className="hero-actions hero-enter hero-enter-six">
             <a className="button button-primary" href="#work">
