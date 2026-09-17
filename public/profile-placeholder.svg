@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 960" role="img" aria-labelledby="title desc">
+  <title id="title">Profile photo placeholder</title>
+  <desc id="desc">Replace this file or update profileImage in the portfolio data file.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#0b1f34"/>
+      <stop offset="1" stop-color="#07111f"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#66e3ff"/>
+      <stop offset="1" stop-color="#49a9ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="960" fill="url(#bg)"/>
+  <g opacity=".16" stroke="#66e3ff">
+    <path d="M0 120h800M0 240h800M0 360h800M0 480h800M0 600h800M0 720h800M0 840h800"/>
+    <path d="M100 0v960M200 0v960M300 0v960M400 0v960M500 0v960M600 0v960M700 0v960"/>
+  </g>
+  <circle cx="400" cy="340" r="142" fill="#102a44" stroke="url(#line)" stroke-width="6"/>
+  <path d="M145 880c18-194 112-302 255-302s237 108 255 302" fill="#102a44" stroke="url(#line)" stroke-width="6"/>
+  <rect x="170" y="86" width="460" height="788" rx="32" fill="none" stroke="#66e3ff" stroke-dasharray="12 18" opacity=".55"/>
+  <text x="400" y="920" fill="#a9bdd0" text-anchor="middle" font-family="monospace" font-size="24">REPLACE WITH YOUR PHOTO</text>
+</svg>
