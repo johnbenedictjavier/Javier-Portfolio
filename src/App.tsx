@@ -7,6 +7,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import {
+  Accessibility,
   ArrowDown,
   ArrowRight,
   ArrowUp,
@@ -14,9 +15,13 @@ import {
   Award,
   Bot,
   Boxes,
+  Braces,
   BriefcaseBusiness,
+  ChevronLeft,
+  ChevronRight,
   Code2,
   Copy,
+  Database,
   ExternalLink,
   Facebook,
   Github,
@@ -29,14 +34,33 @@ import {
   MapPin,
   Menu,
   MessageSquareText,
+  MonitorSmartphone,
   Moon,
+  Palette,
   Send,
   Sun,
   TerminalSquare,
+  Trophy,
   Users,
+  Workflow,
   X,
   type LucideIcon,
 } from "lucide-react";
+import type { IconType } from "react-icons";
+import {
+  SiCss,
+  SiFigma,
+  SiGit,
+  SiGithub,
+  SiHtml5,
+  SiJavascript,
+  SiLuau,
+  SiNodedotjs,
+  SiPython,
+  SiReact,
+  SiSupabase,
+  SiTypescript,
+} from "react-icons/si";
 import { Chatbot } from "./components/Chatbot";
 import { portfolio } from "./data/portfolio";
 
@@ -58,6 +82,36 @@ const socialIcons: Record<string, LucideIcon> = {
 };
 
 const skillIcons = [Code2, Boxes, TerminalSquare, Users];
+
+const technologyIcons: Record<string, LucideIcon | IconType> = {
+  javascript: SiJavascript,
+  typescript: SiTypescript,
+  python: SiPython,
+  html: SiHtml5,
+  css: SiCss,
+  luau: SiLuau,
+  react: SiReact,
+  responsive: MonitorSmartphone,
+  rest: Braces,
+  accessibility: Accessibility,
+  node: SiNodedotjs,
+  sql: Database,
+  supabase: SiSupabase,
+  api: Workflow,
+  git: SiGit,
+  github: SiGithub,
+  figma: SiFigma,
+  canva: Palette,
+};
+
+const awardGroupIcons: Record<string, LucideIcon> = {
+  recognition: Award,
+  competition: Trophy,
+  academic: GraduationCap,
+};
+
+const assetPath = (path: string) =>
+  path.startsWith("http") ? path : `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
 
 const revealDelay = (delay: number) =>
   ({ "--delay": `${delay}ms` }) as CSSProperties;
@@ -208,12 +262,19 @@ function Portrait() {
         <div className="portrait-card">
           <div className="portrait-corners" aria-hidden="true"><i /><i /><i /><i /></div>
           <img
-            src={portfolio.profileImage}
+            src={assetPath(portfolio.profileImage)}
             alt={portfolio.profileAlt}
             onError={(event) => {
-              if (event.currentTarget.dataset.fallback) return;
-              event.currentTarget.dataset.fallback = "true";
-              event.currentTarget.src = `${import.meta.env.BASE_URL}profile-placeholder.svg`;
+              const image = event.currentTarget;
+              if (!image.dataset.fallback) {
+                image.dataset.fallback = "github";
+                image.src = portfolio.profileFallbackImage;
+                return;
+              }
+              if (image.dataset.fallback === "github") {
+                image.dataset.fallback = "placeholder";
+                image.src = `${import.meta.env.BASE_URL}profile-placeholder.svg`;
+              }
             }}
           />
           <div className="portrait-scan" aria-hidden="true" />
@@ -268,6 +329,10 @@ function Hero({ onOpenAssistant }: HeroProps) {
             <span className="role-text" key={portfolio.roles[roleIndex]}>{portfolio.roles[roleIndex]}</span>
           </div>
           <p className="hero-summary hero-enter hero-enter-five">{portfolio.summary}</p>
+          <div className="hero-facts hero-enter hero-enter-five">
+            <span><GraduationCap size={16} /> {portfolio.course}</span>
+            <span><MapPin size={16} /> {portfolio.location}</span>
+          </div>
           <div className="hero-actions hero-enter hero-enter-six">
             <a className="button button-primary" href="#work">
               Explore my work <ArrowDown size={17} />
@@ -339,6 +404,91 @@ function About() {
   );
 }
 
+type AwardGroup = (typeof portfolio.awardGroups)[number];
+
+type AwardDeckProps = {
+  group: AwardGroup;
+  index: number;
+};
+
+function AwardDeck({ group, index }: AwardDeckProps) {
+  const [activeCard, setActiveCard] = useState(0);
+  const count = group.cards.length;
+  const GroupIcon = awardGroupIcons[group.id];
+  const showNext = () => setActiveCard((current) => (current + 1) % count);
+  const showPrevious = () => setActiveCard((current) => (current - 1 + count) % count);
+
+  return (
+    <article className={`award-deck award-deck-${group.id}`} data-reveal style={revealDelay(index * 100)}>
+      <header className="award-deck-header">
+        <span className="award-deck-icon"><GroupIcon size={20} /></span>
+        <div>
+          <small>Collection 0{index + 1}</small>
+          <h3>{group.label}</h3>
+        </div>
+        <span className="award-deck-count">{String(activeCard + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}</span>
+      </header>
+
+      <div className="award-deck-stage">
+        {group.cards.map((card, cardIndex) => {
+          const position = (cardIndex - activeCard + count) % count;
+          const stackPosition = Math.min(position, 3);
+          const cardStyle = {
+            "--stack-position": stackPosition,
+            zIndex: count - position,
+          } as CSSProperties;
+
+          return (
+            <button
+              className={`award-photo-card ${position === 0 ? "is-active" : ""} ${position > 2 ? "is-hidden" : ""}`}
+              type="button"
+              style={cardStyle}
+              onClick={() => position === 0 ? showNext() : setActiveCard(cardIndex)}
+              aria-label={position === 0 && count > 1 ? `${card.title}. Show next card` : card.title}
+              aria-hidden={position !== 0}
+              tabIndex={position === 0 ? 0 : -1}
+              key={`${group.id}-${card.title}`}
+            >
+              <span className="award-photo-wrap">
+                <img
+                  src={assetPath(card.image)}
+                  alt={card.imageAlt}
+                  onError={(event) => {
+                    const image = event.currentTarget;
+                    if (image.dataset.fallback) return;
+                    image.dataset.fallback = "true";
+                    image.src = assetPath(group.fallbackImage);
+                  }}
+                />
+                <span className="award-photo-date">{card.date}</span>
+              </span>
+              <span className="award-card-body">
+                <small>{card.organization}</small>
+                <strong>{card.title}</strong>
+                <span>{card.description}</span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <footer className="award-deck-controls">
+        <button type="button" onClick={showPrevious} disabled={count < 2} aria-label={`Previous ${group.label} card`}>
+          <ChevronLeft size={17} />
+        </button>
+        <div className="award-deck-dots" aria-hidden="true">
+          {group.cards.map((card, cardIndex) => (
+            <i className={cardIndex === activeCard ? "is-active" : ""} key={card.title} />
+          ))}
+        </div>
+        <button type="button" onClick={showNext} disabled={count < 2} aria-label={`Next ${group.label} card`}>
+          <ChevronRight size={17} />
+        </button>
+      </footer>
+    </article>
+  );
+}
+
 function AwardsSection() {
   return (
     <section className="section awards-section" id="awards">
@@ -348,19 +498,9 @@ function AwardsSection() {
           title="Milestones worth remembering."
           description="Awards, distinctions, and moments that reflect growth and meaningful contribution."
         />
-        <div className="awards-grid">
-          {portfolio.awards.map((award, index) => (
-            <article className="award-card interactive-card" data-reveal style={revealDelay(index * 100)} key={`${award.title}-${index}`}>
-              <div className="award-topline">
-                <span className="award-icon"><Award size={20} /></span>
-                <span className="mono-label">{award.year}</span>
-              </div>
-              <p className="award-index">0{index + 1}</p>
-              <h3>{award.title}</h3>
-              <h4>{award.organization}</h4>
-              <p>{award.description}</p>
-              <div className="award-trace" aria-hidden="true" />
-            </article>
+        <div className="award-decks-grid">
+          {portfolio.awardGroups.map((group, index) => (
+            <AwardDeck group={group} index={index} key={group.id} />
           ))}
         </div>
       </div>
@@ -441,8 +581,17 @@ function Skills() {
                   </div>
                   <h3>{group.label}</h3>
                   <p>{group.description}</p>
-                  <div className="skill-tags">
-                    {group.items.map((item) => <span key={item}>{item}</span>)}
+                  <div className="skill-logos" role="list" aria-label={`${group.label} skills`}>
+                    {group.items.map((item) => {
+                      const Logo = technologyIcons[item.icon];
+                      const logoStyle = { "--logo-color": item.color } as CSSProperties;
+                      return (
+                        <div className="skill-logo" role="listitem" tabIndex={0} aria-label={item.name} style={logoStyle} key={item.name}>
+                          <Logo size={30} aria-hidden="true" />
+                          <span>{item.name}</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </article>
               );
@@ -491,6 +640,17 @@ function Work() {
                 <div className="project-window">
                   <div className="project-window-bar"><i /><i /><i /><span>{project.number}.project</span></div>
                   <div className="project-art">
+                    <img
+                      className="project-image"
+                      src={assetPath(project.image)}
+                      alt=""
+                      onError={(event) => {
+                        const image = event.currentTarget;
+                        if (image.dataset.fallback) return;
+                        image.dataset.fallback = "true";
+                        image.src = assetPath(project.fallbackImage);
+                      }}
+                    />
                     <span className="project-art-number">{project.number}</span>
                     <i className="project-shape shape-one" />
                     <i className="project-shape shape-two" />

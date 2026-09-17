@@ -5,14 +5,15 @@ type Intent = {
   answer: () => string;
 };
 
-const joinItems = (items: readonly string[]) => items.join(", ");
+const joinSkillNames = (items: readonly { readonly name: string }[]) =>
+  items.map((item) => item.name).join(", ");
 
 const intents: readonly Intent[] = [
   {
     keywords: ["skill", "skills", "stack", "technology", "technologies", "tools", "strongest", "good at"],
     answer: () =>
       `Javier's toolkit includes ${portfolio.skillGroups
-        .map((group) => `${group.label}: ${joinItems(group.items)}`)
+        .map((group) => `${group.label}: ${joinSkillNames(group.items)}`)
         .join("; ")}.`,
   },
   {
@@ -38,17 +39,28 @@ const intents: readonly Intent[] = [
   },
   {
     keywords: ["award", "awards", "achievement", "achievements", "recognition", "honor", "honours"],
-    answer: () =>
-      `His highlighted recognitions are ${portfolio.awards
-        .map((award) => `${award.title} from ${award.organization} (${award.year})`)
-        .join(", ")}.`,
+    answer: () => {
+      const confirmedAwards: Array<{
+        readonly title: string;
+        readonly organization: string;
+        readonly date: string;
+      }> = [];
+      for (const group of portfolio.awardGroups) {
+        for (const award of group.cards) {
+          if (!award.isPlaceholder) confirmedAwards.push(award);
+        }
+      }
+      return `His highlighted academic distinctions are ${confirmedAwards
+        .map((award) => `${award.title} from ${award.organization} (${award.date})`)
+        .join(", ")}.`;
+    },
   },
   {
     keywords: ["language", "languages", "speak", "spoken"],
     answer: () =>
       `Spoken languages: ${portfolio.spokenLanguages
         .map((item) => `${item.language} (${item.level})`)
-        .join(", ")}. Programming languages include ${joinItems(portfolio.skillGroups[0].items)}.`,
+        .join(", ")}. Programming languages include ${joinSkillNames(portfolio.skillGroups[0].items)}.`,
   },
   {
     keywords: ["contact", "email", "reach", "message", "hire", "connect", "talk"],
@@ -84,7 +96,7 @@ const intents: readonly Intent[] = [
   {
     keywords: ["about", "who", "yourself", "javier", "john", "bio", "introduce"],
     answer: () =>
-      `${portfolio.name} is a ${portfolio.roles.join(", ")}. ${portfolio.summary}`,
+      `${portfolio.name} is a ${portfolio.course} student based in ${portfolio.location}. ${portfolio.summary}`,
   },
 ];
 

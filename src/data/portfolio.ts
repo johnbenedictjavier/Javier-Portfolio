@@ -4,24 +4,26 @@ export const portfolio = {
   initials: "JBJ",
   eyebrow: "Hello, I'm",
   roles: [
-    "Software Developer",
-    "Technology Enthusiast",
-    "Emerging Leader",
+    "BS Computer Science Student",
+    "Aspiring Software Engineer",
+    "Technology Project Leader",
   ],
+  course: "BS Computer Science, 3rd Year",
   summary:
-    "I turn ideas into thoughtful digital experiences, blending practical engineering, creative problem-solving, and people-first leadership.",
+    "I'm a third-year Computer Science student building educational games and practical web platforms through thoughtful engineering and people-first leadership.",
   availability: "Open to opportunities",
-  location: "Your City, Country",
-  email: "hello@yourdomain.com",
-  profileImage: "https://avatars.githubusercontent.com/u/326827759?v=4",
+  location: "Lipa City, Batangas",
+  email: "johnbenedictjavier15@gmail.com",
+  profileImage: "images/profile/john-benedict-javier.jpg",
+  profileFallbackImage: "https://avatars.githubusercontent.com/u/326827759?v=4",
   profileAlt: "Portrait of John Benedict Javier",
   resumeUrl: "",
   about: {
     kicker: "Beyond the code",
-    title: "Building useful technology with curiosity and intent.",
+    title: "Learning deeply, building purposefully, leading responsibly.",
     paragraphs: [
-      "I'm a developer and lifelong learner who enjoys translating complex problems into clear, human-centered solutions. Replace this paragraph with the story behind your work and the problems you care about.",
-      "Outside development, I invest in leadership, collaboration, and continuous growth. Add the values, communities, or interests that make your journey uniquely yours.",
+      "I'm a third-year Bachelor of Science in Computer Science student at Lipa City Colleges with a growing focus on software engineering. I enjoy translating practical problems into clear, approachable digital experiences.",
+      "My work ranges from Tech Revive, an educational device-repair game, to ELFRESCO PH, an e-commerce experience for a container-house business. Alongside development, I lead student initiatives and help teams turn plans into successful activities.",
     ],
     principles: [
       {
@@ -42,133 +44,216 @@ export const portfolio = {
     ],
   },
   stats: [
-    { value: "03+", label: "Featured projects" },
-    { value: "10+", label: "Tools explored" },
-    { value: "03", label: "Leadership roles" },
-    { value: "100%", label: "Growth mindset" },
+    { value: "02", label: "Featured projects" },
+    { value: "18", label: "Skills and tools" },
+    { value: "04", label: "Leadership roles" },
+    { value: "03", label: "Academic distinctions" },
   ],
-  awards: [
+  awardGroups: [
     {
-      year: "20XX",
-      title: "Award or Recognition",
-      organization: "Issuing Organization",
-      description:
-        "Describe what the award recognized, what you accomplished, and why it mattered.",
+      id: "recognition",
+      label: "Awards & Recognitions",
+      fallbackImage: "images/awards/recognition-placeholder.svg",
+      cards: [
+        {
+          date: "Add date",
+          title: "Add an Award or Recognition",
+          organization: "Issuing organization",
+          description:
+            "Add the story behind this recognition, what it celebrated, and why it was meaningful.",
+          image: "images/awards/recognition-01.jpg",
+          imageAlt: "Add a photo of this award or recognition",
+          isPlaceholder: true,
+        },
+      ],
     },
     {
-      year: "20XX",
-      title: "Hackathon or Competition",
-      organization: "Event or Institution",
-      description:
-        "Summarize your contribution, the challenge, and the outcome achieved by your team.",
+      id: "competition",
+      label: "Hackathons & Competitions",
+      fallbackImage: "images/awards/competition-placeholder.svg",
+      cards: [
+        {
+          date: "Add date",
+          title: "Add a Hackathon or Competition",
+          organization: "Event or institution",
+          description:
+            "Add the challenge, your contribution, the solution your team created, and the result.",
+          image: "images/awards/competition-01.jpg",
+          imageAlt: "Add a photo from this hackathon or competition",
+          isPlaceholder: true,
+        },
+      ],
     },
     {
-      year: "20XX",
-      title: "Academic Distinction",
-      organization: "Your School or University",
-      description:
-        "Add a concise explanation of this distinction, scholarship, or academic milestone.",
+      id: "academic",
+      label: "Academic Distinctions",
+      fallbackImage: "images/awards/academic-placeholder.svg",
+      cards: [
+        {
+          date: "2024",
+          title: "Senior High School Rank 1",
+          organization: "STI College Lipa",
+          description:
+            "Graduated Rank 1 from the Science, Technology, Engineering, and Mathematics strand.",
+          image: "images/awards/academic-rank-1-2024.jpg",
+          imageAlt: "Senior High School Rank 1 recognition",
+          isPlaceholder: false,
+        },
+        {
+          date: "2022",
+          title: "Junior High School Salutatorian",
+          organization: "Pinagkawitan Integrated National High School",
+          description:
+            "Graduated Salutatorian in recognition of consistent academic achievement throughout junior high school.",
+          image: "images/awards/academic-salutatorian-jhs-2022.jpg",
+          imageAlt: "Junior High School Salutatorian recognition",
+          isPlaceholder: false,
+        },
+        {
+          date: "2017",
+          title: "Elementary Salutatorian",
+          organization: "Jose K. Obando Memorial Elementary School",
+          description:
+            "Graduated Salutatorian after demonstrating strong academic performance throughout elementary school.",
+          image: "images/awards/academic-salutatorian-elementary-2017.jpg",
+          imageAlt: "Elementary Salutatorian recognition",
+          isPlaceholder: false,
+        },
+      ],
     },
   ],
   education: [
     {
-      period: "20XX — Present",
-      degree: "Bachelor of Science in Your Program",
-      school: "Your University",
+      period: "2024 — Present",
+      degree: "Bachelor of Science in Computer Science",
+      school: "Lipa City Colleges",
       detail:
-        "Add your specialization, relevant coursework, academic organizations, or current standing.",
+        "Third-year student under the College of Computing and Technology Engineering, building toward a career in software engineering.",
     },
     {
-      period: "20XX — 20XX",
-      degree: "Senior High School Track",
-      school: "Your School",
+      period: "2022 — 2024",
+      degree: "Senior High School",
+      school: "STI College Lipa",
       detail:
-        "Add your strand, notable projects, honors, or activities from this part of your education.",
+        "Science, Technology, Engineering, and Mathematics strand. Graduated Rank 1.",
+    },
+    {
+      period: "2017 — 2022",
+      degree: "Junior High School",
+      school: "Pinagkawitan Integrated National High School",
+      detail: "Completed junior high school and graduated Salutatorian.",
+    },
+    {
+      period: "2011 — 2017",
+      degree: "Elementary Education",
+      school: "Jose K. Obando Memorial Elementary School",
+      detail: "Completed elementary education and graduated Salutatorian.",
     },
   ],
   leadership: [
     {
-      period: "20XX — Present",
-      role: "Leadership Position",
-      organization: "Organization or Community",
+      period: "2026 — Present",
+      role: "Special Project Lead",
+      organization: "Junior Philippine Computer Society",
       detail:
-        "Explain the team you supported, initiatives you led, and measurable impact you created.",
+        "I plan and supervise special organizational projects, coordinate team responsibilities, monitor progress, and ensure activities are completed successfully according to their objectives and timelines.",
     },
     {
-      period: "20XX — 20XX",
-      role: "Committee or Team Lead",
-      organization: "Student Organization",
+      period: "2025 — 2026",
+      role: "2nd Year Representative",
+      organization: "CODES",
       detail:
-        "Describe your responsibilities, collaboration style, and a meaningful result from the role.",
+        "Represented second-year students, communicated their concerns, and coordinated organizational activities and announcements.",
     },
     {
-      period: "20XX",
-      role: "Volunteer or Community Role",
-      organization: "Community Name",
+      period: "2024 — 2025",
+      role: "Career Guidance Representative",
+      organization: "Lipa City Colleges",
       detail:
-        "Share how you contributed your time or technical skills to help a community move forward.",
+        "Shared career-related information, represented student concerns, and supported career guidance activities.",
+    },
+    {
+      period: "2023 — 2024",
+      role: "President",
+      organization: "STI Sigma Math Club",
+      detail:
+        "Led the club, organized mathematics-related activities, and coordinated officers and members.",
     },
   ],
   skillGroups: [
     {
       label: "Languages",
       description: "Core languages I use to turn ideas into working software.",
-      items: ["JavaScript", "TypeScript", "Python", "Java", "HTML", "CSS"],
+      items: [
+        { name: "JavaScript", icon: "javascript", color: "#f7df1e" },
+        { name: "TypeScript", icon: "typescript", color: "#3178c6" },
+        { name: "Python", icon: "python", color: "#3776ab" },
+        { name: "HTML5", icon: "html", color: "#e34f26" },
+        { name: "CSS3", icon: "css", color: "#1572b6" },
+        { name: "Luau", icon: "luau", color: "#00a2ff" },
+      ],
     },
     {
       label: "Frontend",
       description: "Tools for creating responsive and accessible interfaces.",
-      items: ["React", "Vite", "Responsive UI", "REST APIs", "Accessibility"],
+      items: [
+        { name: "React", icon: "react", color: "#61dafb" },
+        { name: "Responsive UI", icon: "responsive", color: "#66e3ff" },
+        { name: "REST APIs", icon: "rest", color: "#49a9ff" },
+        { name: "Accessibility", icon: "accessibility", color: "#8f7cff" },
+      ],
     },
     {
       label: "Backend & Data",
       description: "Technologies for application logic, data, and integrations.",
-      items: ["Node.js", "Express", "SQL", "Firebase", "API Design"],
+      items: [
+        { name: "Node.js", icon: "node", color: "#5fa04e" },
+        { name: "SQL", icon: "sql", color: "#49a9ff" },
+        { name: "Supabase", icon: "supabase", color: "#3ecf8e" },
+        { name: "API Design", icon: "api", color: "#66e3ff" },
+      ],
     },
     {
       label: "Tools & Practice",
       description: "The workflow behind dependable and collaborative delivery.",
-      items: ["Git", "GitHub", "Figma", "Agile", "Problem Solving", "Teamwork"],
+      items: [
+        { name: "Git", icon: "git", color: "#f05032" },
+        { name: "GitHub", icon: "github", color: "var(--text)" },
+        { name: "Figma", icon: "figma", color: "#f24e1e" },
+        { name: "Canva", icon: "canva", color: "#7d5cff" },
+      ],
     },
   ],
   spokenLanguages: [
     { language: "Filipino", level: "Native" },
     { language: "English", level: "Professional" },
-    { language: "Add a language", level: "Your level" },
   ],
   projects: [
     {
       number: "01",
-      title: "Your Flagship Project",
-      type: "Full-stack application",
+      title: "Tech Revive",
+      type: "Educational Pygame",
       description:
-        "Describe the problem, your solution, and the most meaningful result. Keep it focused on value rather than only listing features.",
-      tags: ["React", "TypeScript", "Node.js"],
+        "Tech Revive is a unique educational game where players become skilled technicians fixing electronic devices. It teaches players how to use tools effectively while keeping the experience fun and informative.",
+      tags: ["Python", "Pygame", "Game Development"],
+      image: "images/projects/tech-revive.jpg",
+      fallbackImage: "images/projects/tech-revive-placeholder.svg",
       sourceUrl: "https://github.com/johnbenedictjavier",
       liveUrl: "",
       accent: "cyan",
     },
     {
       number: "02",
-      title: "Your Mobile or Web Product",
-      type: "Product design & development",
+      title: "ELFRESCO PH",
+      type: "Web E-commerce Platform",
       description:
-        "Explain the users you designed for, your role in the project, and one technical or design challenge you solved.",
-      tags: ["UI/UX", "API", "Responsive"],
+        "ELFRESCO PH is a web-based e-commerce platform for a modern container-house business. Customers can explore house designs, review product details, select available options, and manage a shopping cart through an organized online interface.",
+      tags: ["Web Development", "E-commerce", "Responsive UI"],
+      image: "images/projects/elfresco-ph.jpg",
+      fallbackImage: "images/projects/elfresco-ph-placeholder.svg",
       sourceUrl: "https://github.com/johnbenedictjavier",
       liveUrl: "",
       accent: "blue",
-    },
-    {
-      number: "03",
-      title: "Your Community Project",
-      type: "Technology for impact",
-      description:
-        "Show how you used technology, collaboration, or leadership to create a positive outcome for a group or community.",
-      tags: ["JavaScript", "Collaboration", "Open Source"],
-      sourceUrl: "https://github.com/johnbenedictjavier",
-      liveUrl: "",
-      accent: "violet",
     },
   ],
   socials: [

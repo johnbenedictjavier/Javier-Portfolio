@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">ELFRESCO PH project preview</title>
+  <desc id="desc">A stylized container house storefront placeholder for ELFRESCO PH.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#15314b"/>
+      <stop offset="1" stop-color="#07111f"/>
+    </linearGradient>
+    <linearGradient id="house" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#409dff"/>
+      <stop offset="1" stop-color="#1a567d"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#sky)"/>
+  <circle cx="925" cy="145" r="72" fill="#66e3ff" opacity=".18"/>
+  <path d="M0 555 230 450l160 65 185-130 190 95 210-152 225 145v227H0Z" fill="#0a1b2a"/>
+  <rect x="174" y="238" width="852" height="325" rx="8" fill="url(#house)" stroke="#66e3ff" stroke-width="5"/>
+  <g stroke="#8fc8e5" stroke-width="3" opacity=".5"><path d="M220 238v325M268 238v325M316 238v325M364 238v325M412 238v325M460 238v325M508 238v325M556 238v325M604 238v325M652 238v325M700 238v325M748 238v325M796 238v325M844 238v325M892 238v325M940 238v325M988 238v325"/></g>
+  <rect x="260" y="310" width="255" height="182" fill="#07111f" stroke="#66e3ff" stroke-width="5"/>
+  <rect x="660" y="297" width="238" height="266" fill="#091827" stroke="#66e3ff" stroke-width="5"/>
+  <circle cx="855" cy="431" r="8" fill="#66e3ff"/>
+  <rect x="118" y="563" width="964" height="18" rx="9" fill="#66e3ff" opacity=".48"/>
+  <text x="600" y="650" fill="#edf7ff" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" font-weight="700">ELFRESCO PH</text>
+</svg>

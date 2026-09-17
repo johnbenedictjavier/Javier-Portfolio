@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Academic distinction photo placeholder</title>
+  <desc id="desc">Add the matching academic recognition photo to the awards folder.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#171b40"/>
+      <stop offset="1" stop-color="#06111f"/>
+    </linearGradient>
+    <linearGradient id="cap" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#8f7cff"/>
+      <stop offset="1" stop-color="#66e3ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <circle cx="600" cy="345" r="240" fill="none" stroke="#8f7cff" stroke-width="2" opacity=".22"/>
+  <circle cx="600" cy="345" r="185" fill="none" stroke="#66e3ff" stroke-dasharray="10 15" stroke-width="3" opacity=".32"/>
+  <path d="m600 180 300 140-300 140-300-140Z" fill="url(#cap)"/>
+  <path d="M425 392v105c87 78 263 78 350 0V392" fill="#111b36" stroke="#66e3ff" stroke-width="7"/>
+  <path d="M900 320v205" stroke="#66e3ff" stroke-width="8"/>
+  <circle cx="900" cy="540" r="18" fill="#66e3ff"/>
+  <text x="600" y="672" fill="#edf7ff" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" font-weight="700">ADD ACADEMIC PHOTO</text>
+  <text x="600" y="719" fill="#8297a9" text-anchor="middle" font-family="monospace" font-size="21">Use the exact filename listed in README.md</text>
+</svg>

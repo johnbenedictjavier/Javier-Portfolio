@@ -8,15 +8,29 @@ All portfolio content is stored in one file:
 
 `src/data/portfolio.ts`
 
-Edit that file to replace the sample titles, biography, awards, education, leadership roles, skills, languages, projects, email address, and social links.
+Edit that file to update the biography, award details, education, leadership roles, skills, languages, projects, email address, and social links.
 
-The current profile image uses the GitHub account avatar. To use a different image:
+The site checks for these exact image filenames:
 
-1. Add the image to `public/`, for example `public/profile.jpg`.
-2. Set `profileImage` in `src/data/portfolio.ts` to `/Javier-Portfolio/profile.jpg`.
-3. Update `profileAlt` with an accurate description.
+```text
+public/
+└── images/
+    ├── profile/
+    │   └── john-benedict-javier.jpg
+    ├── awards/
+    │   ├── recognition-01.jpg
+    │   ├── competition-01.jpg
+    │   ├── academic-rank-1-2024.jpg
+    │   ├── academic-salutatorian-jhs-2022.jpg
+    │   └── academic-salutatorian-elementary-2017.jpg
+    └── projects/
+        ├── tech-revive.jpg
+        └── elfresco-ph.jpg
+```
 
-`public/profile-placeholder.svg` is used if the configured image cannot load.
+Use lowercase filenames exactly as shown. JPG, PNG, and WebP are supported, but the extension in `src/data/portfolio.ts` must match the actual file. For additional award cards, continue with names such as `recognition-02.jpg` and add the matching card data to the appropriate `awardGroups` entry.
+
+The GitHub avatar and designed SVG artwork are used automatically when local images are unavailable.
 
 ## Run locally
 
@@ -37,7 +51,7 @@ npm run build
 
 ## Contact form
 
-GitHub Pages cannot process forms on its own. The message form validates the fields and opens the visitor's email application with a prepared message. Replace `email` in `src/data/portfolio.ts` before publishing.
+GitHub Pages cannot process forms on its own. The message form validates the fields and opens the visitor's email application with a prepared message addressed to the `email` configured in `src/data/portfolio.ts`.
 
 ## Portfolio assistant
 

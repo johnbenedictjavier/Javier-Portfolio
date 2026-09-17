@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Award photo placeholder</title>
+  <desc id="desc">Replace recognition-01.jpg with a photo of the award.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#102a44"/>
+      <stop offset="1" stop-color="#06111f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#66e3ff"/>
+      <stop offset="1" stop-color="#409dff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <g opacity=".12" stroke="#66e3ff">
+    <path d="M0 100h1200M0 200h1200M0 300h1200M0 400h1200M0 500h1200M0 600h1200M0 700h1200"/>
+    <path d="M100 0v800M200 0v800M300 0v800M400 0v800M500 0v800M600 0v800M700 0v800M800 0v800M900 0v800M1000 0v800M1100 0v800"/>
+  </g>
+  <circle cx="600" cy="310" r="142" fill="#0b1c2d" stroke="url(#accent)" stroke-width="8"/>
+  <path d="m540 410-40 180 100-48 100 48-40-180" fill="#102f4c" stroke="#66e3ff" stroke-width="6"/>
+  <path d="m600 215 29 59 65 9-47 46 11 65-58-31-58 31 11-65-47-46 65-9Z" fill="url(#accent)"/>
+  <text x="600" y="675" fill="#edf7ff" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" font-weight="700">ADD AWARD PHOTO</text>
+  <text x="600" y="722" fill="#8297a9" text-anchor="middle" font-family="monospace" font-size="22">images/awards/recognition-01.jpg</text>
+</svg>
