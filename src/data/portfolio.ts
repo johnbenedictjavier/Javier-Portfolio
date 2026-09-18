@@ -14,8 +14,10 @@ export const portfolio = {
   roles: [
     "BS Computer Science Student",
     "Aspiring Software Engineer",
+    "Aspring Game Developer",
     "Technology Project Leader",
-  ],
+    "DOST-SEI Scholar",
+    ],
   course: "BS Computer Science, 3rd Year",
   summary:
     "I'm a third-year Computer Science student building educational games and practical web platforms through thoughtful engineering and people-first leadership.",
@@ -78,12 +80,22 @@ export const portfolio = {
       fallbackImage: "images/awards/competition-placeholder.svg",
       cards: [
         {
-          date: "Add date",
-          title: "Add a Hackathon or Competition",
-          organization: "Event or institution",
+          date: "September 2026",
+          title: "JPCS Mini-Hackaton",
+          organization: "Junior Philippine Computer Society",
           description:
-            "Add the challenge, your contribution, the solution your team created, and the result.",
-          image: "images/awards/competition-01.jpg",
+            "We've made a website where we digitalized the practices of our department. We used opencode as vibe-coding is one of the theme of the mini-hackaton.",
+          image: "images/awards/hackaton2.jpg",
+          imageAlt: "Add a photo from this hackathon or competition",
+          isPlaceholder: true,
+        },
+        {
+          date: "January 2025",
+          title: "BEC Hackaton",
+          organization: "BEC",
+          description:
+            "Happened at San Juan, Batangas, where we are one of the representative of our school. The event happened for 12 hours, where 8 hours is the main hackaton proper.",
+          image: "images/awards/hackaton1.jpg",
           imageAlt: "Add a photo from this hackathon or competition",
           isPlaceholder: true,
         },
@@ -266,7 +278,7 @@ export const portfolio = {
       id: "linkedin",
       label: "LinkedIn",
       handle: "your-handle",
-      url: "https://www.linkedin.com/in/your-handle/",
+      url: "https://linkedin.com/in/john-benedict-javier-011523435",
     },
     {
       id: "github",
