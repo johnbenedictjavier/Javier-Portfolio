@@ -28,6 +28,7 @@ public/
         └── elfresco-ph.jpg
 ```
 
+
 Use lowercase filenames exactly as shown. JPG, PNG, and WebP are supported, but the extension in `src/data/portfolio.ts` must match the actual file. For additional award cards, use names such as `recognition-02.jpg` and add the matching card data to the appropriate `awardGroups` entry.
 
 The GitHub avatar and designed SVG artwork are used automatically when local images are unavailable.

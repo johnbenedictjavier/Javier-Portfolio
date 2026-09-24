@@ -82,7 +82,7 @@ export const portfolio = {
         {
           date: "September 2026",
           title: "JPCS Mini-Hackaton",
-          organization: "Junior Philippine Computer Society",
+          organization: "Junior Philippine Computer Society - Lipa City Colleges",
           description:
             "We've made a website where we digitalized the practices of our department. We used opencode as vibe-coding is one of the theme of the mini-hackaton.",
           image: "images/awards/hackaton2.jpg",
@@ -92,7 +92,7 @@ export const portfolio = {
         {
           date: "January 2025",
           title: "BEC Hackaton",
-          organization: "BEC",
+          organization: "Batangas Eastern Colleges - San Juan",
           description:
             "Happened at San Juan, Batangas, where we are one of the representative of our school. The event happened for 12 hours, where 8 hours is the main hackaton proper.",
           image: "images/awards/hackaton1.jpg",
@@ -277,7 +277,7 @@ export const portfolio = {
     {
       id: "linkedin",
       label: "LinkedIn",
-      handle: "your-handle",
+      handle: "John Benedict Javier",
       url: "https://linkedin.com/in/john-benedict-javier-011523435",
     },
     {
@@ -289,26 +289,20 @@ export const portfolio = {
     {
       id: "facebook",
       label: "Facebook",
-      handle: "your-handle",
-      url: "https://www.facebook.com/your-handle",
+      handle: "John Benedict Javier",
+      url: "https://www.facebook.com/jbmitra.javier",
     },
     {
       id: "instagram",
       label: "Instagram",
-      handle: "@your-handle",
-      url: "https://www.instagram.com/your-handle/",
+      handle: "@jrx.bxnz",
+      url: "https://www.instagram.com/jrx.bxnz/",
     },
     {
       id: "tiktok",
       label: "TikTok",
-      handle: "@your-handle",
-      url: "https://www.tiktok.com/@your-handle",
-    },
-    {
-      id: "website",
-      label: "Other",
-      handle: "your-link.com",
-      url: "https://your-link.com",
+      handle: "@hndsmjerax",
+      url: "https://www.tiktok.com/@hndsmjerax",
     },
   ],
   assistant: {
