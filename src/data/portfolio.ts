@@ -246,7 +246,7 @@ export const portfolio = {
       proofUrl: "images/events/iotcert.jpg",
     },
     {
-      year: "2025",
+      year: "2026",
       shortTitle: "PCTA Philippine Tech Show",
       title: "PCTA Philippine Tech Show 2025",
       role: "Participant / Attendee",
