@@ -64,10 +64,13 @@ import {
   SiGooglegemini,
   SiLuau,
   SiNodedotjs,
+  SiOpencode,
+  SiPhp,
   SiPython,
   SiReact,
   SiSupabase,
   SiTypescript,
+  SiVercel,
 } from "react-icons/si";
 import { BsOpenai } from "react-icons/bs";
 import { VscVscode } from "react-icons/vsc";
@@ -98,6 +101,7 @@ const technologyIcons: Record<string, LucideIcon | IconType> = {
   javascript: SiJavascript,
   typescript: SiTypescript,
   python: SiPython,
+  php: SiPhp,
   html: SiHtml5,
   css: SiCss,
   luau: SiLuau,
@@ -112,11 +116,12 @@ const technologyIcons: Record<string, LucideIcon | IconType> = {
   git: SiGit,
   github: SiGithub,
   vscode: VscVscode,
+  vercel: SiVercel,
   kiro: Sparkles,
   figma: SiFigma,
   canva: Palette,
   chatgpt: BsOpenai,
-  opencode: TerminalSquare,
+  opencode: SiOpencode,
   claude: SiClaude,
   gemini: SiGooglegemini,
   quickai: Zap,
@@ -567,6 +572,8 @@ function Hero({ onOpenAssistant }: HeroProps) {
 }
 
 function About() {
+  const [activePrinciple, setActivePrinciple] = useState(0);
+
   return (
     <section className="section about-section" id="about">
       <div className="shell">
@@ -586,12 +593,25 @@ function About() {
           </div>
           <div className="principles-grid">
             {portfolio.about.principles.map((principle, index) => (
-              <article className="principle-card interactive-card" data-reveal style={revealDelay(index * 90)} key={principle.number}>
+              <button
+                className={`principle-card interactive-card ${activePrinciple === index ? "is-active" : ""}`}
+                data-reveal
+                style={revealDelay(index * 90)}
+                type="button"
+                aria-expanded={activePrinciple === index}
+                aria-controls="mobile-principle-detail"
+                onClick={() => setActivePrinciple(index)}
+                key={principle.number}
+              >
                 <span>{principle.number}</span>
                 <h3>{principle.title}</h3>
                 <p>{principle.text}</p>
-              </article>
+              </button>
             ))}
+            <div className="principle-mobile-detail" id="mobile-principle-detail" aria-live="polite">
+              <strong>{portfolio.about.principles[activePrinciple].title}</strong>
+              <p>{portfolio.about.principles[activePrinciple].text}</p>
+            </div>
           </div>
         </div>
 
@@ -618,10 +638,19 @@ type AwardDeckProps = {
 
 function AwardDeck({ group, index, onOpen }: AwardDeckProps) {
   const [activeCard, setActiveCard] = useState(0);
+  const pointerStart = useRef<number | null>(null);
+  const suppressClick = useRef(false);
   const count = group.cards.length;
   const GroupIcon = awardGroupIcons[group.id];
   const showNext = () => setActiveCard((current) => (current + 1) % count);
   const showPrevious = () => setActiveCard((current) => (current - 1 + count) % count);
+  const cycleCard = () => {
+    if (suppressClick.current) {
+      suppressClick.current = false;
+      return;
+    }
+    if (count > 1) showNext();
+  };
 
   return (
     <article className={`award-deck award-deck-${group.id}`} data-reveal style={revealDelay(index * 100)}>
@@ -648,6 +677,28 @@ function AwardDeck({ group, index, onOpen }: AwardDeckProps) {
               className={`award-photo-card ${position === 0 ? "is-active" : ""} ${position > 2 ? "is-hidden" : ""}`}
               style={cardStyle}
               aria-hidden={position !== 0}
+              aria-label={position === 0 && count > 1 ? `${card.title}. Activate to show the next card.` : undefined}
+              role={position === 0 && count > 1 ? "button" : undefined}
+              tabIndex={position === 0 && count > 1 ? 0 : -1}
+              onClick={position === 0 ? cycleCard : undefined}
+              onKeyDown={position === 0 && count > 1 ? (event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  showNext();
+                }
+              } : undefined}
+              onPointerDown={position === 0 && count > 1 ? (event) => {
+                pointerStart.current = event.clientX;
+              } : undefined}
+              onPointerUp={position === 0 && count > 1 ? (event) => {
+                if (pointerStart.current === null) return;
+                const distance = event.clientX - pointerStart.current;
+                pointerStart.current = null;
+                if (Math.abs(distance) < 45) return;
+                suppressClick.current = true;
+                if (distance < 0) showNext();
+                else showPrevious();
+              } : undefined}
               key={`${group.id}-${card.title}`}
             >
               <span className="award-photo-wrap">
@@ -671,7 +722,9 @@ function AwardDeck({ group, index, onOpen }: AwardDeckProps) {
                   className="view-experience"
                   type="button"
                   tabIndex={position === 0 ? 0 : -1}
-                  onClick={() => onOpen({
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onOpen({
                     title: card.title,
                     label: group.label,
                     date: card.date,
@@ -681,8 +734,9 @@ function AwardDeck({ group, index, onOpen }: AwardDeckProps) {
                     images: card.images,
                     imageAlt: card.imageAlt,
                     fallbackImage: group.fallbackImage,
-                    proofUrl: card.proofUrl,
-                  })}
+                      proofUrl: card.proofUrl,
+                    });
+                  }}
                 >
                   View experience <ArrowUpRight size={16} />
                 </button>
@@ -692,19 +746,21 @@ function AwardDeck({ group, index, onOpen }: AwardDeckProps) {
         })}
       </div>
 
-      <footer className="award-deck-controls">
-        <button type="button" onClick={showPrevious} disabled={count < 2} aria-label={`Previous ${group.label} card`}>
-          <ChevronLeft size={17} />
-        </button>
-        <div className="award-deck-dots" aria-hidden="true">
-          {group.cards.map((card, cardIndex) => (
-            <i className={cardIndex === activeCard ? "is-active" : ""} key={card.title} />
-          ))}
-        </div>
-        <button type="button" onClick={showNext} disabled={count < 2} aria-label={`Next ${group.label} card`}>
-          <ChevronRight size={17} />
-        </button>
-      </footer>
+      {count > 1 ? (
+        <footer className="award-deck-controls">
+          <button type="button" onClick={showPrevious} aria-label={`Previous ${group.label} card`}>
+            <ChevronLeft size={17} />
+          </button>
+          <div className="award-deck-dots" aria-hidden="true">
+            {group.cards.map((card, cardIndex) => (
+              <i className={cardIndex === activeCard ? "is-active" : ""} key={card.title} />
+            ))}
+          </div>
+          <button type="button" onClick={showNext} aria-label={`Next ${group.label} card`}>
+            <ChevronRight size={17} />
+          </button>
+        </footer>
+      ) : <p className="award-single-label">Single experience</p>}
     </article>
   );
 }
@@ -729,6 +785,11 @@ function AwardsSection({ onOpen }: { onOpen: (detail: ExperienceDetail) => void 
 }
 
 function EventsSection({ onOpen }: { onOpen: (detail: ExperienceDetail) => void }) {
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const scrollTimeline = (direction: number) => {
+    timelineRef.current?.scrollBy({ left: direction * 390, behavior: "smooth" });
+  };
+
   return (
     <section className="section events-section" id="events">
       <div
@@ -745,9 +806,14 @@ function EventsSection({ onOpen }: { onOpen: (detail: ExperienceDetail) => void 
           title="Beyond the classroom, into the industry."
           description="A timeline of technology spaces that expanded how I see connected systems, infrastructure, and emerging products."
         />
-        <div className="events-timeline" data-reveal>
+        <div className="event-scroll-controls" aria-label="Event timeline controls">
+          <span>Scroll through events</span>
+          <button type="button" onClick={() => scrollTimeline(-1)} aria-label="Scroll to previous event"><ChevronLeft size={18} /></button>
+          <button type="button" onClick={() => scrollTimeline(1)} aria-label="Scroll to next event"><ChevronRight size={18} /></button>
+        </div>
+        <div className="events-timeline" data-reveal ref={timelineRef}>
           {portfolio.events.map((event, index) => (
-            <article className="event-card" data-reveal style={revealDelay(index * 120)} key={event.year}>
+            <article className="event-card" data-reveal style={revealDelay(index * 120)} key={event.title}>
               <div className="event-year"><span>{event.year}</span><i /></div>
               <div className="event-card-content">
                 <div className="event-icon"><CalendarDays size={20} /></div>
@@ -845,6 +911,8 @@ function Journey() {
 }
 
 function Skills() {
+  const [activeSkill, setActiveSkill] = useState<string | null>(null);
+
   return (
     <section className="section skills-section" id="skills">
       <div className="shell">
@@ -870,9 +938,18 @@ function Skills() {
                       const Logo = technologyIcons[item.icon];
                       const logoStyle = { "--logo-color": item.color } as CSSProperties;
                       return (
-                        <div className="skill-logo" role="listitem" tabIndex={0} aria-label={item.name} style={logoStyle} key={item.name}>
-                          <Logo size={30} aria-hidden="true" />
-                          <span>{item.name}</span>
+                        <div className="skill-logo-item" role="listitem" key={item.name}>
+                          <button
+                            className={`skill-logo ${activeSkill === item.name ? "is-active" : ""}`}
+                            type="button"
+                            aria-label={item.name}
+                            aria-pressed={activeSkill === item.name}
+                            style={logoStyle}
+                            onClick={() => setActiveSkill((current) => current === item.name ? null : item.name)}
+                          >
+                            <Logo size={30} aria-hidden="true" />
+                            <span>{item.name}</span>
+                          </button>
                         </div>
                       );
                     })}

@@ -55,7 +55,7 @@ export const portfolio = {
   },
   stats: [
     { value: "05", label: "Featured projects" },
-    { value: "25", label: "Skills and tools" },
+    { value: "27", label: "Skills and tools" },
     { value: "04", label: "Leadership roles" },
     { value: "04", label: "Recognitions & distinctions" },
   ],
@@ -229,6 +229,24 @@ export const portfolio = {
       images: [] as string[],
       proofUrl: "",
     },
+    {
+      year: "2026",
+      shortTitle: "AIDLC Workshop with Kiro",
+      title: "AIDLC Workshop with Kiro",
+      role: "Workshop Participant",
+      venue: "Online Workshop",
+      date: "September 26-27, 2026",
+      tags: ["AIDLC", "Kiro", "AI-Assisted Development", "Software Development", "Requirements & Planning"],
+      description:
+        "Focused on the AI-Driven Development Life Cycle and using Kiro in modern software development workflows, from requirements and planning through implementation and refinement.",
+      takeaways: [
+        "Applied AI assistance across multiple stages of the development life cycle.",
+        "Practiced structuring requirements and planning implementation with Kiro.",
+        "Explored ways to refine software solutions through AI-assisted workflows.",
+      ],
+      images: [] as string[],
+      proofUrl: "",
+    },
   ],
   education: [
     {
@@ -302,6 +320,7 @@ export const portfolio = {
         { name: "JavaScript", icon: "javascript", color: "#f7df1e" },
         { name: "TypeScript", icon: "typescript", color: "#3178c6" },
         { name: "Python", icon: "python", color: "#3776ab" },
+        { name: "PHP", icon: "php", color: "#777bb4" },
         { name: "HTML5", icon: "html", color: "#e34f26" },
         { name: "CSS3", icon: "css", color: "#1572b6" },
         { name: "Luau", icon: "luau", color: "#00a2ff" },
@@ -334,6 +353,7 @@ export const portfolio = {
         { name: "Git", icon: "git", color: "#f05032" },
         { name: "GitHub", icon: "github", color: "var(--text)" },
         { name: "VS Code", icon: "vscode", color: "#23a8f2" },
+        { name: "Vercel", icon: "vercel", color: "var(--text)" },
         { name: "Kiro", icon: "kiro", color: "#a98bff" },
         { name: "Figma", icon: "figma", color: "#f24e1e" },
         { name: "Canva", icon: "canva", color: "#7d5cff" },
