@@ -215,16 +215,21 @@ function OpeningSequence({ onComplete }: { onComplete: () => void }) {
   );
 }
 
-function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail | null; onClose: () => void }) {
+function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClose: () => void }) {
   const [activeImage, setActiveImage] = useState(0);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (!detail) return;
     setActiveImage(0);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     closeButtonRef.current?.focus();
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [detail]);
+
+  useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
       if (event.key === "ArrowRight" && detail.images.length > 1) {
@@ -236,13 +241,12 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail | null;
     };
     window.addEventListener("keydown", handleKey);
     return () => {
-      document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKey);
     };
   }, [detail, onClose]);
 
-  if (!detail) return null;
   const hasImages = detail.images.length > 0;
+  const displayedImage = hasImages && activeImage < detail.images.length ? activeImage : 0;
 
   return (
     <div className="experience-modal-backdrop" onPointerDown={(event) => event.target === event.currentTarget && onClose()}>
@@ -256,8 +260,8 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail | null;
             <div className={`experience-main-image ${hasImages ? "" : "is-placeholder"}`}>
               {hasImages ? (
                 <img
-                  src={assetPath(detail.images[activeImage])}
-                  alt={`${detail.imageAlt} ${activeImage + 1}`}
+                  src={assetPath(detail.images[displayedImage])}
+                  alt={`${detail.imageAlt} ${displayedImage + 1}`}
                   onError={(event) => {
                     if (!detail.fallbackImage || event.currentTarget.dataset.fallback) return;
                     event.currentTarget.dataset.fallback = "true";
@@ -268,14 +272,14 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail | null;
             </div>
             {detail.images.length > 1 && (
               <div className="experience-gallery-controls">
-                <button type="button" aria-label="Previous photo" onClick={() => setActiveImage((activeImage - 1 + detail.images.length) % detail.images.length)}><ChevronLeft /></button>
-                <span>{activeImage + 1} / {detail.images.length}</span>
-                <button type="button" aria-label="Next photo" onClick={() => setActiveImage((activeImage + 1) % detail.images.length)}><ChevronRight /></button>
+                <button type="button" aria-label="Previous photo" onClick={() => setActiveImage((current) => (current - 1 + detail.images.length) % detail.images.length)}><ChevronLeft /></button>
+                <span>{displayedImage + 1} / {detail.images.length}</span>
+                <button type="button" aria-label="Next photo" onClick={() => setActiveImage((current) => (current + 1) % detail.images.length)}><ChevronRight /></button>
               </div>
             )}
             {detail.images.length > 1 && <div className="experience-thumbnails">
               {detail.images.map((image, index) => (
-                <button className={index === activeImage ? "is-active" : ""} type="button" onClick={() => setActiveImage(index)} key={`${image}-${index}`} aria-label={`View photo ${index + 1}`}>
+                <button className={index === displayedImage ? "is-active" : ""} type="button" onClick={() => setActiveImage(index)} key={`${image}-${index}`} aria-label={`View photo ${index + 1}`}>
                   <img src={assetPath(image)} alt="" />
                 </button>
               ))}
@@ -1222,7 +1226,13 @@ export default function App() {
         <Contact onOpenAssistant={() => setAssistantOpen(true)} />
       </main>
       <Footer />
-      <ExperienceModal detail={activeExperience} onClose={() => setActiveExperience(null)} />
+      {activeExperience && (
+        <ExperienceModal
+          detail={activeExperience}
+          key={`${activeExperience.title}-${activeExperience.date}`}
+          onClose={() => setActiveExperience(null)}
+        />
+      )}
       <Chatbot open={assistantOpen} onOpenChange={setAssistantOpen} />
     </>
   );

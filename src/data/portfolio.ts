@@ -32,8 +32,7 @@ export const portfolio = {
     kicker: "Beyond the code",
     title: "Learning deeply, building purposefully, leading responsibly.",
     paragraphs: [
-      "I'm a third-year Bachelor of Science in Computer Science student at Lipa City Colleges with a growing focus on software engineering. I enjoy translating practical problems into clear, approachable digital experiences.",
-      "My work ranges from Tech Revive, an educational device-repair game, to ELFRESCO PH, an e-commerce experience for a container-house business. Alongside development, I lead student initiatives and help teams turn plans into successful activities.",
+      "I'm a third-year Bachelor of Science in Computer Science student at Lipa City Colleges and a DOST-SEI Merit Scholar with hands-on experience building practical software for real users. From developing a client-focused ordering and management system with Python and Flask to creating educational games and web platforms, I enjoy turning ideas into clear, functional experiences. I also lead student initiatives, collaborate with teams, and continue strengthening my skills as I work toward a career in software engineering and game development.",
     ],
     principles: [
       {
