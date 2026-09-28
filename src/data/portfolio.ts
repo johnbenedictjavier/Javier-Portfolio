@@ -77,14 +77,52 @@ export const portfolio = {
           isPlaceholder: false,
         },
         {
-          ...dostSeiScholarship,
+          date: "March 2026",
+          title: "Dean's Lister",
+          organization: "Lipa City Colleges",
+          description:
+            "2nd Year BSCS | 1st Semester: Achieve a GWA of 1.39",
+          image: "images/awards/deans2nd.jpg",
+          images: ["images/awards/deans2nd.jpg"],
+          imageAlt: "John Benedict Javier's Deans Lister recognition",
+          takeaways: [
+            "Got 1.39 as GWA for Dean's Lister",
+            "Only one of dean's lister of 2nd Year BSCS",
+            "1st Semester of 2nd Year",
+          ],
+          proofUrl: "",
+          isPlaceholder: false,
+        },
+        {
+          date: "October 2025",
+          title: "Dean's Lister",
+          organization: "Lipa City Colleges",
+          description:
+            "1st Year BSCS | 2nd Semester: Achieve a GWA of 1.45",
           image: "images/awards/deans.jpg",
           images: ["images/awards/deans.jpg"],
           imageAlt: "John Benedict Javier's Deans Lister recognition",
           takeaways: [
             "Got 1.45 as GWA for Dean's Lister",
-            "One of two dean's lister of 2nd Year BSCS",
-            "1st Semester: Dean's Lister",
+            "One of two dean's lister of 1st Year BSCS",
+            "2nd Semester of 1st Year",
+          ],
+          proofUrl: "",
+          isPlaceholder: false,
+        },
+        {
+          date: "February 2025",
+          title: "Dean's Lister",
+          organization: "Lipa City Colleges",
+          description:
+            "1st Year BSCS | 1st Semester: Achieve a GWA of 1.45",
+          image: "images/awards/deans1st.jpg",
+          images: ["images/awards/deans1st.jpg"],
+          imageAlt: "John Benedict Javier's Deans Lister recognition",
+          takeaways: [
+            "Got 1.45 as GWA for Dean's Lister",
+            "Only one dean lister of 1st Year BSCS",
+            "1st Semester of 1st Year",
           ],
           proofUrl: "",
           isPlaceholder: false,
@@ -103,9 +141,10 @@ export const portfolio = {
           description:
             "Built a website that digitized department practices during a fast-paced team challenge focused on AI-assisted development.",
           image: "images/awards/hackaton2.jpg",
-          images: ["images/awards/hackaton2.jpg"],
+          images: ["images/awards/hackaton2.jpg","images/awards/hackaton2-2.jpg"],
           imageAlt: "JPCS Mini-Hackathon team experience",
           takeaways: [
+            "TEAM 3",
             "Turned an operational problem into a working digital concept.",
             "Practiced rapid collaboration and responsible AI-assisted development.",
           ],
@@ -119,9 +158,10 @@ export const portfolio = {
           description:
             "Represented our school in San Juan, Batangas during a 12-hour event with an eight-hour main development challenge.",
           image: "images/awards/hackaton1.jpg",
-          images: ["images/awards/hackaton1.jpg"],
+          images: ["images/awards/hackaton1.jpg","images/awards/hackaton1-1.jpg"],
           imageAlt: "BEC Hackathon school representatives",
           takeaways: [
+            "TEAM RORALQ",
             "Built under strict time constraints while representing my school.",
             "Improved team planning, prioritization, and presentation skills.",
           ],
@@ -211,7 +251,7 @@ export const portfolio = {
       title: "PCTA Philippine Tech Show 2025",
       role: "Participant / Attendee",
       venue: "SMX Convention Center Manila",
-      date: "March 24-28, 2025",
+      date: "March 24-28, 2026",
       tags: ["Telecommunications", "Networking", "Digital Infrastructure", "ICT"],
       description:
         "Gained exposure to telecommunications, connectivity, digital infrastructure, and emerging ICT solutions.",
@@ -220,7 +260,7 @@ export const portfolio = {
         "Connected software concepts with industry-scale networking systems.",
         "Observed current approaches to connectivity and digital transformation.",
       ],
-      images: [] as string[],
+      images: ["images/events/pcta.jpg","images/events/pcta1.jpg","images/events/pcta2.jpg","images/events/pcta3.jpg"] as string[],
       proofUrl: "",
     },
     {
@@ -238,7 +278,7 @@ export const portfolio = {
         "Expanded my awareness of current AI and robotics applications.",
         "Connected classroom concepts with emerging consumer technologies.",
       ],
-      images: ["images/events/wocee.jpg","images/events/wocee1.jpg","images/events/wocee3.jpg","images/events/wocee2.jpg"] as string[],
+      images: ["images/events/wocee.jpg","images/events/wocee1.jpg","images/events/wocee5.jpg","images/events/wocee3.jpg","images/events/wocee2.jpg","images/events/wocee4.jpg"] as string[],
       proofUrl: "",
     },
     {
@@ -256,7 +296,7 @@ export const portfolio = {
         "Practiced structuring requirements and planning implementation with Kiro.",
         "Explored ways to refine software solutions through AI-assisted workflows.",
       ],
-      images: ["images/events/kiro.jpg"] as string[],
+      images: ["images/events/kiro.jpg","images/events/kiro2.jpg","images/events/kiro3.jpg"] as string[],
       proofUrl: "",
     },
   ],
