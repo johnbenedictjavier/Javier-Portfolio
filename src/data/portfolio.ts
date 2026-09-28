@@ -14,10 +14,10 @@ export const portfolio = {
   roles: [
     "BS Computer Science Student",
     "Aspiring Software Engineer",
-    "Aspring Game Developer",
+    "Aspiring Game Developer",
     "Technology Project Leader",
     "DOST-SEI Scholar",
-    ],
+  ],
   course: "BS Computer Science, 3rd Year",
   summary:
     "I'm a third-year Computer Science student building educational games and practical web platforms through thoughtful engineering and people-first leadership.",
@@ -28,7 +28,6 @@ export const portfolio = {
   profileImage: "images/profile/john-benedict-javier.jpg",
   profileFallbackImage: "https://avatars.githubusercontent.com/u/326827759?v=4",
   profileAlt: "Portrait of John Benedict Javier",
-  resumeUrl: "",
   about: {
     kicker: "Beyond the code",
     title: "Learning deeply, building purposefully, leading responsibly.",
@@ -55,8 +54,8 @@ export const portfolio = {
     ],
   },
   stats: [
-    { value: "02", label: "Featured projects" },
-    { value: "18", label: "Skills and tools" },
+    { value: "05", label: "Featured projects" },
+    { value: "25", label: "Skills and tools" },
     { value: "04", label: "Leadership roles" },
     { value: "04", label: "Recognitions & distinctions" },
   ],
@@ -69,7 +68,13 @@ export const portfolio = {
         {
           ...dostSeiScholarship,
           image: "images/awards/dost-sei-scholar.jpg",
+          images: ["images/awards/dost-sei-scholar.jpg"],
           imageAlt: "John Benedict Javier's DOST-SEI Merit Scholarship recognition",
+          takeaways: [
+            "Earned national recognition for academic potential in science and technology.",
+            "Strengthened my commitment to responsible, high-impact technology work.",
+          ],
+          proofUrl: "",
           isPlaceholder: false,
         },
       ],
@@ -81,23 +86,35 @@ export const portfolio = {
       cards: [
         {
           date: "September 2026",
-          title: "JPCS Mini-Hackaton",
+          title: "JPCS Mini-Hackathon",
           organization: "Junior Philippine Computer Society - Lipa City Colleges",
           description:
-            "We've made a website where we digitalized the practices of our department. We used opencode as vibe-coding is one of the theme of the mini-hackaton.",
+            "Built a website that digitized department practices during a fast-paced team challenge focused on AI-assisted development.",
           image: "images/awards/hackaton2.jpg",
-          imageAlt: "Add a photo from this hackathon or competition",
-          isPlaceholder: true,
+          images: ["images/awards/hackaton2.jpg"],
+          imageAlt: "JPCS Mini-Hackathon team experience",
+          takeaways: [
+            "Turned an operational problem into a working digital concept.",
+            "Practiced rapid collaboration and responsible AI-assisted development.",
+          ],
+          proofUrl: "",
+          isPlaceholder: false,
         },
         {
           date: "January 2025",
-          title: "BEC Hackaton",
+          title: "BEC Hackathon",
           organization: "Batangas Eastern Colleges - San Juan",
           description:
-            "Happened at San Juan, Batangas, where we are one of the representative of our school. The event happened for 12 hours, where 8 hours is the main hackaton proper.",
+            "Represented our school in San Juan, Batangas during a 12-hour event with an eight-hour main development challenge.",
           image: "images/awards/hackaton1.jpg",
-          imageAlt: "Add a photo from this hackathon or competition",
-          isPlaceholder: true,
+          images: ["images/awards/hackaton1.jpg"],
+          imageAlt: "BEC Hackathon school representatives",
+          takeaways: [
+            "Built under strict time constraints while representing my school.",
+            "Improved team planning, prioritization, and presentation skills.",
+          ],
+          proofUrl: "",
+          isPlaceholder: false,
         },
       ],
     },
@@ -113,7 +130,13 @@ export const portfolio = {
           description:
             "Graduated Rank 1 from the Science, Technology, Engineering, and Mathematics strand.",
           image: "images/awards/academic-rank-1-2024.jpg",
+          images: ["images/awards/academic-rank-1-2024.jpg"],
           imageAlt: "Senior High School Rank 1 recognition",
+          takeaways: [
+            "Sustained strong performance across the STEM curriculum.",
+            "Developed the discipline that supports my current computing studies.",
+          ],
+          proofUrl: "",
           isPlaceholder: false,
         },
         {
@@ -123,7 +146,13 @@ export const portfolio = {
           description:
             "Graduated Salutatorian in recognition of consistent academic achievement throughout junior high school.",
           image: "images/awards/academic-salutatorian-jhs-2022.jpg",
+          images: ["images/awards/academic-salutatorian-jhs-2022.jpg"],
           imageAlt: "Junior High School Salutatorian recognition",
+          takeaways: [
+            "Built consistent study habits and resilience.",
+            "Learned to balance academic goals with school responsibilities.",
+          ],
+          proofUrl: "",
           isPlaceholder: false,
         },
         {
@@ -133,10 +162,72 @@ export const portfolio = {
           description:
             "Graduated Salutatorian after demonstrating strong academic performance throughout elementary school.",
           image: "images/awards/academic-salutatorian-elementary-2017.jpg",
+          images: ["images/awards/academic-salutatorian-elementary-2017.jpg"],
           imageAlt: "Elementary Salutatorian recognition",
+          takeaways: [
+            "Established an early commitment to learning and improvement.",
+            "Gained confidence through consistent academic effort.",
+          ],
+          proofUrl: "",
           isPlaceholder: false,
         },
       ],
+    },
+  ],
+  events: [
+    {
+      year: "2024",
+      shortTitle: "IoT Conference Philippines",
+      title: "Internet of Things Conference Philippines 2024",
+      role: "Participant / Attendee",
+      venue: "SMX Convention Center Manila",
+      date: "October 29-30, 2024",
+      tags: ["IoT", "Smart Systems", "Emerging Tech", "Networking"],
+      description:
+        "Explored connected systems, smart-city applications, and practical IoT uses across industries.",
+      takeaways: [
+        "Saw how sensors, networks, software, and data operate as one system.",
+        "Gained a broader view of technology beyond traditional software development.",
+        "Learned how IoT concepts translate into real industry solutions.",
+      ],
+      images: [] as string[],
+      proofUrl: "",
+    },
+    {
+      year: "2025",
+      shortTitle: "PCTA Philippine Tech Show",
+      title: "PCTA Philippine Tech Show 2025",
+      role: "Participant / Attendee",
+      venue: "SMX Convention Center Manila",
+      date: "March 24-28, 2025",
+      tags: ["Telecommunications", "Networking", "Digital Infrastructure", "ICT"],
+      description:
+        "Gained exposure to telecommunications, connectivity, digital infrastructure, and emerging ICT solutions.",
+      takeaways: [
+        "Understood how communication infrastructure supports modern applications.",
+        "Connected software concepts with industry-scale networking systems.",
+        "Observed current approaches to connectivity and digital transformation.",
+      ],
+      images: [] as string[],
+      proofUrl: "",
+    },
+    {
+      year: "2026",
+      shortTitle: "WOCEE",
+      title: "World of Consumer Electronics Expo (WOCEE) 2026",
+      role: "Participant / Attendee",
+      venue: "SMX Convention Center Manila",
+      date: "August 5-8, 2026",
+      tags: ["AI", "Robotics", "IoT", "Consumer Electronics", "Gaming"],
+      description:
+        "Explored innovations in AI, robotics, IoT, smart devices, gaming, and consumer electronics through live exhibits.",
+      takeaways: [
+        "Observed how software, hardware, and automation combine in real products.",
+        "Expanded my awareness of current AI and robotics applications.",
+        "Connected classroom concepts with emerging consumer technologies.",
+      ],
+      images: [] as string[],
+      proofUrl: "",
     },
   ],
   education: [
@@ -197,6 +288,12 @@ export const portfolio = {
         "Led the club, organized mathematics-related activities, and coordinated officers and members.",
     },
   ],
+  professionalExperience: [] as Array<{
+    period: string;
+    role: string;
+    organization: string;
+    detail: string;
+  }>,
   skillGroups: [
     {
       label: "Languages",
@@ -236,8 +333,21 @@ export const portfolio = {
       items: [
         { name: "Git", icon: "git", color: "#f05032" },
         { name: "GitHub", icon: "github", color: "var(--text)" },
+        { name: "VS Code", icon: "vscode", color: "#23a8f2" },
+        { name: "Kiro", icon: "kiro", color: "#a98bff" },
         { name: "Figma", icon: "figma", color: "#f24e1e" },
         { name: "Canva", icon: "canva", color: "#7d5cff" },
+      ],
+    },
+    {
+      label: "AI Assistants",
+      description: "AI tools I use to research, reason, prototype, and improve development workflows.",
+      items: [
+        { name: "ChatGPT", icon: "chatgpt", color: "#10a37f" },
+        { name: "OpenCode", icon: "opencode", color: "#66e3ff" },
+        { name: "Claude", icon: "claude", color: "#d97757" },
+        { name: "Gemini", icon: "gemini", color: "#6f8df6" },
+        { name: "Quick AI", icon: "quickai", color: "#f2b84b" },
       ],
     },
   ],
@@ -255,7 +365,7 @@ export const portfolio = {
       tags: ["Python", "Pygame", "Game Development"],
       image: "images/projects/tech-revive.jpg",
       fallbackImage: "images/projects/tech-revive-placeholder.svg",
-      sourceUrl: "https://github.com/johnbenedictjavier",
+      sourceUrl: "",
       liveUrl: "",
       accent: "cyan",
     },
@@ -268,7 +378,46 @@ export const portfolio = {
       tags: ["Web Development", "E-commerce", "Responsive UI"],
       image: "images/projects/elfresco-ph.jpg",
       fallbackImage: "images/projects/elfresco-ph-placeholder.svg",
-      sourceUrl: "https://github.com/johnbenedictjavier",
+      sourceUrl: "",
+      liveUrl: "",
+      accent: "blue",
+    },
+    {
+      number: "03",
+      title: "Laurel & Ladle",
+      type: "Luxury Food Ordering System",
+      description:
+        "Laurel & Ladle is an elegant food-ordering system with complete CRUD workflows for menu and order management, automatic price calculations, and a polished receipt-style confirmation for every completed order.",
+      tags: ["CRUD", "Food Ordering", "Auto-calculation", "Responsive UI"],
+      image: "images/projects/laurel-and-ladle-placeholder.svg",
+      fallbackImage: "images/projects/laurel-and-ladle-placeholder.svg",
+      sourceUrl: "",
+      liveUrl: "https://johnbenedictjavier.github.io/Food-Ordering-System/",
+      accent: "violet",
+    },
+    {
+      number: "04",
+      title: "Barangay Information System",
+      type: "Community Information Platform",
+      description:
+        "A community management system that handles CRUD operations for resident records, streamlines official document requests, and organizes public infrastructure concerns for clearer barangay services.",
+      tags: ["CRUD", "Resident Records", "Document Requests", "Civic Tech"],
+      image: "images/projects/barangay-information-system-placeholder.svg",
+      fallbackImage: "images/projects/barangay-information-system-placeholder.svg",
+      sourceUrl: "",
+      liveUrl: "",
+      accent: "cyan",
+    },
+    {
+      number: "05",
+      title: "Payroll Management System",
+      type: "Business Management System",
+      description:
+        "A structured payroll platform for managing employee information, departments, positions, salary details, and related payroll records through dependable CRUD workflows.",
+      tags: ["CRUD", "Payroll", "Employee Records", "Business Systems"],
+      image: "images/projects/payroll-management-system-placeholder.svg",
+      fallbackImage: "images/projects/payroll-management-system-placeholder.svg",
+      sourceUrl: "",
       liveUrl: "",
       accent: "blue",
     },
@@ -308,7 +457,7 @@ export const portfolio = {
   assistant: {
     name: "Javi AI",
     welcome:
-      "Hi! I'm Javier's portfolio assistant. Ask me about his skills, education, projects, awards, leadership, or how to get in touch.",
+      "Hi! I'm Javier's portfolio assistant. Ask me about his skills, education, projects, awards, events, leadership, or how to get in touch.",
     suggestions: [
       "What are your strongest skills?",
       "Tell me about your projects",

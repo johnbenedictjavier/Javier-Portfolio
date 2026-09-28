@@ -38,6 +38,20 @@ const intents: readonly Intent[] = [
         .join(", ")}. You can find the responsibilities and impact in the Journey section.`,
   },
   {
+    keywords: ["event", "events", "conference", "conferences", "wocee", "pcta", "iot", "expo"],
+    answer: () =>
+      `Javier has attended ${portfolio.events
+        .map((event) => `${event.title} (${event.year})`)
+        .join(", ")}. Open Events and Conferences to view the technologies explored and key takeaways.`,
+  },
+  {
+    keywords: ["experience", "professional experience", "internship", "employment"],
+    answer: () =>
+      portfolio.professionalExperience.length
+        ? `Javier's professional experience includes ${portfolio.professionalExperience.map((item) => `${item.role} at ${item.organization}`).join(", ")}.`
+        : "Javier is currently seeking his first professional or internship opportunity and is ready to contribute his project and leadership experience.",
+  },
+  {
     keywords: ["dost", "dost sei", "scholar", "scholarship", "merit scholar"],
     answer: () =>
       `Javier has been a ${portfolio.primaryCredential.title} since ${portfolio.primaryCredential.date}. ${portfolio.primaryCredential.description}`,
@@ -86,13 +100,6 @@ const intents: readonly Intent[] = [
     keywords: ["available", "availability", "opportunity", "job", "internship", "freelance", "collaborate"],
     answer: () =>
       `${portfolio.availability}. If you have a role, project, or collaboration in mind, send a message through the Contact section.`,
-  },
-  {
-    keywords: ["resume", "cv", "curriculum vitae"],
-    answer: () =>
-      portfolio.resumeUrl
-        ? "A resume is available from the main hero section."
-        : "The resume link has not been added yet. You can still ask about skills, education, projects, or contact Javier directly.",
   },
   {
     keywords: ["location", "based", "live", "where are you"],

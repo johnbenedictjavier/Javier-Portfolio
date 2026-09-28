@@ -4,6 +4,7 @@ import {
   useState,
   type CSSProperties,
   type FormEvent,
+  type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import {
@@ -17,6 +18,9 @@ import {
   Boxes,
   Braces,
   BriefcaseBusiness,
+  CalendarDays,
+  Camera,
+  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Code2,
@@ -38,12 +42,14 @@ import {
   Moon,
   Palette,
   Send,
+  Sparkles,
   Sun,
   TerminalSquare,
   Trophy,
   Users,
   Workflow,
   X,
+  Zap,
   type LucideIcon,
 } from "lucide-react";
 import type { IconType } from "react-icons";
@@ -54,6 +60,8 @@ import {
   SiGithub,
   SiHtml5,
   SiJavascript,
+  SiClaude,
+  SiGooglegemini,
   SiLuau,
   SiNodedotjs,
   SiPython,
@@ -61,11 +69,14 @@ import {
   SiSupabase,
   SiTypescript,
 } from "react-icons/si";
+import { BsOpenai } from "react-icons/bs";
+import { VscVscode } from "react-icons/vsc";
 import { Chatbot } from "./components/Chatbot";
 import { portfolio } from "./data/portfolio";
 
 const navLinks = [
   { label: "About", href: "#about" },
+  { label: "Events", href: "#events" },
   { label: "Journey", href: "#journey" },
   { label: "Skills", href: "#skills" },
   { label: "Work", href: "#work" },
@@ -81,7 +92,7 @@ const socialIcons: Record<string, LucideIcon> = {
   website: Globe2,
 };
 
-const skillIcons = [Code2, Boxes, TerminalSquare, Users];
+const skillIcons = [Code2, Boxes, TerminalSquare, Users, Bot];
 
 const technologyIcons: Record<string, LucideIcon | IconType> = {
   javascript: SiJavascript,
@@ -100,8 +111,15 @@ const technologyIcons: Record<string, LucideIcon | IconType> = {
   api: Workflow,
   git: SiGit,
   github: SiGithub,
+  vscode: VscVscode,
+  kiro: Sparkles,
   figma: SiFigma,
   canva: Palette,
+  chatgpt: BsOpenai,
+  opencode: TerminalSquare,
+  claude: SiClaude,
+  gemini: SiGooglegemini,
+  quickai: Zap,
 };
 
 const awardGroupIcons: Record<string, LucideIcon> = {
@@ -130,6 +148,145 @@ function SectionHeading({ eyebrow, title, description }: SectionHeadingProps) {
         <h2>{title}</h2>
         {description && <p>{description}</p>}
       </div>
+    </div>
+  );
+}
+
+type ExperienceDetail = {
+  title: string;
+  label: string;
+  date: string;
+  meta: string;
+  description: string;
+  tags?: readonly string[];
+  takeaways: readonly string[];
+  images: readonly string[];
+  imageAlt: string;
+  fallbackImage?: string;
+  proofUrl?: string;
+};
+
+function OpeningSequence({ onComplete }: { onComplete: () => void }) {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const progressTimer = window.setInterval(() => {
+      setProgress((current) => Math.min(current + 2, 100));
+    }, 38);
+    const timer = window.setTimeout(onComplete, 2800);
+    return () => {
+      window.clearInterval(progressTimer);
+      window.clearTimeout(timer);
+    };
+  }, [onComplete]);
+
+  const loadingLabel = progress < 34
+    ? "Loading interface modules"
+    : progress < 68
+      ? "Calibrating interactions"
+      : progress < 100
+        ? "Preparing experience"
+        : "System ready";
+
+  return (
+    <div className="opening-sequence" role="dialog" aria-modal="true" aria-label="Portfolio loading">
+      <div className="opening-grid" aria-hidden="true" />
+      <div className="opening-scan" aria-hidden="true" />
+      <div className="opening-terminal">
+        <div className="opening-status"><span /> PORTFOLIO_OS / BOOT_SEQUENCE</div>
+        <div className="opening-loader-mark" aria-hidden="true"><i /><i /><i /></div>
+        <p className="opening-command" aria-live="polite">&gt; {loadingLabel}</p>
+        <div className="opening-percentage"><strong>{String(progress).padStart(3, "0")}</strong><span>%</span></div>
+        <div className="opening-progress"><i style={{ transform: `scaleX(${progress / 100})` }} /></div>
+        <div className="opening-modules" aria-hidden="true">
+          <span className={progress >= 24 ? "is-ready" : ""}>UI_CORE</span>
+          <span className={progress >= 52 ? "is-ready" : ""}>DATA_LAYER</span>
+          <span className={progress >= 82 ? "is-ready" : ""}>MOTION_SYS</span>
+        </div>
+        <p className={`opening-ready ${progress === 100 ? "is-visible" : ""}`}>ALL SYSTEMS READY // ENTERING EXPERIENCE</p>
+      </div>
+      <button type="button" onClick={onComplete}>Skip intro</button>
+    </div>
+  );
+}
+
+function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail | null; onClose: () => void }) {
+  const [activeImage, setActiveImage] = useState(0);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!detail) return;
+    setActiveImage(0);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+      if (event.key === "ArrowRight" && detail.images.length > 1) {
+        setActiveImage((current) => (current + 1) % detail.images.length);
+      }
+      if (event.key === "ArrowLeft" && detail.images.length > 1) {
+        setActiveImage((current) => (current - 1 + detail.images.length) % detail.images.length);
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKey);
+    };
+  }, [detail, onClose]);
+
+  if (!detail) return null;
+  const hasImages = detail.images.length > 0;
+
+  return (
+    <div className="experience-modal-backdrop" onPointerDown={(event) => event.target === event.currentTarget && onClose()}>
+      <section className="experience-modal" role="dialog" aria-modal="true" aria-labelledby="experience-title">
+        <header className="experience-modal-header">
+          <div><small>{detail.label}</small><span>{detail.date}</span></div>
+          <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Close experience"><X size={21} /></button>
+        </header>
+        <div className="experience-modal-grid">
+          <div className="experience-gallery">
+            <div className={`experience-main-image ${hasImages ? "" : "is-placeholder"}`}>
+              {hasImages ? (
+                <img
+                  src={assetPath(detail.images[activeImage])}
+                  alt={`${detail.imageAlt} ${activeImage + 1}`}
+                  onError={(event) => {
+                    if (!detail.fallbackImage || event.currentTarget.dataset.fallback) return;
+                    event.currentTarget.dataset.fallback = "true";
+                    event.currentTarget.src = assetPath(detail.fallbackImage);
+                  }}
+                />
+              ) : <><Camera size={34} /><strong>Gallery ready</strong><span>Add as many photos as you want</span></>}
+              {detail.images.length > 1 && (
+                <div className="experience-gallery-controls">
+                  <button type="button" aria-label="Previous photo" onClick={() => setActiveImage((activeImage - 1 + detail.images.length) % detail.images.length)}><ChevronLeft /></button>
+                  <span>{activeImage + 1} / {detail.images.length}</span>
+                  <button type="button" aria-label="Next photo" onClick={() => setActiveImage((activeImage + 1) % detail.images.length)}><ChevronRight /></button>
+                </div>
+              )}
+            </div>
+            {detail.images.length > 1 && <div className="experience-thumbnails">
+              {detail.images.map((image, index) => (
+                <button className={index === activeImage ? "is-active" : ""} type="button" onClick={() => setActiveImage(index)} key={`${image}-${index}`} aria-label={`View photo ${index + 1}`}>
+                  <img src={assetPath(image)} alt="" />
+                </button>
+              ))}
+            </div>}
+          </div>
+          <div className="experience-copy">
+            <p className="experience-meta">{detail.meta}</p>
+            <h2 id="experience-title">{detail.title}</h2>
+            <p>{detail.description}</p>
+            {detail.tags && <div className="experience-tags">{detail.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}
+            <h3>Key takeaways</h3>
+            <ul>{detail.takeaways.map((takeaway) => <li key={takeaway}><CheckCircle2 size={17} />{takeaway}</li>)}</ul>
+            {detail.proofUrl && <a className="button button-ghost experience-proof" href={assetPath(detail.proofUrl)} target="_blank" rel="noreferrer">View certificate or proof <ExternalLink size={16} /></a>}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
@@ -166,14 +323,43 @@ function Header() {
     return () => window.removeEventListener("keydown", closeMenu);
   }, []);
 
-  const toggleTheme = () => {
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [menuOpen]);
+
+  const toggleTheme = (event: ReactMouseEvent<HTMLButtonElement>) => {
     const nextTheme = theme === "dark" ? "light" : "dark";
-    setTheme(nextTheme);
-    document.documentElement.dataset.theme = nextTheme;
-    localStorage.setItem("javier-portfolio-theme", nextTheme);
-    document
-      .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", nextTheme === "dark" ? "#07111f" : "#f4f8fb");
+    const root = document.documentElement;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = bounds.left + bounds.width / 2;
+    const y = bounds.top + bounds.height / 2;
+    const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+    root.style.setProperty("--theme-x", `${x}px`);
+    root.style.setProperty("--theme-y", `${y}px`);
+    root.style.setProperty("--theme-radius", `${radius}px`);
+
+    const applyTheme = () => {
+      setTheme(nextTheme);
+      root.dataset.theme = nextTheme;
+      localStorage.setItem("javier-portfolio-theme", nextTheme);
+      document
+        .querySelector('meta[name="theme-color"]')
+        ?.setAttribute("content", nextTheme === "dark" ? "#07111f" : "#f4f8fb");
+    };
+    const transitionDocument = document as Document & {
+      startViewTransition?: (update: () => void) => { finished: Promise<void> };
+    };
+    if (!transitionDocument.startViewTransition || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      applyTheme();
+      return;
+    }
+    root.classList.add("theme-transitioning");
+    transitionDocument.startViewTransition(applyTheme).finished.finally(() => {
+      root.classList.remove("theme-transitioning");
+    });
   };
 
   return (
@@ -185,7 +371,8 @@ function Header() {
         </a>
 
         <nav className={`primary-nav ${menuOpen ? "is-open" : ""}`} aria-label="Primary navigation">
-          {navLinks.map((link) => (
+          <div className="mobile-nav-heading"><small>NAVIGATION_PROTOCOL</small><strong>Where should we go?</strong></div>
+          {navLinks.map((link, index) => (
             <a
               href={link.href}
               key={link.href}
@@ -193,9 +380,10 @@ function Header() {
               aria-current={activeSection === link.href.slice(1) ? "location" : undefined}
               onClick={() => setMenuOpen(false)}
             >
-              {link.label}
+              <span className="mobile-nav-index">0{index + 1}</span>{link.label}<ArrowUpRight className="mobile-nav-arrow" size={18} />
             </a>
           ))}
+          <div className="mobile-nav-footer"><span className="status-dot" /> Available for opportunities</div>
         </nav>
 
         <div className="header-actions">
@@ -300,13 +488,27 @@ type HeroProps = {
 
 function Hero({ onOpenAssistant }: HeroProps) {
   const [roleIndex, setRoleIndex] = useState(0);
+  const [typedRole, setTypedRole] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      setRoleIndex((current) => (current + 1) % portfolio.roles.length);
-    }, 3200);
-    return () => window.clearInterval(timer);
-  }, []);
+    const role = portfolio.roles[roleIndex];
+    let delay = deleting ? 38 : 72;
+    if (!deleting && typedRole === role) delay = 1500;
+    if (deleting && typedRole === "") delay = 260;
+
+    const timer = window.setTimeout(() => {
+      if (!deleting && typedRole === role) {
+        setDeleting(true);
+      } else if (deleting && typedRole === "") {
+        setDeleting(false);
+        setRoleIndex((current) => (current + 1) % portfolio.roles.length);
+      } else {
+        setTypedRole(role.slice(0, typedRole.length + (deleting ? -1 : 1)));
+      }
+    }, delay);
+    return () => window.clearTimeout(timer);
+  }, [deleting, roleIndex, typedRole]);
 
   return (
     <section className="hero" id="top">
@@ -326,7 +528,8 @@ function Hero({ onOpenAssistant }: HeroProps) {
           </h1>
           <div className="role-line hero-enter hero-enter-four">
             <span className="role-prefix" aria-hidden="true">01</span>
-            <span className="role-text" key={portfolio.roles[roleIndex]}>{portfolio.roles[roleIndex]}</span>
+            <span className="role-text" aria-hidden="true">{typedRole}<i className="typing-cursor" /></span>
+            <span className="sr-only" aria-live="polite">{portfolio.roles[roleIndex]}</span>
           </div>
           <p className="hero-summary hero-enter hero-enter-five">{portfolio.summary}</p>
           <div className="hero-facts hero-enter hero-enter-five">
@@ -410,9 +613,10 @@ type AwardGroup = (typeof portfolio.awardGroups)[number];
 type AwardDeckProps = {
   group: AwardGroup;
   index: number;
+  onOpen: (detail: ExperienceDetail) => void;
 };
 
-function AwardDeck({ group, index }: AwardDeckProps) {
+function AwardDeck({ group, index, onOpen }: AwardDeckProps) {
   const [activeCard, setActiveCard] = useState(0);
   const count = group.cards.length;
   const GroupIcon = awardGroupIcons[group.id];
@@ -440,14 +644,10 @@ function AwardDeck({ group, index }: AwardDeckProps) {
           } as CSSProperties;
 
           return (
-            <button
+            <article
               className={`award-photo-card ${position === 0 ? "is-active" : ""} ${position > 2 ? "is-hidden" : ""}`}
-              type="button"
               style={cardStyle}
-              onClick={() => position === 0 ? showNext() : setActiveCard(cardIndex)}
-              aria-label={position === 0 && count > 1 ? `${card.title}. Show next card` : card.title}
               aria-hidden={position !== 0}
-              tabIndex={position === 0 ? 0 : -1}
               key={`${group.id}-${card.title}`}
             >
               <span className="award-photo-wrap">
@@ -467,8 +667,27 @@ function AwardDeck({ group, index }: AwardDeckProps) {
                 <small>{card.organization}</small>
                 <strong>{card.title}</strong>
                 <span>{card.description}</span>
+                <button
+                  className="view-experience"
+                  type="button"
+                  tabIndex={position === 0 ? 0 : -1}
+                  onClick={() => onOpen({
+                    title: card.title,
+                    label: group.label,
+                    date: card.date,
+                    meta: card.organization,
+                    description: card.description,
+                    takeaways: card.takeaways,
+                    images: card.images,
+                    imageAlt: card.imageAlt,
+                    fallbackImage: group.fallbackImage,
+                    proofUrl: card.proofUrl,
+                  })}
+                >
+                  View experience <ArrowUpRight size={16} />
+                </button>
               </span>
-            </button>
+            </article>
           );
         })}
       </div>
@@ -490,7 +709,7 @@ function AwardDeck({ group, index }: AwardDeckProps) {
   );
 }
 
-function AwardsSection() {
+function AwardsSection({ onOpen }: { onOpen: (detail: ExperienceDetail) => void }) {
   return (
     <section className="section awards-section" id="awards">
       <div className="shell">
@@ -501,7 +720,61 @@ function AwardsSection() {
         />
         <div className="award-decks-grid">
           {portfolio.awardGroups.map((group, index) => (
-            <AwardDeck group={group} index={index} key={group.id} />
+            <AwardDeck group={group} index={index} onOpen={onOpen} key={group.id} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function EventsSection({ onOpen }: { onOpen: (detail: ExperienceDetail) => void }) {
+  return (
+    <section className="section events-section" id="events">
+      <div
+        className="events-photo-bg"
+        style={{
+          backgroundImage: `url(${assetPath("images/events/events-background.jpg")}), url(${assetPath("images/events/events-background-placeholder.svg")})`,
+        }}
+        aria-hidden="true"
+      />
+      <div className="events-grid-bg" aria-hidden="true" />
+      <div className="shell">
+        <SectionHeading
+          eyebrow="Events and conferences"
+          title="Beyond the classroom, into the industry."
+          description="A timeline of technology spaces that expanded how I see connected systems, infrastructure, and emerging products."
+        />
+        <div className="events-timeline" data-reveal>
+          {portfolio.events.map((event, index) => (
+            <article className="event-card" data-reveal style={revealDelay(index * 120)} key={event.year}>
+              <div className="event-year"><span>{event.year}</span><i /></div>
+              <div className="event-card-content">
+                <div className="event-icon"><CalendarDays size={20} /></div>
+                <small>{event.date} // {event.venue}</small>
+                <h3>{event.shortTitle}</h3>
+                <p>{event.description}</p>
+                <div className="event-tags">{event.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
+                <button
+                  className="view-experience"
+                  type="button"
+                  onClick={() => onOpen({
+                    title: event.title,
+                    label: "Event experience",
+                    date: event.date,
+                    meta: `${event.role} | ${event.venue}`,
+                    description: event.description,
+                    tags: event.tags,
+                    takeaways: event.takeaways,
+                    images: event.images,
+                    imageAlt: `${event.title} experience photo`,
+                    proofUrl: event.proofUrl,
+                  })}
+                >
+                  View experience <ArrowUpRight size={16} />
+                </button>
+              </div>
+            </article>
           ))}
         </div>
       </div>
@@ -510,34 +783,43 @@ function AwardsSection() {
 }
 
 type TimelineProps = {
-  type: "education" | "leadership";
+  type: "education" | "leadership" | "experience";
 };
 
 function Timeline({ type }: TimelineProps) {
   const isEducation = type === "education";
-  const items = isEducation ? portfolio.education : portfolio.leadership;
-  const Icon = isEducation ? GraduationCap : BriefcaseBusiness;
+  const isLeadership = type === "leadership";
+  const items = isEducation ? portfolio.education : isLeadership ? portfolio.leadership : portfolio.professionalExperience;
+  const Icon = isEducation ? GraduationCap : isLeadership ? Users : BriefcaseBusiness;
+  const title = isEducation ? "Education" : isLeadership ? "Leadership" : "Experience";
+  const track = isEducation ? "01" : isLeadership ? "02" : "03";
 
   return (
     <div className="journey-column" data-reveal>
       <div className="journey-column-title">
         <span><Icon size={20} /></span>
         <div>
-          <p>Track {isEducation ? "01" : "02"}</p>
-          <h3>{isEducation ? "Education" : "Leadership"}</h3>
+          <p>Track {track}</p>
+          <h3>{title}</h3>
         </div>
       </div>
-      <div className="timeline">
+      {items.length > 0 ? <div className="timeline">
         {items.map((item, index) => (
           <article className="timeline-item" style={revealDelay(index * 90)} key={`${item.period}-${index}`}>
             <div className="timeline-node"><i /></div>
             <span className="timeline-period">{item.period}</span>
-            <h4>{isEducation ? "degree" in item && item.degree : "role" in item && item.role}</h4>
-            <h5>{isEducation ? "school" in item && item.school : "organization" in item && item.organization}</h5>
+            <h4>{isEducation && "degree" in item ? item.degree : "role" in item ? item.role : ""}</h4>
+            <h5>{isEducation && "school" in item ? item.school : "organization" in item ? item.organization : ""}</h5>
             <p>{item.detail}</p>
           </article>
         ))}
-      </div>
+      </div> : <div className="experience-empty">
+        <Sparkles size={24} />
+        <span>Next chapter</span>
+        <h4>Ready for my first professional opportunity.</h4>
+        <p>I am currently open to internships and entry-level opportunities where I can learn, contribute, and grow with a team.</p>
+        <a href="#contact">Start a conversation <ArrowRight size={16} /></a>
+      </div>}
     </div>
   );
 }
@@ -555,6 +837,7 @@ function Journey() {
         <div className="journey-layout">
           <Timeline type="education" />
           <Timeline type="leadership" />
+          <Timeline type="experience" />
         </div>
       </div>
     </section>
@@ -668,9 +951,11 @@ function Work() {
                   {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
                 </div>
                 <div className="project-links">
-                  <a href={project.sourceUrl} target="_blank" rel="noreferrer">
-                    <Github size={17} /> View source <ArrowUpRight size={15} />
-                  </a>
+                   {project.sourceUrl ? (
+                     <a href={project.sourceUrl} target="_blank" rel="noreferrer">
+                       <Github size={17} /> View source <ArrowUpRight size={15} />
+                     </a>
+                   ) : <span>Source unavailable</span>}
                   {project.liveUrl ? (
                     <a href={project.liveUrl} target="_blank" rel="noreferrer">
                       <ExternalLink size={17} /> Live project <ArrowUpRight size={15} />
@@ -787,6 +1072,13 @@ function Footer() {
 
 export default function App() {
   const [assistantOpen, setAssistantOpen] = useState(false);
+  const [activeExperience, setActiveExperience] = useState<ExperienceDetail | null>(null);
+  const [showIntro, setShowIntro] = useState(() => sessionStorage.getItem("javier-intro-seen") !== "true");
+
+  const closeIntro = () => {
+    sessionStorage.setItem("javier-intro-seen", "true");
+    setShowIntro(false);
+  };
 
   useEffect(() => {
     const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
@@ -834,17 +1126,20 @@ export default function App() {
   return (
     <>
       <a className="skip-link" href="#main-content">Skip to content</a>
+      {showIntro && <OpeningSequence onComplete={closeIntro} />}
       <Header />
       <main id="main-content">
         <Hero onOpenAssistant={() => setAssistantOpen(true)} />
         <About />
-        <AwardsSection />
+        <AwardsSection onOpen={setActiveExperience} />
+        <EventsSection onOpen={setActiveExperience} />
         <Journey />
         <Skills />
         <Work />
         <Contact onOpenAssistant={() => setAssistantOpen(true)} />
       </main>
       <Footer />
+      <ExperienceModal detail={activeExperience} onClose={() => setActiveExperience(null)} />
       <Chatbot open={assistantOpen} onOpenChange={setAssistantOpen} />
     </>
   );

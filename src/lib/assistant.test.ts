@@ -22,6 +22,9 @@ describe("getAssistantResponse", () => {
     const response = getAssistantResponse("Tell me about your projects");
     expect(response).toContain("Tech Revive");
     expect(response).toContain("ELFRESCO PH");
+    expect(response).toContain("Laurel & Ladle");
+    expect(response).toContain("Barangay Information System");
+    expect(response).toContain("Payroll Management System");
   });
 
   it("answers award questions without placeholder achievements", () => {
@@ -34,5 +37,18 @@ describe("getAssistantResponse", () => {
     const response = getAssistantResponse("Are you a DOST scholar?");
     expect(response).toContain("DOST-SEI Merit Scholar");
     expect(response).toContain("2024");
+  });
+
+  it("answers event and conference questions", () => {
+    const response = getAssistantResponse("Which conferences have you attended?");
+    expect(response).toContain("WOCEE");
+    expect(response).toContain("PCTA");
+  });
+
+  it("includes AI assistants in skill answers", () => {
+    const response = getAssistantResponse("Which tools and AI assistants do you use?");
+    expect(response).toContain("VS Code");
+    expect(response).toContain("ChatGPT");
+    expect(response).toContain("OpenCode");
   });
 });

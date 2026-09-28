@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560">
+  <defs><linearGradient id="b" x2="1" y2="1"><stop stop-color="#071827"/><stop offset="1" stop-color="#0d3a48"/></linearGradient><pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#66e3ff" stroke-opacity=".1"/></pattern></defs>
+  <rect width="900" height="560" fill="url(#b)"/><rect width="900" height="560" fill="url(#g)"/>
+  <path d="M270 260 450 130l180 130v178H270Z" fill="#66e3ff" fill-opacity=".08" stroke="#66e3ff" stroke-width="3"/><path d="M230 260h440M330 438V294h240v144M408 438V330h84v108" fill="none" stroke="#66e3ff" stroke-width="3"/>
+  <g fill="#66e3ff"><circle cx="337" cy="222" r="9"/><circle cx="450" cy="184" r="9"/><circle cx="563" cy="222" r="9"/></g>
+  <text x="450" y="505" fill="#dffaff" font-family="Arial,sans-serif" font-size="25" text-anchor="middle" letter-spacing="6">BARANGAY INFORMATION SYSTEM</text>
+</svg>
