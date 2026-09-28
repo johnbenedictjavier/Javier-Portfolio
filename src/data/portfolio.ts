@@ -130,7 +130,7 @@ export const portfolio = {
           description:
             "Graduated Rank 1 from the Science, Technology, Engineering, and Mathematics strand.",
           image: "images/awards/academic-rank-1-2024.jpg",
-          images: ["images/awards/academic-rank-1-2024.jpg"],
+          images: ["images/awards/academic-rank-1-2024.jpg","images/awards/academic-2.jpg"],
           imageAlt: "Senior High School Rank 1 recognition",
           takeaways: [
             "Sustained strong performance across the STEM curriculum.",
@@ -190,7 +190,7 @@ export const portfolio = {
         "Gained a broader view of technology beyond traditional software development.",
         "Learned how IoT concepts translate into real industry solutions.",
       ],
-      images: [] as string[],
+      images: ["images/events/iot1.jpg","images/events/iot2.jpg"] as string[],
       proofUrl: "",
     },
     {
@@ -226,7 +226,7 @@ export const portfolio = {
         "Expanded my awareness of current AI and robotics applications.",
         "Connected classroom concepts with emerging consumer technologies.",
       ],
-      images: [] as string[],
+      images: ["images/events/wocee.jpg","images/events/wocee1.jpg","images/events/wocee3.jpg","images/events/wocee2.jpg"] as string[],
       proofUrl: "",
     },
     {
@@ -244,7 +244,7 @@ export const portfolio = {
         "Practiced structuring requirements and planning implementation with Kiro.",
         "Explored ways to refine software solutions through AI-assisted workflows.",
       ],
-      images: [] as string[],
+      images: ["images/events/kiro.jpg"] as string[],
       proofUrl: "",
     },
   ],
@@ -409,7 +409,7 @@ export const portfolio = {
       description:
         "Laurel & Ladle is an elegant food-ordering system with complete CRUD workflows for menu and order management, automatic price calculations, and a polished receipt-style confirmation for every completed order.",
       tags: ["CRUD", "Food Ordering", "Auto-calculation", "Responsive UI"],
-      image: "images/projects/laurel-and-ladle-placeholder.svg",
+      image: "images/projects/foodorderingsystem.jpg",
       fallbackImage: "images/projects/laurel-and-ladle-placeholder.svg",
       sourceUrl: "",
       liveUrl: "https://johnbenedictjavier.github.io/Food-Ordering-System/",
@@ -422,7 +422,7 @@ export const portfolio = {
       description:
         "A community management system that handles CRUD operations for resident records, streamlines official document requests, and organizes public infrastructure concerns for clearer barangay services.",
       tags: ["CRUD", "Resident Records", "Document Requests", "Civic Tech"],
-      image: "images/projects/barangay-information-system-placeholder.svg",
+      image: "images/projects/bms.jpg",
       fallbackImage: "images/projects/barangay-information-system-placeholder.svg",
       sourceUrl: "",
       liveUrl: "",
@@ -435,7 +435,7 @@ export const portfolio = {
       description:
         "A structured payroll platform for managing employee information, departments, positions, salary details, and related payroll records through dependable CRUD workflows.",
       tags: ["CRUD", "Payroll", "Employee Records", "Business Systems"],
-      image: "images/projects/payroll-management-system-placeholder.svg",
+      image: "images/projects/payroll.jpg",
       fallbackImage: "images/projects/payroll-management-system-placeholder.svg",
       sourceUrl: "",
       liveUrl: "",
