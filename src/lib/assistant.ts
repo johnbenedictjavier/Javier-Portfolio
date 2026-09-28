@@ -130,6 +130,10 @@ export function getAssistantResponse(question: string): string {
     return `Hello! I'm ${portfolio.assistant.name}. Ask me about Javier's projects, skills, education, leadership, awards, or contact details.`;
   }
 
+  if (/\b(?:who do (?:you|u) like|sino nagugustuhan mo|sino crush mo|kanino ka lang|sino nasa heart mo)\b/.test(normalized)) {
+    return "🌹";
+  }
+
   const words = new Set(normalized.split(" "));
   let bestIntent: Intent | undefined;
   let bestScore = 0;

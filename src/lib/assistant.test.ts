@@ -14,6 +14,16 @@ describe("getAssistantResponse", () => {
     expect(getAssistantResponse("Hello there")).toContain("Javi AI");
   });
 
+  it.each([
+    "Who do u like?",
+    "Sino nagugustuhan mo?",
+    "Sino crush mo?",
+    "Kanino ka lang?",
+    "Sino nasa heart mo?",
+  ])("answers romantic questions with a rose for %s", (question) => {
+    expect(getAssistantResponse(question)).toBe("🌹");
+  });
+
   it("offers supported topics for unknown questions", () => {
     expect(getAssistantResponse("What is your favorite movie?")).toContain("skills");
   });

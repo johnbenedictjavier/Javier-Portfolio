@@ -217,10 +217,12 @@ function OpeningSequence({ onComplete }: { onComplete: () => void }) {
 
 function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClose: () => void }) {
   const [activeImage, setActiveImage] = useState(0);
+  const [showProof, setShowProof] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setActiveImage(0);
+    setShowProof(false);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     closeButtonRef.current?.focus();
@@ -231,11 +233,14 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClos
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-      if (event.key === "ArrowRight" && detail.images.length > 1) {
+      if (event.key === "Escape") {
+        if (showProof) setShowProof(false);
+        else onClose();
+      }
+      if (!showProof && event.key === "ArrowRight" && detail.images.length > 1) {
         setActiveImage((current) => (current + 1) % detail.images.length);
       }
-      if (event.key === "ArrowLeft" && detail.images.length > 1) {
+      if (!showProof && event.key === "ArrowLeft" && detail.images.length > 1) {
         setActiveImage((current) => (current - 1 + detail.images.length) % detail.images.length);
       }
     };
@@ -243,7 +248,7 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClos
     return () => {
       window.removeEventListener("keydown", handleKey);
     };
-  }, [detail, onClose]);
+  }, [detail, onClose, showProof]);
 
   const hasImages = detail.images.length > 0;
   const displayedImage = hasImages && activeImage < detail.images.length ? activeImage : 0;
@@ -257,8 +262,10 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClos
         </header>
         <div className="experience-modal-grid">
           <div className="experience-gallery">
-            <div className={`experience-main-image ${hasImages ? "" : "is-placeholder"}`}>
-              {hasImages ? (
+            <div className={`experience-main-image ${hasImages || showProof ? "" : "is-placeholder"}`}>
+              {showProof && detail.proofUrl ? (
+                <img src={assetPath(detail.proofUrl)} alt={`${detail.title} certificate or proof`} />
+              ) : hasImages ? (
                 <img
                   src={assetPath(detail.images[displayedImage])}
                   alt={`${detail.imageAlt} ${displayedImage + 1}`}
@@ -269,15 +276,25 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClos
                   }}
                 />
               ) : <><Camera size={34} /><strong>Gallery ready</strong><span>Add as many photos as you want</span></>}
+              {detail.proofUrl && (
+                <button
+                  className={`experience-proof-toggle ${showProof ? "is-close" : ""}`}
+                  type="button"
+                  onClick={() => setShowProof((current) => !current)}
+                  aria-label={showProof ? "Back to event photos" : "View certificate or proof"}
+                >
+                  {showProof ? <><X size={17} /> Back to photos</> : <><Award size={17} /> View certificate</>}
+                </button>
+              )}
             </div>
-            {detail.images.length > 1 && (
+            {!showProof && detail.images.length > 1 && (
               <div className="experience-gallery-controls">
                 <button type="button" aria-label="Previous photo" onClick={() => setActiveImage((current) => (current - 1 + detail.images.length) % detail.images.length)}><ChevronLeft /></button>
                 <span>{displayedImage + 1} / {detail.images.length}</span>
                 <button type="button" aria-label="Next photo" onClick={() => setActiveImage((current) => (current + 1) % detail.images.length)}><ChevronRight /></button>
               </div>
             )}
-            {detail.images.length > 1 && <div className="experience-thumbnails">
+            {!showProof && detail.images.length > 1 && <div className="experience-thumbnails">
               {detail.images.map((image, index) => (
                 <button className={index === displayedImage ? "is-active" : ""} type="button" onClick={() => setActiveImage(index)} key={`${image}-${index}`} aria-label={`View photo ${index + 1}`}>
                   <img src={assetPath(image)} alt="" />
@@ -292,7 +309,6 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClos
             {detail.tags && <div className="experience-tags">{detail.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}
             <h3>Key takeaways</h3>
             <ul>{detail.takeaways.map((takeaway) => <li key={takeaway}><CheckCircle2 size={17} />{takeaway}</li>)}</ul>
-            {detail.proofUrl && <a className="button button-ghost experience-proof" href={assetPath(detail.proofUrl)} target="_blank" rel="noreferrer">View certificate or proof <ExternalLink size={16} /></a>}
           </div>
         </div>
       </section>
