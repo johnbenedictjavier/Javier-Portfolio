@@ -67,12 +67,25 @@ export const portfolio = {
       cards: [
         {
           ...dostSeiScholarship,
-          image: "images/awards/dost-sei-scholar.jpg",
-          images: ["images/awards/dost-sei-scholar.jpg"],
+          image: "images/awards/dost1.jpg",
+          images: ["images/awards/dost1.jpg","images/awards/dost2.jpg"],
           imageAlt: "John Benedict Javier's DOST-SEI Merit Scholarship recognition",
           takeaways: [
             "Earned national recognition for academic potential in science and technology.",
             "Strengthened my commitment to responsible, high-impact technology work.",
+          ],
+          proofUrl: "",
+          isPlaceholder: false,
+        },
+        {
+          ...dostSeiScholarship,
+          image: "images/awards/deans.jpg",
+          images: ["images/awards/deans.jpg"],
+          imageAlt: "John Benedict Javier's Deans Lister recognition",
+          takeaways: [
+            "Got 1.45 as GWA for Dean's Lister",
+            "One of two dean's lister of 2nd Year BSCS",
+            "1st Semester: Dean's Lister",
           ],
           proofUrl: "",
           isPlaceholder: false,
