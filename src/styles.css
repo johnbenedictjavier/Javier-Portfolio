@@ -3246,15 +3246,18 @@ img {
     gap: 0;
     opacity: 0;
     pointer-events: none;
+    visibility: hidden;
     transform: translateY(-12px);
     backdrop-filter: blur(20px);
-    transition: opacity 180ms ease, transform 220ms ease;
+    transition: opacity 180ms ease, transform 220ms ease, visibility 0s linear 220ms;
   }
 
   .primary-nav.is-open {
     opacity: 1;
     pointer-events: auto;
+    visibility: visible;
     transform: translateY(0);
+    transition-delay: 0s;
   }
 
   .primary-nav a {
