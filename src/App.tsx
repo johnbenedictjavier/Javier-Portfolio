@@ -174,22 +174,27 @@ type ExperienceDetail = {
 function OpeningSequence({ onComplete }: { onComplete: () => void }) {
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const timer = window.setTimeout(onComplete, reducedMotion ? 600 : 5000);
+    const timer = window.setTimeout(onComplete, reducedMotion ? 600 : 8000);
     return () => window.clearTimeout(timer);
   }, [onComplete]);
 
   return (
     <div className="opening-sequence" role="dialog" aria-modal="true" aria-label="Portfolio introduction">
       <div className="opening-atmosphere" aria-hidden="true" />
+      <div className="opening-smoke" aria-hidden="true"><i /><i /><i /></div>
       <div className="opening-grid" aria-hidden="true" />
+      <div className="opening-hud" aria-hidden="true"><i /><i /></div>
+      <div className="opening-circuit opening-circuit-left" aria-hidden="true" />
+      <div className="opening-circuit opening-circuit-right" aria-hidden="true" />
+      <div className="opening-particles" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /><i /></div>
       <div className="opening-light" aria-hidden="true" />
       <div className="opening-letterbox opening-letterbox-top" aria-hidden="true" />
       <div className="opening-letterbox opening-letterbox-bottom" aria-hidden="true" />
       <div className="opening-title-card">
         <p className="opening-kicker">A digital portfolio</p>
-        <div className="opening-mark" aria-hidden="true"><span>&lt;</span>{portfolio.initials}<span>/&gt;</span></div>
+        <div className="opening-mark" data-text={`<${portfolio.initials}/>`} aria-hidden="true"><span>&lt;</span>{portfolio.initials}<span>/&gt;</span></div>
         <div className="opening-rule" aria-hidden="true"><i /></div>
-        <h1>{portfolio.name}</h1>
+        <h1 data-text={portfolio.name}>{portfolio.name}</h1>
         <p className="opening-role">Computer Science <span>/</span> Software Engineering <span>/</span> Game Development</p>
       </div>
       <button type="button" onClick={onComplete}>Skip intro</button>

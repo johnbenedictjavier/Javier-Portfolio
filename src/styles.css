@@ -1854,7 +1854,8 @@ img {
   background: #010408;
   color: #edf7ff;
   isolation: isolate;
-  animation: introExit 550ms cubic-bezier(0.7, 0, 0.84, 0) 4.45s forwards;
+  perspective: 1200px;
+  animation: introExit 700ms cubic-bezier(0.7, 0, 0.84, 0) 7.3s forwards;
 }
 
 .opening-atmosphere {
@@ -1865,8 +1866,50 @@ img {
     radial-gradient(circle at 68% 58%, rgba(85, 66, 185, 0.12), transparent 27%),
     linear-gradient(115deg, transparent 38%, rgba(102, 227, 255, 0.05) 50%, transparent 62%);
   filter: blur(2px);
-  animation: introAtmosphere 5s ease-out both;
+  animation: introAtmosphere 8s ease-out both;
   pointer-events: none;
+}
+
+.opening-smoke {
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.opening-smoke i {
+  position: absolute;
+  width: min(72vw, 900px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 42%, rgba(72, 164, 198, 0.2), transparent 24%),
+    radial-gradient(circle at 58% 34%, rgba(70, 88, 158, 0.2), transparent 29%),
+    radial-gradient(circle at 48% 62%, rgba(31, 79, 103, 0.3), transparent 38%);
+  filter: blur(44px);
+  mix-blend-mode: screen;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.opening-smoke i:nth-child(1) {
+  top: 4%;
+  left: -10%;
+  animation: introSmokeLeft 8s ease-in-out both;
+}
+
+.opening-smoke i:nth-child(2) {
+  right: -7%;
+  bottom: -12%;
+  animation: introSmokeRight 8s ease-in-out 350ms both;
+}
+
+.opening-smoke i:nth-child(3) {
+  top: 20%;
+  left: 30%;
+  width: min(55vw, 690px);
+  animation: introSmokeCenter 7s ease-in-out 800ms both;
 }
 
 .opening-atmosphere::after {
@@ -1889,9 +1932,114 @@ img {
   mask-image: linear-gradient(to bottom, transparent, black 45%, transparent 95%);
   transform: perspective(600px) rotateX(67deg);
   transform-origin: center top;
-  animation: introGrid 5s ease-out both;
+  animation: introGrid 8s ease-out both;
   pointer-events: none;
 }
+
+.opening-hud {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: min(72vw, 760px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(102, 227, 255, 0.08);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.7) rotateX(66deg);
+  animation: introHudReveal 2.4s cubic-bezier(0.16, 1, 0.3, 1) 900ms both;
+  pointer-events: none;
+}
+
+.opening-hud::before,
+.opening-hud::after,
+.opening-hud i {
+  position: absolute;
+  border-radius: 50%;
+  content: "";
+}
+
+.opening-hud::before {
+  inset: 7%;
+  border: 1px dashed rgba(102, 227, 255, 0.18);
+  animation: introHudSpin 18s linear infinite;
+}
+
+.opening-hud::after {
+  inset: 19%;
+  border: 1px solid rgba(143, 124, 255, 0.15);
+  border-right-color: rgba(143, 124, 255, 0.58);
+  border-left-color: rgba(102, 227, 255, 0.4);
+  box-shadow: inset 0 0 45px rgba(47, 128, 167, 0.06);
+  animation: introHudSpinReverse 13s linear infinite;
+}
+
+.opening-hud i:first-child {
+  inset: -6%;
+  border-top: 2px solid rgba(102, 227, 255, 0.42);
+  border-right: 2px solid transparent;
+  animation: introHudSpin 11s linear infinite;
+}
+
+.opening-hud i:last-child {
+  inset: 30%;
+  border-bottom: 1px solid rgba(143, 124, 255, 0.55);
+  border-left: 1px solid transparent;
+  animation: introHudSpinReverse 8s linear infinite;
+}
+
+.opening-circuit {
+  position: absolute;
+  top: 19%;
+  bottom: 19%;
+  z-index: 1;
+  width: min(28vw, 400px);
+  background:
+    radial-gradient(circle, rgba(102, 227, 255, 0.72) 0 2px, transparent 3px) 0 0 / 72px 72px,
+    linear-gradient(90deg, transparent 49%, rgba(102, 227, 255, 0.12) 50%, transparent 51%) 0 0 / 72px 72px,
+    linear-gradient(transparent 49%, rgba(102, 227, 255, 0.12) 50%, transparent 51%) 0 0 / 72px 72px;
+  mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent), linear-gradient(to right, black, transparent 88%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.opening-circuit-left {
+  left: 0;
+  animation: introCircuitLeft 2s ease 1.4s both;
+}
+
+.opening-circuit-right {
+  right: 0;
+  mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent), linear-gradient(to left, black, transparent 88%);
+  animation: introCircuitRight 2s ease 1.4s both;
+}
+
+.opening-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.opening-particles i {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #9cecff;
+  box-shadow: 0 0 10px #66e3ff;
+  opacity: 0;
+  animation: introParticle 5s ease-in-out infinite;
+}
+
+.opening-particles i:nth-child(1) { top: 18%; left: 16%; animation-delay: 900ms; }
+.opening-particles i:nth-child(2) { top: 29%; left: 82%; animation-delay: 1.5s; }
+.opening-particles i:nth-child(3) { top: 69%; left: 12%; animation-delay: 2.1s; }
+.opening-particles i:nth-child(4) { top: 76%; left: 87%; animation-delay: 2.7s; }
+.opening-particles i:nth-child(5) { top: 12%; left: 62%; animation-delay: 3.3s; }
+.opening-particles i:nth-child(6) { top: 84%; left: 57%; animation-delay: 1.8s; }
+.opening-particles i:nth-child(7) { top: 46%; left: 7%; animation-delay: 3.9s; }
+.opening-particles i:nth-child(8) { top: 53%; left: 93%; animation-delay: 2.4s; }
 
 .opening-light {
   position: absolute;
@@ -1902,7 +2050,7 @@ img {
   background: linear-gradient(90deg, transparent 10%, rgba(102, 227, 255, 0.4), #d5f8ff, rgba(143, 124, 255, 0.42), transparent 90%);
   box-shadow: 0 0 14px rgba(102, 227, 255, 0.6), 0 0 70px rgba(64, 157, 255, 0.24);
   opacity: 0;
-  animation: introLight 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 1.25s both;
+  animation: introLight 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.1s both;
   pointer-events: none;
 }
 
@@ -1931,7 +2079,9 @@ img {
   z-index: 2;
   width: min(100% - 40px, 1100px);
   padding: 48px 0;
+  perspective: 1000px;
   text-align: center;
+  transform-style: preserve-3d;
 }
 
 .opening-kicker {
@@ -1941,17 +2091,41 @@ img {
   letter-spacing: 0.38em;
   opacity: 0;
   text-transform: uppercase;
-  animation: introKicker 900ms ease 300ms both;
+  animation: introKicker 1.1s ease 650ms both;
 }
 
 .opening-mark {
+  position: relative;
+  width: fit-content;
+  margin-inline: auto;
   color: #f3fbff;
   font: 700 clamp(3.6rem, 9vw, 7.8rem)/0.85 var(--font-display);
   letter-spacing: -0.09em;
   opacity: 0;
-  text-shadow: 0 0 42px rgba(102, 227, 255, 0.16);
-  transform: scale(1.18);
-  animation: introMark 1.15s cubic-bezier(0.16, 1, 0.3, 1) 950ms both;
+  isolation: isolate;
+  text-shadow: 0 2px 0 #8adcf1, 0 7px 0 #18374e, 0 13px 24px rgba(0, 0, 0, 0.8), 0 0 52px rgba(102, 227, 255, 0.24);
+  transform-style: preserve-3d;
+  animation: introMark 2s cubic-bezier(0.16, 1, 0.3, 1) 1.7s both;
+}
+
+.opening-mark::before,
+.opening-mark::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: attr(data-text);
+  pointer-events: none;
+}
+
+.opening-mark::before {
+  color: #183b57;
+  transform: translate3d(10px, 12px, -45px);
+}
+
+.opening-mark::after {
+  color: rgba(143, 124, 255, 0.34);
+  filter: blur(1px);
+  transform: translate3d(-5px, 7px, -24px);
 }
 
 .opening-mark span {
@@ -1974,18 +2148,42 @@ img {
   background: linear-gradient(90deg, transparent, #66e3ff, #8f7cff, transparent);
   box-shadow: 0 0 14px rgba(102, 227, 255, 0.8);
   transform: scaleX(0);
-  animation: introRule 850ms cubic-bezier(0.22, 1, 0.36, 1) 1.55s both;
+  animation: introRule 1.1s cubic-bezier(0.22, 1, 0.36, 1) 3.35s both;
 }
 
 .opening-title-card h1 {
+  position: relative;
+  width: fit-content;
   margin: 0;
+  margin-inline: auto;
   color: #edf7ff;
   font: 600 clamp(1.5rem, 4.1vw, 3.5rem)/1.05 var(--font-display);
   letter-spacing: 0.18em;
   opacity: 0;
+  isolation: isolate;
   text-transform: uppercase;
-  transform: translateY(20px);
-  animation: introName 1s cubic-bezier(0.16, 1, 0.3, 1) 1.8s both;
+  text-shadow: 0 2px 0 #68899b, 0 5px 0 #172c3a, 0 10px 24px rgba(0, 0, 0, 0.8);
+  transform-style: preserve-3d;
+  animation: introName 1.6s cubic-bezier(0.16, 1, 0.3, 1) 3.8s both;
+}
+
+.opening-title-card h1::before,
+.opening-title-card h1::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: attr(data-text);
+  pointer-events: none;
+}
+
+.opening-title-card h1::before {
+  color: #173246;
+  transform: translate3d(7px, 8px, -34px);
+}
+
+.opening-title-card h1::after {
+  color: rgba(78, 151, 190, 0.22);
+  transform: translate3d(-3px, 4px, -18px);
 }
 
 .opening-role {
@@ -1995,7 +2193,7 @@ img {
   letter-spacing: 0.19em;
   opacity: 0;
   text-transform: uppercase;
-  animation: introRole 900ms ease 2.45s both;
+  animation: introRole 1.1s ease 5.25s both;
 }
 
 .opening-role span {
@@ -3289,10 +3487,44 @@ img {
   35% { opacity: 1; }
   100% { opacity: 0.72; transform: scale(1) translate3d(1%, -1%, 0); }
 }
+@keyframes introSmokeLeft {
+  0% { opacity: 0; transform: translate3d(-12%, 12%, 0) scale(0.78) rotate(-8deg); }
+  35% { opacity: 0.78; }
+  100% { opacity: 0.32; transform: translate3d(22%, -8%, 0) scale(1.18) rotate(12deg); }
+}
+@keyframes introSmokeRight {
+  0% { opacity: 0; transform: translate3d(15%, 10%, 0) scale(0.72) rotate(10deg); }
+  38% { opacity: 0.72; }
+  100% { opacity: 0.28; transform: translate3d(-20%, -12%, 0) scale(1.2) rotate(-9deg); }
+}
+@keyframes introSmokeCenter {
+  0% { opacity: 0; transform: translate3d(0, 16%, 0) scale(0.65); }
+  45% { opacity: 0.48; }
+  100% { opacity: 0.15; transform: translate3d(-5%, -10%, 0) scale(1.32); }
+}
 @keyframes introGrid {
   0% { opacity: 0; transform: perspective(600px) rotateX(67deg) translateY(12%); }
   45% { opacity: 0.75; }
   100% { opacity: 0.3; transform: perspective(600px) rotateX(67deg) translateY(-4%); }
+}
+@keyframes introHudReveal {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.62) rotateX(78deg) rotateZ(-18deg); }
+  to { opacity: 0.72; transform: translate(-50%, -50%) scale(1) rotateX(66deg) rotateZ(0); }
+}
+@keyframes introHudSpin { to { transform: rotate(360deg); } }
+@keyframes introHudSpinReverse { to { transform: rotate(-360deg); } }
+@keyframes introCircuitLeft {
+  from { opacity: 0; transform: translateX(-35px); }
+  to { opacity: 0.42; transform: translateX(0); }
+}
+@keyframes introCircuitRight {
+  from { opacity: 0; transform: translateX(35px); }
+  to { opacity: 0.42; transform: translateX(0); }
+}
+@keyframes introParticle {
+  0% { opacity: 0; transform: translate3d(0, 24px, 0) scale(0.4); }
+  38% { opacity: 0.9; }
+  100% { opacity: 0; transform: translate3d(8px, -65px, 0) scale(1.3); }
 }
 @keyframes introLight {
   0% { opacity: 0; transform: scaleX(0.05); }
@@ -3306,13 +3538,15 @@ img {
   to { opacity: 1; letter-spacing: 0.38em; transform: translateY(0); }
 }
 @keyframes introMark {
-  from { filter: blur(18px); opacity: 0; transform: scale(1.18); }
-  to { filter: blur(0); opacity: 1; transform: scale(1); }
+  0% { filter: blur(20px); opacity: 0; transform: translate3d(0, 55px, -380px) rotateX(72deg) rotateY(-32deg) scale(0.7); }
+  62% { filter: blur(0); opacity: 1; transform: translate3d(0, -4px, 20px) rotateX(-8deg) rotateY(7deg) scale(1.04); }
+  100% { filter: blur(0); opacity: 1; transform: translate3d(0, 0, 0) rotateX(0) rotateY(0) scale(1); }
 }
 @keyframes introRule { to { transform: scaleX(1); } }
 @keyframes introName {
-  from { filter: blur(7px); opacity: 0; transform: translateY(20px); }
-  to { filter: blur(0); opacity: 1; transform: translateY(0); }
+  0% { filter: blur(10px); opacity: 0; transform: translate3d(0, 38px, -180px) rotateX(-65deg) rotateY(12deg); }
+  68% { filter: blur(0); opacity: 1; transform: translate3d(0, -2px, 10px) rotateX(5deg) rotateY(-2deg); }
+  100% { filter: blur(0); opacity: 1; transform: translate3d(0, 0, 0) rotateX(0) rotateY(0); }
 }
 @keyframes introRole {
   from { opacity: 0; transform: translateY(8px); }
@@ -3924,6 +4158,23 @@ img {
 
   .opening-title-card {
     width: calc(100% - 30px);
+  }
+
+  .opening-smoke i {
+    width: 110vw;
+    filter: blur(36px);
+  }
+
+  .opening-hud {
+    width: 112vw;
+  }
+
+  .opening-circuit {
+    display: none;
+  }
+
+  .opening-particles i:nth-child(n + 6) {
+    display: none;
   }
 
   .opening-kicker {
