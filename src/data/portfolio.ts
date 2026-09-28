@@ -78,10 +78,10 @@ export const portfolio = {
         },
         {
           date: "March 2026",
-          title: "Dean's Lister",
+          title: "Dean’s Lister",
           organization: "Lipa City Colleges",
           description:
-            "2nd Year BSCS | 1st Semester: Achieve a GWA of 1.39",
+            "2nd Year BSCS, 1st Semester: Earned a place on the Dean’s List with a General Weighted Average of 1.375, continuing my academic performance into my second year in Computer Science.",
           image: "images/awards/deans2nd.jpg",
           images: ["images/awards/deans2nd.jpg"],
           imageAlt: "John Benedict Javier's Deans Lister recognition",
@@ -98,9 +98,9 @@ export const portfolio = {
           title: "Dean's Lister",
           organization: "Lipa City Colleges",
           description:
-            "1st Year BSCS | 2nd Semester: Achieve a GWA of 1.45",
-          image: "images/awards/deans.jpg",
-          images: ["images/awards/deans.jpg"],
+            "1st Year, 2nd Semester: Earned a place on the Dean’s List with a General Weighted Average of 1.45, maintaining strong academic performance throughout my first year in Computer Science.",
+          image: "images/awards/deans2.jpg",
+          images: ["images/awards/deans.jpg","images/awards/deans2.jpg"],
           imageAlt: "John Benedict Javier's Deans Lister recognition",
           takeaways: [
             "Got 1.45 as GWA for Dean's Lister",
@@ -115,7 +115,7 @@ export const portfolio = {
           title: "Dean's Lister",
           organization: "Lipa City Colleges",
           description:
-            "1st Year BSCS | 1st Semester: Achieve a GWA of 1.45",
+            "1st Year, 1st Semester: Recognized for academic excellence during my first semester in the Bachelor of Science in Computer Science program, earning a General Weighted Average of 1.45.",
           image: "images/awards/deans1st.jpg",
           images: ["images/awards/deans1st.jpg"],
           imageAlt: "John Benedict Javier's Deans Lister recognition",
@@ -243,7 +243,7 @@ export const portfolio = {
         "Learned how IoT concepts translate into real industry solutions.",
       ],
       images: ["images/events/iot1.jpg","images/events/iot2.jpg"] as string[],
-      proofUrl: "",
+      proofUrl: "images/events/iotcert.jpg",
     },
     {
       year: "2025",
@@ -279,7 +279,7 @@ export const portfolio = {
         "Connected classroom concepts with emerging consumer technologies.",
       ],
       images: ["images/events/wocee.jpg","images/events/wocee1.jpg","images/events/wocee5.jpg","images/events/wocee3.jpg","images/events/wocee2.jpg","images/events/wocee4.jpg"] as string[],
-      proofUrl: "",
+      proofUrl: "images/events/woceecert.jpg",
     },
     {
       year: "2026",
