@@ -172,43 +172,25 @@ type ExperienceDetail = {
 };
 
 function OpeningSequence({ onComplete }: { onComplete: () => void }) {
-  const [progress, setProgress] = useState(0);
-
   useEffect(() => {
-    const progressTimer = window.setInterval(() => {
-      setProgress((current) => Math.min(current + 2, 100));
-    }, 38);
-    const timer = window.setTimeout(onComplete, 2800);
-    return () => {
-      window.clearInterval(progressTimer);
-      window.clearTimeout(timer);
-    };
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const timer = window.setTimeout(onComplete, reducedMotion ? 600 : 5000);
+    return () => window.clearTimeout(timer);
   }, [onComplete]);
 
-  const loadingLabel = progress < 34
-    ? "Loading interface modules"
-    : progress < 68
-      ? "Calibrating interactions"
-      : progress < 100
-        ? "Preparing experience"
-        : "System ready";
-
   return (
-    <div className="opening-sequence" role="dialog" aria-modal="true" aria-label="Portfolio loading">
+    <div className="opening-sequence" role="dialog" aria-modal="true" aria-label="Portfolio introduction">
+      <div className="opening-atmosphere" aria-hidden="true" />
       <div className="opening-grid" aria-hidden="true" />
-      <div className="opening-scan" aria-hidden="true" />
-      <div className="opening-terminal">
-        <div className="opening-status"><span /> PORTFOLIO_OS / BOOT_SEQUENCE</div>
-        <div className="opening-loader-mark" aria-hidden="true"><i /><i /><i /></div>
-        <p className="opening-command" aria-live="polite">&gt; {loadingLabel}</p>
-        <div className="opening-percentage"><strong>{String(progress).padStart(3, "0")}</strong><span>%</span></div>
-        <div className="opening-progress"><i style={{ transform: `scaleX(${progress / 100})` }} /></div>
-        <div className="opening-modules" aria-hidden="true">
-          <span className={progress >= 24 ? "is-ready" : ""}>UI_CORE</span>
-          <span className={progress >= 52 ? "is-ready" : ""}>DATA_LAYER</span>
-          <span className={progress >= 82 ? "is-ready" : ""}>MOTION_SYS</span>
-        </div>
-        <p className={`opening-ready ${progress === 100 ? "is-visible" : ""}`}>ALL SYSTEMS READY // ENTERING EXPERIENCE</p>
+      <div className="opening-light" aria-hidden="true" />
+      <div className="opening-letterbox opening-letterbox-top" aria-hidden="true" />
+      <div className="opening-letterbox opening-letterbox-bottom" aria-hidden="true" />
+      <div className="opening-title-card">
+        <p className="opening-kicker">A digital portfolio</p>
+        <div className="opening-mark" aria-hidden="true"><span>&lt;</span>{portfolio.initials}<span>/&gt;</span></div>
+        <div className="opening-rule" aria-hidden="true"><i /></div>
+        <h1>{portfolio.name}</h1>
+        <p className="opening-role">Computer Science <span>/</span> Software Engineering <span>/</span> Game Development</p>
       </div>
       <button type="button" onClick={onComplete}>Skip intro</button>
     </div>
