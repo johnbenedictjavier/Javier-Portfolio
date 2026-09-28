@@ -265,14 +265,14 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail | null;
                   }}
                 />
               ) : <><Camera size={34} /><strong>Gallery ready</strong><span>Add as many photos as you want</span></>}
-              {detail.images.length > 1 && (
-                <div className="experience-gallery-controls">
-                  <button type="button" aria-label="Previous photo" onClick={() => setActiveImage((activeImage - 1 + detail.images.length) % detail.images.length)}><ChevronLeft /></button>
-                  <span>{activeImage + 1} / {detail.images.length}</span>
-                  <button type="button" aria-label="Next photo" onClick={() => setActiveImage((activeImage + 1) % detail.images.length)}><ChevronRight /></button>
-                </div>
-              )}
             </div>
+            {detail.images.length > 1 && (
+              <div className="experience-gallery-controls">
+                <button type="button" aria-label="Previous photo" onClick={() => setActiveImage((activeImage - 1 + detail.images.length) % detail.images.length)}><ChevronLeft /></button>
+                <span>{activeImage + 1} / {detail.images.length}</span>
+                <button type="button" aria-label="Next photo" onClick={() => setActiveImage((activeImage + 1) % detail.images.length)}><ChevronRight /></button>
+              </div>
+            )}
             {detail.images.length > 1 && <div className="experience-thumbnails">
               {detail.images.map((image, index) => (
                 <button className={index === activeImage ? "is-active" : ""} type="button" onClick={() => setActiveImage(index)} key={`${image}-${index}`} aria-label={`View photo ${index + 1}`}>
@@ -591,12 +591,10 @@ function About() {
               <MapPin size={17} /> Based in {portfolio.location}
             </div>
           </div>
-          <div className="principles-grid">
+          <div className="principles-grid" data-reveal>
             {portfolio.about.principles.map((principle, index) => (
               <button
                 className={`principle-card interactive-card ${activePrinciple === index ? "is-active" : ""}`}
-                data-reveal
-                style={revealDelay(index * 90)}
                 type="button"
                 aria-expanded={activePrinciple === index}
                 aria-controls="mobile-principle-detail"
@@ -813,7 +811,15 @@ function EventsSection({ onOpen }: { onOpen: (detail: ExperienceDetail) => void 
         </div>
         <div className="events-timeline" data-reveal ref={timelineRef}>
           {portfolio.events.map((event, index) => (
-            <article className="event-card" data-reveal style={revealDelay(index * 120)} key={event.title}>
+            <article
+              className="event-card"
+              data-reveal
+              style={{
+                ...revealDelay(index * 120),
+                "--event-image": `url(${assetPath(event.images[0] ?? "images/events/events-background-placeholder.svg")})`,
+              } as CSSProperties}
+              key={event.title}
+            >
               <div className="event-year"><span>{event.year}</span><i /></div>
               <div className="event-card-content">
                 <div className="event-icon"><CalendarDays size={20} /></div>

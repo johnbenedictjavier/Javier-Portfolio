@@ -319,12 +319,15 @@ export const portfolio = {
         "Led the club, organized mathematics-related activities, and coordinated officers and members.",
     },
   ],
-  professionalExperience: [] as Array<{
-    period: string;
-    role: string;
-    organization: string;
-    detail: string;
-  }>,
+  professionalExperience: [
+    {
+      period: "March 19, 2025 – May 23, 2025",
+      role: "Freelance Software Developer",
+      organization: "Chicken Ordering & Management System — Client Project",
+      detail:
+        "Developed a kiosk-style chicken ordering and management system for a client using Python, Flask, and HTML. Built the backend application logic with Flask and Python while using HTML to structure the user interface. The system incorporated CRUD (Create, Read, Update, Delete) operations for managing system data and provided a kiosk-inspired ordering experience. Technologies: Python, Flask, HTML, CRUD, Web Development. Project type: Client Project.",
+    },
+  ],
   skillGroups: [
     {
       label: "Languages",
