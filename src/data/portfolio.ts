@@ -158,7 +158,7 @@ export const portfolio = {
           description:
             "Represented our school in San Juan, Batangas during a 12-hour event with an eight-hour main development challenge.",
           image: "images/awards/hackaton1.jpg",
-          images: ["images/awards/hackaton1.jpg","images/awards/hackaton1-1.jpg"],
+          images: ["images/awards/hackaton1.jpg","images/awards/hackaton1-1.jpg","images/awards/hackaton1-2.jpg"],
           imageAlt: "BEC Hackathon school representatives",
           takeaways: [
             "TEAM RORALQ",
