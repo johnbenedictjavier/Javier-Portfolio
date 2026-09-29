@@ -30,7 +30,7 @@ jobs:
       - name: Test
         run: npm test
       - name: Build
-        run: npm run build
+        run: npm run build -- --mode github
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
