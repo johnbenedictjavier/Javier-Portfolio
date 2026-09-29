@@ -174,7 +174,7 @@ type ExperienceDetail = {
 function OpeningSequence({ onComplete }: { onComplete: () => void }) {
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const timer = window.setTimeout(onComplete, reducedMotion ? 600 : 8000);
+    const timer = window.setTimeout(onComplete, reducedMotion ? 600 : 5000);
     return () => window.clearTimeout(timer);
   }, [onComplete]);
 
