@@ -124,7 +124,7 @@ export const portfolio = {
             "Only one dean lister of 1st Year BSCS",
             "1st Semester of 1st Year",
           ],
-          proofUrl: "",
+          proofUrl: "images/awards/deans1st.jpg",
           isPlaceholder: false,
         },
       ],
