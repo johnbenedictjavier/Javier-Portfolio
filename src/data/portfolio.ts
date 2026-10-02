@@ -99,15 +99,15 @@ export const portfolio = {
           organization: "Lipa City Colleges",
           description:
             "1st Year, 2nd Semester: Earned a place on the Dean’s List with a General Weighted Average of 1.45, maintaining strong academic performance throughout my first year in Computer Science.",
-          image: "images/awards/deans2.jpg",
-          images: ["images/awards/deans.jpg","images/awards/deans2.jpg"],
+          image: "images/awards/deans.jpg",
+          images: ["images/awards/deans.jpg"],
           imageAlt: "John Benedict Javier's Deans Lister recognition",
           takeaways: [
             "Got 1.45 as GWA for Dean's Lister",
             "One of two dean's lister of 1st Year BSCS",
             "2nd Semester of 1st Year",
           ],
-          proofUrl: "",
+          proofUrl: "images/awards/deans2.jpg",
           isPlaceholder: false,
         },
         {
@@ -148,7 +148,7 @@ export const portfolio = {
             "Turned an operational problem into a working digital concept.",
             "Practiced rapid collaboration and responsible AI-assisted development.",
           ],
-          proofUrl: "",
+          proofUrl: "images/awards/hackaton-2-cert.jpg",
           isPlaceholder: false,
         },
         {
