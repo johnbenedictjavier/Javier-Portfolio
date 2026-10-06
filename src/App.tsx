@@ -225,16 +225,20 @@ function AutoPanImage({ src, alt, className = "", onError }: AutoPanImageProps) 
     const image = imageRef.current;
     if (!viewport || !image || !image.naturalWidth || !image.naturalHeight) return;
 
-    const scale = Math.max(
+    const coverScale = Math.max(
       viewport.clientWidth / image.naturalWidth,
       viewport.clientHeight / image.naturalHeight,
     );
+    // Add a small overscan so images with a matching aspect ratio can still pan.
+    const scale = coverScale * 1.025;
     image.style.width = `${Math.ceil(image.naturalWidth * scale)}px`;
     image.style.height = `${Math.ceil(image.naturalHeight * scale)}px`;
+    programmaticScrollUntil.current = performance.now() + 200;
     viewport.scrollLeft = 0;
     viewport.scrollTop = 0;
     direction.current = 1;
     axis.current = viewport.scrollHeight - viewport.clientHeight >= viewport.scrollWidth - viewport.clientWidth ? "y" : "x";
+    lastFrameTime.current = null;
     setImageReady(true);
   };
 
@@ -264,13 +268,14 @@ function AutoPanImage({ src, alt, className = "", onError }: AutoPanImageProps) 
       lastFrameTime.current = time;
 
       if (performance.now() >= manualPauseUntil.current) {
-        const maximum = axis.current === "y"
-          ? viewport.scrollHeight - viewport.clientHeight
-          : viewport.scrollWidth - viewport.clientWidth;
+        const horizontalOverflow = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+        const verticalOverflow = Math.max(0, viewport.scrollHeight - viewport.clientHeight);
+        const maximum = Math.max(horizontalOverflow, verticalOverflow);
         if (maximum > 1) {
+          axis.current = verticalOverflow >= horizontalOverflow ? "y" : "x";
           const current = axis.current === "y" ? viewport.scrollTop : viewport.scrollLeft;
-          // Keep short pans from completing too quickly while preserving the existing speed cap for long images.
-          const pixelsPerMillisecond = Math.min(0.018, maximum / 45000);
+          // Keep the travel time consistent so long images do not crawl.
+          const pixelsPerMillisecond = maximum / 15000;
           let next = current + (direction.current * elapsed * pixelsPerMillisecond);
           if (next >= maximum) {
             next = maximum;
@@ -1178,6 +1183,7 @@ function EventCard({ event, index, onOpen }: { event: EventItem; index: number; 
   const [activeImage, setActiveImage] = useState(0);
   const [paused, setPaused] = useState(false);
   const imageCount = event.images.length;
+  const descriptionIsLong = event.description.length > 150;
   const displayedImage = event.images[activeImage % imageCount] ?? "images/events/events-background-placeholder.svg";
 
   useEffect(() => {
@@ -1217,7 +1223,7 @@ function EventCard({ event, index, onOpen }: { event: EventItem; index: number; 
           <div className="event-icon"><CalendarDays size={20} /></div>
           <small>{event.date} // {event.venue}</small>
           <h3>{event.shortTitle}</h3>
-          <p>{event.description}</p>
+          <p className={descriptionIsLong ? "is-truncated" : undefined}>{event.description}</p>
           <div className="event-tags">{event.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
           <button
             className="view-experience"
@@ -1236,7 +1242,7 @@ function EventCard({ event, index, onOpen }: { event: EventItem; index: number; 
               proofUrl: event.proofUrl,
             })}
           >
-            View experience <ArrowUpRight size={16} />
+            {descriptionIsLong ? "See more." : "View experience"} <ArrowUpRight size={16} />
           </button>
         </div>
       </div>
