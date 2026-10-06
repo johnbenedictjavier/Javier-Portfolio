@@ -137,8 +137,8 @@ export const portfolio = {
           organization: "Lipa City Colleges",
           description:
             "1st Year, 1st Semester: Recognized for academic excellence during my first semester in the Bachelor of Science in Computer Science program, earning a General Weighted Average of 1.45.",
-          image: "images/awards/deans1st.jpg",
-          images: ["images/awards/deans1st.jpg"],
+          image: "images/awards/recognition-placeholder.svg",
+          images: [],
           imageAlt: "John Benedict Javier's Deans Lister recognition",
           takeaways: [
             "Got 1.45 as GWA for Dean's Lister",

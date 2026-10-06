@@ -404,6 +404,9 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClos
   const [showProof, setShowProof] = useState(false);
   const [galleryPaused, setGalleryPaused] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const certificateCloseButtonRef = useRef<HTMLButtonElement>(null);
+  const proofToggleRef = useRef<HTMLButtonElement>(null);
+  const proofWasOpen = useRef(false);
   const galleryPointerStart = useRef<number | null>(null);
 
   useEffect(() => {
@@ -417,6 +420,16 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClos
       document.body.style.overflow = previousOverflow;
     };
   }, [detail]);
+
+  useEffect(() => {
+    if (showProof) {
+      proofWasOpen.current = true;
+      certificateCloseButtonRef.current?.focus();
+    } else if (proofWasOpen.current) {
+      proofWasOpen.current = false;
+      proofToggleRef.current?.focus();
+    }
+  }, [showProof]);
 
   useEffect(() => {
     if (showProof || galleryPaused || detail.images.length < 2) return;
@@ -455,93 +468,122 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClos
   };
 
   return (
-    <div className="experience-modal-backdrop" onPointerDown={(event) => event.target === event.currentTarget && onClose()}>
-      <section className="experience-modal" role="dialog" aria-modal="true" aria-labelledby="experience-title">
-        <header className="experience-modal-header">
-          <div><small>{detail.label}</small><span>{detail.date}</span></div>
-          <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Close experience"><X size={21} /></button>
-        </header>
-        <div className="experience-modal-grid">
-          <div
-            className="experience-gallery"
-            onPointerEnter={(event) => {
-              if (event.pointerType === "mouse") setGalleryPaused(true);
-            }}
-            onPointerLeave={() => setGalleryPaused(false)}
-            onFocusCapture={() => setGalleryPaused(true)}
-            onBlurCapture={(event) => {
-              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setGalleryPaused(false);
-            }}
-          >
+    <>
+      <div className="experience-modal-backdrop" onPointerDown={(event) => event.target === event.currentTarget && onClose()}>
+        <section className="experience-modal" role="dialog" aria-modal="true" aria-labelledby="experience-title">
+          <header className="experience-modal-header">
+            <div><small>{detail.label}</small><span>{detail.date}</span></div>
+            <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Close experience"><X size={21} /></button>
+          </header>
+          <div className="experience-modal-grid">
             <div
-              className={`experience-main-image ${hasImages || showProof ? "" : "is-placeholder"} ${showProof ? "is-proof" : ""}`}
-              onPointerDown={(event) => {
-                if (event.pointerType !== "mouse") galleryPointerStart.current = event.clientX;
+              className="experience-gallery"
+              onPointerEnter={(event) => {
+                if (event.pointerType === "mouse") setGalleryPaused(true);
               }}
-              onPointerUp={(event) => {
-                if (galleryPointerStart.current === null) return;
-                const distance = event.clientX - galleryPointerStart.current;
-                galleryPointerStart.current = null;
-                if (showProof || detail.images.length < 2) return;
-                if (Math.abs(distance) >= 45) changeImage(distance < 0 ? 1 : -1);
+              onPointerLeave={() => setGalleryPaused(false)}
+              onFocusCapture={() => setGalleryPaused(true)}
+              onBlurCapture={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setGalleryPaused(false);
               }}
-              onPointerCancel={() => { galleryPointerStart.current = null; }}
             >
-              {showProof && detail.proofUrl ? (
-                proofIsPdf ? (
-                  <iframe src={proofUrl} title={`${detail.title} certificate or proof`} />
-                ) : (
-                  <AutoPanImage className="experience-proof-scroll" src={proofUrl} alt={`${detail.title} certificate or proof`} />
-                )
-              ) : hasImages ? (
-                <AutoPanImage
-                  key={`${detail.title}-${displayedImage}`}
-                  src={assetPath(detail.images[displayedImage])}
-                  alt={`${detail.imageAlt} ${displayedImage + 1}`}
-                  onError={(event) => {
-                    if (!detail.fallbackImage || event.currentTarget.dataset.fallback) return;
-                    event.currentTarget.dataset.fallback = "true";
-                    event.currentTarget.src = assetPath(detail.fallbackImage);
-                  }}
-                />
-              ) : <><Camera size={34} /><strong>Gallery ready</strong><span>Add as many photos as you want</span></>}
-              {detail.proofUrl && (
-                <button
-                  className={`experience-proof-toggle ${showProof ? "is-close" : ""}`}
-                  type="button"
-                  onClick={() => setShowProof((current) => !current)}
-                  aria-label={showProof ? "Back to event photos" : "View certificate or proof"}
-                >
-                  {showProof ? <><X size={17} /> Back to photos</> : <><Award size={17} /> View certificate</>}
-                </button>
+              <div
+                className={`experience-main-image ${hasImages ? "" : "is-placeholder"}`}
+                onPointerDown={(event) => {
+                  if (event.pointerType !== "mouse") galleryPointerStart.current = event.clientX;
+                }}
+                onPointerUp={(event) => {
+                  if (galleryPointerStart.current === null) return;
+                  const distance = event.clientX - galleryPointerStart.current;
+                  galleryPointerStart.current = null;
+                  if (showProof || detail.images.length < 2) return;
+                  if (Math.abs(distance) >= 45) changeImage(distance < 0 ? 1 : -1);
+                }}
+                onPointerCancel={() => { galleryPointerStart.current = null; }}
+              >
+                {hasImages ? (
+                  <AutoPanImage
+                    key={`${detail.title}-${displayedImage}`}
+                    src={assetPath(detail.images[displayedImage])}
+                    alt={`${detail.imageAlt} ${displayedImage + 1}`}
+                    onError={(event) => {
+                      if (!detail.fallbackImage || event.currentTarget.dataset.fallback) return;
+                      event.currentTarget.dataset.fallback = "true";
+                      event.currentTarget.src = assetPath(detail.fallbackImage);
+                    }}
+                  />
+                ) : <><Camera size={34} /><strong>Gallery ready</strong><span>Add as many photos as you want</span></>}
+                {detail.proofUrl && (
+                  <button
+                    ref={proofToggleRef}
+                    className="experience-proof-toggle"
+                    type="button"
+                    onClick={() => setShowProof(true)}
+                    aria-haspopup="dialog"
+                    aria-expanded={showProof}
+                    aria-controls="certificate-lightbox"
+                    aria-label="View certificate or proof"
+                  >
+                    <Award size={17} /> View certificate
+                  </button>
+                )}
+              </div>
+              {!showProof && detail.images.length > 1 && (
+                <div className="experience-gallery-controls">
+                  <button type="button" aria-label="Previous photo" onClick={() => changeImage(-1)}><ChevronLeft /></button>
+                  <span aria-live="polite">{displayedImage + 1} / {detail.images.length}</span>
+                  <button type="button" aria-label="Next photo" onClick={() => changeImage(1)}><ChevronRight /></button>
+                </div>
+              )}
+              {!showProof && detail.images.length > 1 && <div className="experience-thumbnails">
+                {detail.images.map((image, index) => (
+                  <button className={index === displayedImage ? "is-active" : ""} type="button" onClick={() => setActiveImage(index)} key={`${image}-${index}`} aria-label={`View photo ${index + 1}`}>
+                    <img src={assetPath(image)} alt="" loading="lazy" decoding="async" />
+                  </button>
+                ))}
+              </div>}
+            </div>
+            <div className="experience-copy">
+              <p className="experience-meta">{detail.meta}</p>
+              <h2 id="experience-title">{detail.title}</h2>
+              <p>{detail.description}</p>
+              {detail.tags && <div className="experience-tags">{detail.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}
+              <h3>Key takeaways</h3>
+              <ul>{detail.takeaways.map((takeaway) => <li key={takeaway}><CheckCircle2 size={17} />{takeaway}</li>)}</ul>
+            </div>
+          </div>
+        </section>
+      </div>
+      {showProof && detail.proofUrl && (
+        <div
+          className="certificate-lightbox-backdrop"
+          onPointerDown={(event) => {
+            if (event.target === event.currentTarget) setShowProof(false);
+          }}
+        >
+          <div
+            className="certificate-lightbox"
+            id="certificate-lightbox"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${detail.title} certificate or proof`}
+            onPointerDown={(event) => event.stopPropagation()}
+          >
+            <p className="certificate-lightbox-label">Certificate / proof</p>
+            <button ref={certificateCloseButtonRef} className="certificate-lightbox-close" type="button" onClick={() => setShowProof(false)} aria-label="Close certificate">
+              <X size={19} />
+            </button>
+            <div className="certificate-lightbox-media">
+              {proofIsPdf ? (
+                <iframe src={proofUrl} title={`${detail.title} certificate or proof`} />
+              ) : (
+                <img src={proofUrl} alt={`${detail.title} certificate or proof`} decoding="async" />
               )}
             </div>
-            {!showProof && detail.images.length > 1 && (
-              <div className="experience-gallery-controls">
-                <button type="button" aria-label="Previous photo" onClick={() => changeImage(-1)}><ChevronLeft /></button>
-                <span aria-live="polite">{displayedImage + 1} / {detail.images.length}</span>
-                <button type="button" aria-label="Next photo" onClick={() => changeImage(1)}><ChevronRight /></button>
-              </div>
-            )}
-            {!showProof && detail.images.length > 1 && <div className="experience-thumbnails">
-              {detail.images.map((image, index) => (
-                <button className={index === displayedImage ? "is-active" : ""} type="button" onClick={() => setActiveImage(index)} key={`${image}-${index}`} aria-label={`View photo ${index + 1}`}>
-                  <img src={assetPath(image)} alt="" loading="lazy" decoding="async" />
-                </button>
-              ))}
-            </div>}
-          </div>
-          <div className="experience-copy">
-            <p className="experience-meta">{detail.meta}</p>
-            <h2 id="experience-title">{detail.title}</h2>
-            <p>{detail.description}</p>
-            {detail.tags && <div className="experience-tags">{detail.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}
-            <h3>Key takeaways</h3>
-            <ul>{detail.takeaways.map((takeaway) => <li key={takeaway}><CheckCircle2 size={17} />{takeaway}</li>)}</ul>
           </div>
         </div>
-      </section>
-    </div>
+      )}
+    </>
   );
 }
 
@@ -1022,9 +1064,13 @@ function AwardDeck({ group, index, onOpen }: AwardDeckProps) {
   const suppressClick = useRef(false);
   const count = group.cards.length;
   const GroupIcon = awardGroupIcons[group.id];
-  const activeCardImages = group.cards[activeCard].images.length > 0
-    ? group.cards[activeCard].images
-    : [group.cards[activeCard].image];
+  const getCardGallery = (card: AwardGroup["cards"][number]) => {
+    const proofUrl: string = card.proofUrl;
+    const galleryImages = card.images.filter((image) => image !== proofUrl);
+    if (galleryImages.length > 0) return galleryImages;
+    return [card.image === proofUrl ? group.fallbackImage : card.image];
+  };
+  const activeCardImages = getCardGallery(group.cards[activeCard]);
   const showNext = () => setActiveCard((current) => (current + 1) % count);
   const showPrevious = () => setActiveCard((current) => (current - 1 + count) % count);
   const cycleCard = () => {
@@ -1064,7 +1110,7 @@ function AwardDeck({ group, index, onOpen }: AwardDeckProps) {
           const stackPosition = Math.min(position, 3);
           const displayedImage = position === 0
             ? activeCardImages[activePhoto % activeCardImages.length]
-            : card.image;
+            : getCardGallery(card)[0];
           const cardStyle = {
             "--stack-position": stackPosition,
             zIndex: count - position,
@@ -1124,7 +1170,7 @@ function AwardDeck({ group, index, onOpen }: AwardDeckProps) {
                     meta: card.organization,
                     description: card.description,
                     takeaways: card.takeaways,
-                    images: card.images,
+                    images: getCardGallery(card),
                     imageAlt: card.imageAlt,
                     fallbackImage: group.fallbackImage,
                       proofUrl: card.proofUrl,
@@ -1198,6 +1244,20 @@ function EventCard({ event, index, onOpen }: { event: EventItem; index: number; 
     return () => window.clearInterval(timer);
   }, [imageCount, paused]);
 
+  const openExperience = () => onOpen({
+    title: event.title,
+    label: "Event experience",
+    date: event.date,
+    meta: `${event.role} | ${event.venue}`,
+    description: event.description,
+    tags: event.tags,
+    takeaways: event.takeaways,
+    images: event.images,
+    imageAlt: `${event.title} experience photo`,
+    fallbackImage: "images/events/events-background-placeholder.svg",
+    proofUrl: event.proofUrl,
+  });
+
   return (
     <article
       className="event-card"
@@ -1223,26 +1283,17 @@ function EventCard({ event, index, onOpen }: { event: EventItem; index: number; 
           <div className="event-icon"><CalendarDays size={20} /></div>
           <small>{event.date} // {event.venue}</small>
           <h3>{event.shortTitle}</h3>
-          <p className={descriptionIsLong ? "is-truncated" : undefined}>{event.description}</p>
+          <div className="event-card-description">
+            <p className={descriptionIsLong ? "is-truncated" : undefined}>{event.description}</p>
+            {descriptionIsLong && <button className="event-description-more" type="button" onClick={openExperience}>See more</button>}
+          </div>
           <div className="event-tags">{event.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
           <button
             className="view-experience"
             type="button"
-            onClick={() => onOpen({
-              title: event.title,
-              label: "Event experience",
-              date: event.date,
-              meta: `${event.role} | ${event.venue}`,
-              description: event.description,
-              tags: event.tags,
-              takeaways: event.takeaways,
-              images: event.images,
-              imageAlt: `${event.title} experience photo`,
-              fallbackImage: "images/events/events-background-placeholder.svg",
-              proofUrl: event.proofUrl,
-            })}
+            onClick={openExperience}
           >
-            {descriptionIsLong ? "See more." : "View experience"} <ArrowUpRight size={16} />
+            View experience <ArrowUpRight size={16} />
           </button>
         </div>
       </div>
