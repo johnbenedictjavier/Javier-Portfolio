@@ -1,4 +1,4 @@
-import { portfolio } from "../data/portfolio";
+import { getEventsNewestFirst, portfolio } from "../data/portfolio";
 
 type Intent = {
   keywords: readonly string[];
@@ -40,7 +40,7 @@ const intents: readonly Intent[] = [
   {
     keywords: ["event", "events", "conference", "conferences", "wocee", "pcta", "iot", "expo"],
     answer: () =>
-      `Javier has attended ${portfolio.events
+      `Javier has attended ${getEventsNewestFirst()
         .map((event) => `${event.title} (${event.year})`)
         .join(", ")}. Open Events and Conferences to view the technologies explored and key takeaways.`,
   },

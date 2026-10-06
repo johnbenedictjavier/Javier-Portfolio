@@ -28,6 +28,27 @@ export const portfolio = {
   profileImage: "images/profile/john-benedict-javier.jpg",
   profileFallbackImage: "https://avatars.githubusercontent.com/u/326827759?v=4",
   profileAlt: "Portrait of John Benedict Javier",
+  formspreeEndpoint: "",
+  speakerHighlights: [
+    {
+      image: "images/events/aws-builder-day.jpg",
+      imageAlt: "John Benedict Javier presenting Pairtive at AWS Builder Day",
+      label: "PUBLIC SPEAKER",
+      caption: "Presenting Pairtive",
+    },
+    {
+      image: "images/awards/build-over-nights2.jpg",
+      imageAlt: "John Benedict Javier sharing a project presentation",
+      label: "GRAND FINALS PITCHING",
+      caption: "Making ideas clear",
+    },
+    {
+      image: "images/awards/hackaton2.jpg",
+      imageAlt: "John Benedict Javier participating in a technology workshop",
+      label: "SHARING IDEAS",
+      caption: "Learning out loud",
+    },
+  ],
   about: {
     kicker: "Beyond the code",
     title: "Learning deeply, building purposefully, leading responsibly.",
@@ -249,6 +270,7 @@ export const portfolio = {
   ],
   events: [
     {
+      startDate: "2024-10-29",
       year: "2024",
       shortTitle: "IoT Conference Philippines",
       title: "Internet of Things Conference Philippines 2024",
@@ -267,9 +289,10 @@ export const portfolio = {
       proofUrl: "images/events/iotcert.jpg",
     },
     {
+      startDate: "2026-03-24",
       year: "2026",
       shortTitle: "PCTA Philippine Tech Show",
-      title: "PCTA Philippine Tech Show 2025",
+      title: "PCTA Philippine Tech Show 2026",
       role: "Participant / Attendee",
       venue: "SMX Convention Center Manila",
       date: "March 24-28, 2026",
@@ -285,6 +308,7 @@ export const portfolio = {
       proofUrl: "",
     },
     {
+      startDate: "2026-08-05",
       year: "2026",
       shortTitle: "WOCEE",
       title: "World of Consumer Electronics Expo (WOCEE) 2026",
@@ -303,6 +327,7 @@ export const portfolio = {
       proofUrl: "images/events/woceecert.jpg",
     },
     {
+      startDate: "2026-09-26",
       year: "2026",
       shortTitle: "AIDLC Workshop with Kiro",
       title: "AIDLC Workshop with Kiro",
@@ -321,6 +346,7 @@ export const portfolio = {
       proofUrl: "",
     },
     {
+      startDate: "2026-10-05",
       year: "2026",
       shortTitle: "AWS Builder Day Talk",
       title: "AWS Builder Day Talk: Presenting Pairtive",
@@ -583,5 +609,8 @@ export const portfolio = {
     ],
   },
 } as const;
+
+export const getEventsNewestFirst = () =>
+  [...portfolio.events].sort((first, second) => second.startDate.localeCompare(first.startDate));
 
 export type Portfolio = typeof portfolio;

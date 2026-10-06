@@ -4,8 +4,10 @@ import {
   useState,
   type CSSProperties,
   type FormEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
+  type SyntheticEvent,
 } from "react";
 import {
   Accessibility,
@@ -75,7 +77,7 @@ import {
 import { BsOpenai } from "react-icons/bs";
 import { VscVscode } from "react-icons/vsc";
 import { Chatbot } from "./components/Chatbot";
-import { portfolio } from "./data/portfolio";
+import { getEventsNewestFirst, portfolio } from "./data/portfolio";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -174,30 +176,136 @@ type ExperienceDetail = {
 function OpeningSequence({ onComplete }: { onComplete: () => void }) {
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const timer = window.setTimeout(onComplete, reducedMotion ? 600 : 5000);
+    const timer = window.setTimeout(onComplete, reducedMotion ? 600 : 3000);
     return () => window.clearTimeout(timer);
   }, [onComplete]);
 
   return (
     <div className="opening-sequence" role="dialog" aria-modal="true" aria-label="Portfolio introduction">
-      <div className="opening-atmosphere" aria-hidden="true" />
-      <div className="opening-smoke" aria-hidden="true"><i /><i /><i /></div>
-      <div className="opening-grid" aria-hidden="true" />
-      <div className="opening-hud" aria-hidden="true"><i /><i /></div>
-      <div className="opening-circuit opening-circuit-left" aria-hidden="true" />
-      <div className="opening-circuit opening-circuit-right" aria-hidden="true" />
-      <div className="opening-particles" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /><i /></div>
-      <div className="opening-light" aria-hidden="true" />
-      <div className="opening-letterbox opening-letterbox-top" aria-hidden="true" />
-      <div className="opening-letterbox opening-letterbox-bottom" aria-hidden="true" />
-      <div className="opening-title-card">
-        <p className="opening-kicker">A digital portfolio</p>
-        <div className="opening-mark" data-text={`<${portfolio.initials}/>`} aria-hidden="true"><span>&lt;</span>{portfolio.initials}<span>/&gt;</span></div>
-        <div className="opening-rule" aria-hidden="true"><i /></div>
-        <h1 data-text={portfolio.name}>{portfolio.name}</h1>
-        <p className="opening-role">Computer Science <span>/</span> Software Engineering <span>/</span> Game Development</p>
+      <div className="opening-quick-grid" aria-hidden="true" />
+      <div className="opening-quick-orb opening-quick-orb-one" aria-hidden="true" />
+      <div className="opening-quick-orb opening-quick-orb-two" aria-hidden="true" />
+      <div className="opening-quick-card">
+        <p className="opening-quick-kicker">A digital portfolio</p>
+        <div className="opening-quick-mark" aria-hidden="true"><span>&lt;</span>{portfolio.initials}<span>/&gt;</span></div>
+        <div className="opening-quick-rule" aria-hidden="true"><i /></div>
+        <h1>{portfolio.name}</h1>
+        <p className="opening-quick-role">Software engineering <span>/</span> game development</p>
+        <div className="opening-quick-progress" aria-hidden="true"><i /></div>
       </div>
       <button type="button" onClick={onComplete}>Skip intro</button>
+    </div>
+  );
+}
+
+type AutoPanImageProps = {
+  src: string;
+  alt: string;
+  className?: string;
+  onError?: (event: SyntheticEvent<HTMLImageElement>) => void;
+};
+
+function AutoPanImage({ src, alt, className = "", onError }: AutoPanImageProps) {
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const [imageReady, setImageReady] = useState(false);
+  const axis = useRef<"x" | "y">("y");
+  const direction = useRef<1 | -1>(1);
+  const animationFrame = useRef<number | null>(null);
+  const lastFrameTime = useRef<number | null>(null);
+  const manualPauseUntil = useRef(0);
+  const programmaticScrollUntil = useRef(0);
+
+  const pauseForInteraction = () => {
+    manualPauseUntil.current = performance.now() + 3500;
+  };
+
+  const sizeImage = () => {
+    const viewport = viewportRef.current;
+    const image = imageRef.current;
+    if (!viewport || !image || !image.naturalWidth || !image.naturalHeight) return;
+
+    const scale = Math.max(
+      viewport.clientWidth / image.naturalWidth,
+      viewport.clientHeight / image.naturalHeight,
+    );
+    image.style.width = `${Math.ceil(image.naturalWidth * scale)}px`;
+    image.style.height = `${Math.ceil(image.naturalHeight * scale)}px`;
+    viewport.scrollLeft = 0;
+    viewport.scrollTop = 0;
+    direction.current = 1;
+    axis.current = viewport.scrollHeight - viewport.clientHeight >= viewport.scrollWidth - viewport.clientWidth ? "y" : "x";
+    setImageReady(true);
+  };
+
+  useEffect(() => {
+    setImageReady(false);
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+
+    const resize = () => sizeImage();
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(resize);
+    observer?.observe(viewport);
+    window.addEventListener("resize", resize);
+    if (imageRef.current?.complete) resize();
+
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", resize);
+    };
+  }, [src]);
+
+  useEffect(() => {
+    if (!imageReady || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const animate = (time: number) => {
+      const viewport = viewportRef.current;
+      if (!viewport) return;
+      const elapsed = lastFrameTime.current === null ? 0 : Math.min(50, time - lastFrameTime.current);
+      lastFrameTime.current = time;
+
+      if (performance.now() >= manualPauseUntil.current) {
+        const maximum = axis.current === "y"
+          ? viewport.scrollHeight - viewport.clientHeight
+          : viewport.scrollWidth - viewport.clientWidth;
+        if (maximum > 1) {
+          const current = axis.current === "y" ? viewport.scrollTop : viewport.scrollLeft;
+          let next = current + (direction.current * elapsed * 0.018);
+          if (next >= maximum) {
+            next = maximum;
+            direction.current = -1;
+          } else if (next <= 0) {
+            next = 0;
+            direction.current = 1;
+          }
+          programmaticScrollUntil.current = performance.now() + 80;
+          if (axis.current === "y") viewport.scrollTop = next;
+          else viewport.scrollLeft = next;
+        }
+      }
+
+      animationFrame.current = window.requestAnimationFrame(animate);
+    };
+
+    animationFrame.current = window.requestAnimationFrame(animate);
+    return () => {
+      if (animationFrame.current !== null) window.cancelAnimationFrame(animationFrame.current);
+      animationFrame.current = null;
+      lastFrameTime.current = null;
+    };
+  }, [imageReady]);
+
+  return (
+    <div
+      ref={viewportRef}
+      className={`auto-pan-viewport ${className}`}
+      onPointerDown={pauseForInteraction}
+      onTouchStart={pauseForInteraction}
+      onWheel={pauseForInteraction}
+      onScroll={() => {
+        if (performance.now() >= programmaticScrollUntil.current) pauseForInteraction();
+      }}
+    >
+      <img ref={imageRef} src={src} alt={alt} onLoad={sizeImage} onError={onError} draggable={false} />
     </div>
   );
 }
@@ -205,11 +313,14 @@ function OpeningSequence({ onComplete }: { onComplete: () => void }) {
 function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClose: () => void }) {
   const [activeImage, setActiveImage] = useState(0);
   const [showProof, setShowProof] = useState(false);
+  const [galleryPaused, setGalleryPaused] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const galleryPointerStart = useRef<number | null>(null);
 
   useEffect(() => {
     setActiveImage(0);
     setShowProof(false);
+    setGalleryPaused(false);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     closeButtonRef.current?.focus();
@@ -217,6 +328,14 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClos
       document.body.style.overflow = previousOverflow;
     };
   }, [detail]);
+
+  useEffect(() => {
+    if (showProof || galleryPaused || detail.images.length < 2) return;
+    const timer = window.setInterval(() => {
+      setActiveImage((current) => (current + 1) % detail.images.length);
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, [detail.images.length, galleryPaused, showProof]);
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
@@ -239,6 +358,12 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClos
 
   const hasImages = detail.images.length > 0;
   const displayedImage = hasImages && activeImage < detail.images.length ? activeImage : 0;
+  const proofUrl = detail.proofUrl ? assetPath(detail.proofUrl) : "";
+  const proofIsPdf = detail.proofUrl?.toLowerCase().endsWith(".pdf") ?? false;
+  const changeImage = (direction: number) => {
+    if (detail.images.length < 2) return;
+    setActiveImage((current) => (current + direction + detail.images.length) % detail.images.length);
+  };
 
   return (
     <div className="experience-modal-backdrop" onPointerDown={(event) => event.target === event.currentTarget && onClose()}>
@@ -248,12 +373,40 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClos
           <button ref={closeButtonRef} type="button" onClick={onClose} aria-label="Close experience"><X size={21} /></button>
         </header>
         <div className="experience-modal-grid">
-          <div className="experience-gallery">
-            <div className={`experience-main-image ${hasImages || showProof ? "" : "is-placeholder"}`}>
+          <div
+            className="experience-gallery"
+            onPointerEnter={(event) => {
+              if (event.pointerType === "mouse") setGalleryPaused(true);
+            }}
+            onPointerLeave={() => setGalleryPaused(false)}
+            onFocusCapture={() => setGalleryPaused(true)}
+            onBlurCapture={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setGalleryPaused(false);
+            }}
+          >
+            <div
+              className={`experience-main-image ${hasImages || showProof ? "" : "is-placeholder"} ${showProof ? "is-proof" : ""}`}
+              onPointerDown={(event) => {
+                if (event.pointerType !== "mouse") galleryPointerStart.current = event.clientX;
+              }}
+              onPointerUp={(event) => {
+                if (galleryPointerStart.current === null) return;
+                const distance = event.clientX - galleryPointerStart.current;
+                galleryPointerStart.current = null;
+                if (showProof || detail.images.length < 2) return;
+                if (Math.abs(distance) >= 45) changeImage(distance < 0 ? 1 : -1);
+              }}
+              onPointerCancel={() => { galleryPointerStart.current = null; }}
+            >
               {showProof && detail.proofUrl ? (
-                <img src={assetPath(detail.proofUrl)} alt={`${detail.title} certificate or proof`} />
+                proofIsPdf ? (
+                  <iframe src={proofUrl} title={`${detail.title} certificate or proof`} />
+                ) : (
+                  <AutoPanImage className="experience-proof-scroll" src={proofUrl} alt={`${detail.title} certificate or proof`} />
+                )
               ) : hasImages ? (
-                <img
+                <AutoPanImage
+                  key={`${detail.title}-${displayedImage}`}
                   src={assetPath(detail.images[displayedImage])}
                   alt={`${detail.imageAlt} ${displayedImage + 1}`}
                   onError={(event) => {
@@ -276,15 +429,15 @@ function ExperienceModal({ detail, onClose }: { detail: ExperienceDetail; onClos
             </div>
             {!showProof && detail.images.length > 1 && (
               <div className="experience-gallery-controls">
-                <button type="button" aria-label="Previous photo" onClick={() => setActiveImage((current) => (current - 1 + detail.images.length) % detail.images.length)}><ChevronLeft /></button>
-                <span>{displayedImage + 1} / {detail.images.length}</span>
-                <button type="button" aria-label="Next photo" onClick={() => setActiveImage((current) => (current + 1) % detail.images.length)}><ChevronRight /></button>
+                <button type="button" aria-label="Previous photo" onClick={() => changeImage(-1)}><ChevronLeft /></button>
+                <span aria-live="polite">{displayedImage + 1} / {detail.images.length}</span>
+                <button type="button" aria-label="Next photo" onClick={() => changeImage(1)}><ChevronRight /></button>
               </div>
             )}
             {!showProof && detail.images.length > 1 && <div className="experience-thumbnails">
               {detail.images.map((image, index) => (
                 <button className={index === displayedImage ? "is-active" : ""} type="button" onClick={() => setActiveImage(index)} key={`${image}-${index}`} aria-label={`View photo ${index + 1}`}>
-                  <img src={assetPath(image)} alt="" />
+                  <img src={assetPath(image)} alt="" loading="lazy" decoding="async" />
                 </button>
               ))}
             </div>}
@@ -424,6 +577,12 @@ function Header() {
 function Portrait() {
   const portraitRef = useRef<HTMLDivElement>(null);
   const animationFrame = useRef<number | null>(null);
+  const highlightsRef = useRef<HTMLDivElement>(null);
+  const speakerDrag = useRef<SpeakerDragState | null>(null);
+  const [speakerPositions, setSpeakerPositions] = useState<SpeakerNotePosition[]>(() =>
+    portfolio.speakerHighlights.map(() => ({ x: 0, y: 0 })),
+  );
+  const [draggingSpeaker, setDraggingSpeaker] = useState<number | null>(null);
 
   const updateTilt = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== "mouse" || !portraitRef.current) return;
@@ -449,53 +608,179 @@ function Portrait() {
     portraitRef.current.style.setProperty("--shine-y", "50%");
   };
 
+  const beginSpeakerDrag = (event: ReactPointerEvent<HTMLElement>, index: number) => {
+    const isMouse = event.pointerType === "mouse";
+    const target = event.target;
+    const isHandle = target instanceof Element && Boolean(target.closest(".speaker-highlight-handle"));
+    if (!isMouse && !isHandle) return;
+
+    const position = speakerPositions[index] ?? { x: 0, y: 0 };
+    speakerDrag.current = {
+      index,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      x: position.x,
+      y: position.y,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setDraggingSpeaker(index);
+    event.preventDefault();
+  };
+
+  const constrainSpeakerPosition = (position: SpeakerNotePosition) => {
+    const bounds = highlightsRef.current?.getBoundingClientRect();
+    const maxX = bounds ? Math.max(70, bounds.width * 0.34) : 110;
+    const maxY = bounds ? Math.max(45, bounds.height * 0.42) : 80;
+    return {
+      x: Math.max(-maxX, Math.min(maxX, position.x)),
+      y: Math.max(-maxY, Math.min(maxY, position.y)),
+    };
+  };
+
+  const moveSpeaker = (event: ReactPointerEvent<HTMLElement>) => {
+    const drag = speakerDrag.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    const nextPosition = constrainSpeakerPosition({
+      x: drag.x + event.clientX - drag.startX,
+      y: drag.y + event.clientY - drag.startY,
+    });
+    setSpeakerPositions((current) => current.map((currentPosition, positionIndex) =>
+      positionIndex === drag.index ? nextPosition : currentPosition,
+    ));
+  };
+
+  const finishSpeakerDrag = (event: ReactPointerEvent<HTMLElement>) => {
+    const drag = speakerDrag.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    speakerDrag.current = null;
+    setDraggingSpeaker(null);
+  };
+
+  const nudgeSpeaker = (event: ReactKeyboardEvent<HTMLButtonElement>, index: number) => {
+    const step = event.shiftKey ? 24 : 8;
+    const movement: Record<string, SpeakerNotePosition> = {
+      ArrowUp: { x: 0, y: -step },
+      ArrowDown: { x: 0, y: step },
+      ArrowLeft: { x: -step, y: 0 },
+      ArrowRight: { x: step, y: 0 },
+    };
+    const offset = movement[event.key];
+    if (!offset) return;
+    event.preventDefault();
+    setSpeakerPositions((current) => current.map((position, positionIndex) =>
+      positionIndex === index ? constrainSpeakerPosition({ x: position.x + offset.x, y: position.y + offset.y }) : position,
+    ));
+  };
+
   return (
-    <div className="portrait-stage hero-enter hero-enter-portrait" aria-label="Animated profile portrait">
-      <div className="portrait-orbit orbit-one" aria-hidden="true"><i /></div>
-      <div className="portrait-orbit orbit-two" aria-hidden="true"><i /></div>
-      <div
-        className="portrait-float"
-        ref={portraitRef}
-        onPointerMove={updateTilt}
-        onPointerLeave={resetTilt}
-      >
-        <div className="portrait-card">
-          <div className="portrait-corners" aria-hidden="true"><i /><i /><i /><i /></div>
-          <img
-            src={assetPath(portfolio.profileImage)}
-            alt={portfolio.profileAlt}
-            onError={(event) => {
-              const image = event.currentTarget;
-              if (!image.dataset.fallback) {
-                image.dataset.fallback = "github";
-                image.src = portfolio.profileFallbackImage;
-                return;
-              }
-              if (image.dataset.fallback === "github") {
-                image.dataset.fallback = "placeholder";
-                image.src = `${import.meta.env.BASE_URL}profile-placeholder.svg`;
-              }
-            }}
-          />
-          <div className="portrait-scan" aria-hidden="true" />
-          <div className="portrait-shine" aria-hidden="true" />
-          <div className="portrait-data" aria-hidden="true">
-            <span>SUBJECT_01</span>
-            <span>FOCUS // CREATE</span>
+    <div className="hero-portrait-column hero-enter hero-enter-portrait">
+      <div className="portrait-stage" aria-label="Animated profile portrait">
+        <div className="portrait-orbit orbit-one" aria-hidden="true"><i /></div>
+        <div className="portrait-orbit orbit-two" aria-hidden="true"><i /></div>
+        <div
+          className="portrait-float"
+          ref={portraitRef}
+          onPointerMove={updateTilt}
+          onPointerLeave={resetTilt}
+        >
+          <div className="portrait-card">
+            <div className="portrait-corners" aria-hidden="true"><i /><i /><i /><i /></div>
+            <img
+              src={assetPath(portfolio.profileImage)}
+              alt={portfolio.profileAlt}
+              onError={(event) => {
+                const image = event.currentTarget;
+                if (!image.dataset.fallback) {
+                  image.dataset.fallback = "github";
+                  image.src = portfolio.profileFallbackImage;
+                  return;
+                }
+                if (image.dataset.fallback === "github") {
+                  image.dataset.fallback = "placeholder";
+                  image.src = `${import.meta.env.BASE_URL}profile-placeholder.svg`;
+                }
+              }}
+            />
+            <div className="portrait-scan" aria-hidden="true" />
+            <div className="portrait-shine" aria-hidden="true" />
+            <div className="portrait-data" aria-hidden="true">
+              <span>SUBJECT_01</span>
+              <span>FOCUS // CREATE</span>
+            </div>
           </div>
         </div>
+        <div className="portrait-status glass-card">
+          <span className="status-dot" />
+          <span><small>Status</small>{portfolio.availability}</span>
+        </div>
+        <div className="portrait-coordinate" aria-hidden="true">14.5995° N<br />120.9842° E</div>
       </div>
-      <div className="portrait-status glass-card">
-        <span className="status-dot" />
-        <span><small>Status</small>{portfolio.availability}</span>
+      <div className="speaker-highlights" aria-label="Public speaking highlights">
+        <div className="speaker-highlights-heading">
+          <span>Public speaking</span>
+          <i />
+          <small>03 moments</small>
+        </div>
+        <div className="speaker-highlights-grid" ref={highlightsRef}>
+          {portfolio.speakerHighlights.map((highlight, index) => {
+            const position = speakerPositions[index] ?? { x: 0, y: 0 };
+            const noteStyle = {
+              "--note-x": `${position.x}px`,
+              "--note-y": `${position.y}px`,
+              zIndex: draggingSpeaker === index ? 20 : undefined,
+            } as CSSProperties;
+
+            return (
+            <figure
+              className={`speaker-highlight ${draggingSpeaker === index ? "is-dragging" : ""}`}
+              style={noteStyle}
+              key={highlight.image}
+              onPointerDown={(event) => beginSpeakerDrag(event, index)}
+              onPointerMove={moveSpeaker}
+              onPointerUp={finishSpeakerDrag}
+              onPointerCancel={finishSpeakerDrag}
+            >
+              <button
+                className="speaker-highlight-handle"
+                type="button"
+                aria-label={`Move ${highlight.caption} sticky note`}
+                onKeyDown={(event) => nudgeSpeaker(event, index)}
+              >
+                <span aria-hidden="true" />
+                <span className="sr-only">Use arrow keys to move this note</span>
+              </button>
+              <div className="speaker-highlight-image">
+                <img src={assetPath(highlight.image)} alt={highlight.imageAlt} loading="lazy" decoding="async" />
+                <span>{highlight.label}</span>
+              </div>
+              <figcaption>{highlight.caption}</figcaption>
+            </figure>
+            );
+          })}
+        </div>
       </div>
-      <div className="portrait-coordinate" aria-hidden="true">14.5995° N<br />120.9842° E</div>
     </div>
   );
 }
 
 type HeroProps = {
   onOpenAssistant: () => void;
+};
+
+type SpeakerNotePosition = {
+  x: number;
+  y: number;
+};
+
+type SpeakerDragState = SpeakerNotePosition & {
+  index: number;
+  pointerId: number;
+  startX: number;
+  startY: number;
 };
 
 function Hero({ onOpenAssistant }: HeroProps) {
@@ -643,10 +928,14 @@ type AwardDeckProps = {
 
 function AwardDeck({ group, index, onOpen }: AwardDeckProps) {
   const [activeCard, setActiveCard] = useState(0);
+  const [activePhoto, setActivePhoto] = useState(0);
   const pointerStart = useRef<number | null>(null);
   const suppressClick = useRef(false);
   const count = group.cards.length;
   const GroupIcon = awardGroupIcons[group.id];
+  const activeCardImages = group.cards[activeCard].images.length > 0
+    ? group.cards[activeCard].images
+    : [group.cards[activeCard].image];
   const showNext = () => setActiveCard((current) => (current + 1) % count);
   const showPrevious = () => setActiveCard((current) => (current - 1 + count) % count);
   const cycleCard = () => {
@@ -656,6 +945,18 @@ function AwardDeck({ group, index, onOpen }: AwardDeckProps) {
     }
     if (count > 1) showNext();
   };
+
+  useEffect(() => {
+    setActivePhoto(0);
+  }, [activeCard]);
+
+  useEffect(() => {
+    if (activeCardImages.length < 2) return;
+    const timer = window.setInterval(() => {
+      setActivePhoto((current) => (current + 1) % activeCardImages.length);
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, [activeCard, activeCardImages.length]);
 
   return (
     <article className={`award-deck award-deck-${group.id}`} data-reveal style={revealDelay(index * 100)}>
@@ -672,6 +973,9 @@ function AwardDeck({ group, index, onOpen }: AwardDeckProps) {
         {group.cards.map((card, cardIndex) => {
           const position = (cardIndex - activeCard + count) % count;
           const stackPosition = Math.min(position, 3);
+          const displayedImage = position === 0
+            ? activeCardImages[activePhoto % activeCardImages.length]
+            : card.image;
           const cardStyle = {
             "--stack-position": stackPosition,
             zIndex: count - position,
@@ -708,8 +1012,11 @@ function AwardDeck({ group, index, onOpen }: AwardDeckProps) {
             >
               <span className="award-photo-wrap">
                 <img
-                  src={assetPath(card.image)}
+                  key={`${group.id}-${card.title}-${displayedImage}`}
+                  src={assetPath(displayedImage)}
                   alt={card.imageAlt}
+                  loading="lazy"
+                  decoding="async"
                   onError={(event) => {
                     const image = event.currentTarget;
                     if (image.dataset.fallback) return;
@@ -789,6 +1096,85 @@ function AwardsSection({ onOpen }: { onOpen: (detail: ExperienceDetail) => void 
   );
 }
 
+type EventItem = (typeof portfolio.events)[number];
+
+function EventCard({ event, index, onOpen }: { event: EventItem; index: number; onOpen: (detail: ExperienceDetail) => void }) {
+  const [activeImage, setActiveImage] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const imageCount = event.images.length;
+  const displayedImage = event.images[activeImage % imageCount] ?? "images/events/events-background-placeholder.svg";
+
+  useEffect(() => {
+    setActiveImage(0);
+  }, [event.title]);
+
+  useEffect(() => {
+    if (paused || imageCount < 2) return;
+    const timer = window.setInterval(() => {
+      setActiveImage((current) => (current + 1) % imageCount);
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, [imageCount, paused]);
+
+  return (
+    <article
+      className="event-card"
+      data-reveal
+      style={revealDelay(index * 120)}
+      key={event.title}
+      onPointerEnter={(pointerEvent) => {
+        if (pointerEvent.pointerType === "mouse") setPaused(true);
+      }}
+      onPointerLeave={() => setPaused(false)}
+    >
+      <div className="event-year"><span>{event.year}</span><i /></div>
+      <div className="event-card-content">
+        <div className="event-card-media">
+          <img
+            key={`${event.title}-${activeImage}`}
+            src={assetPath(displayedImage)}
+            alt={`${event.title} event photo ${activeImage + 1}`}
+            loading="lazy"
+            decoding="async"
+            onError={(imageEvent) => {
+              if (imageEvent.currentTarget.dataset.fallback) return;
+              imageEvent.currentTarget.dataset.fallback = "true";
+              imageEvent.currentTarget.src = assetPath("images/events/events-background-placeholder.svg");
+            }}
+          />
+          <span>{imageCount > 1 ? `${activeImage + 1} / ${imageCount}` : "Event photo"}</span>
+        </div>
+        <div className="event-card-body">
+          <div className="event-icon"><CalendarDays size={20} /></div>
+          <small>{event.date} // {event.venue}</small>
+          <h3>{event.shortTitle}</h3>
+          <p>{event.description}</p>
+          <div className="event-tags">{event.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
+          <button
+            className="view-experience"
+            type="button"
+            onClick={() => onOpen({
+              title: event.title,
+              label: "Event experience",
+              date: event.date,
+              meta: `${event.role} | ${event.venue}`,
+              description: event.description,
+              tags: event.tags,
+              takeaways: event.takeaways,
+              images: event.images,
+              imageAlt: `${event.title} experience photo`,
+              fallbackImage: "images/events/events-background-placeholder.svg",
+              proofUrl: event.proofUrl,
+            })}
+          >
+            View experience <ArrowUpRight size={16} />
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 function EventsSection({ onOpen }: { onOpen: (detail: ExperienceDetail) => void }) {
   const timelineRef = useRef<HTMLDivElement>(null);
   const scrollTimeline = (direction: number) => {
@@ -800,7 +1186,7 @@ function EventsSection({ onOpen }: { onOpen: (detail: ExperienceDetail) => void 
       <div
         className="events-photo-bg"
         style={{
-          backgroundImage: `url(${assetPath("images/events/events-background.jpg")}), url(${assetPath("images/events/events-background-placeholder.svg")})`,
+          backgroundImage: `url(${assetPath("images/events/events-background-placeholder.svg")})`,
         }}
         aria-hidden="true"
       />
@@ -817,43 +1203,8 @@ function EventsSection({ onOpen }: { onOpen: (detail: ExperienceDetail) => void 
           <button type="button" onClick={() => scrollTimeline(1)} aria-label="Scroll to next event"><ChevronRight size={18} /></button>
         </div>
         <div className="events-timeline" data-reveal ref={timelineRef}>
-          {portfolio.events.map((event, index) => (
-            <article
-              className="event-card"
-              data-reveal
-              style={{
-                ...revealDelay(index * 120),
-                "--event-image": `url(${assetPath(event.images[0] ?? "images/events/events-background-placeholder.svg")})`,
-              } as CSSProperties}
-              key={event.title}
-            >
-              <div className="event-year"><span>{event.year}</span><i /></div>
-              <div className="event-card-content">
-                <div className="event-icon"><CalendarDays size={20} /></div>
-                <small>{event.date} // {event.venue}</small>
-                <h3>{event.shortTitle}</h3>
-                <p>{event.description}</p>
-                <div className="event-tags">{event.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
-                <button
-                  className="view-experience"
-                  type="button"
-                  onClick={() => onOpen({
-                    title: event.title,
-                    label: "Event experience",
-                    date: event.date,
-                    meta: `${event.role} | ${event.venue}`,
-                    description: event.description,
-                    tags: event.tags,
-                    takeaways: event.takeaways,
-                    images: event.images,
-                    imageAlt: `${event.title} experience photo`,
-                    proofUrl: event.proofUrl,
-                  })}
-                >
-                  View experience <ArrowUpRight size={16} />
-                </button>
-              </div>
-            </article>
+          {getEventsNewestFirst().map((event, index) => (
+            <EventCard event={event} index={index} onOpen={onOpen} key={event.title} />
           ))}
         </div>
       </div>
@@ -874,7 +1225,7 @@ function Timeline({ type }: TimelineProps) {
   const track = isEducation ? "01" : isLeadership ? "02" : "03";
 
   return (
-    <div className="journey-column" data-reveal>
+    <div className={`journey-column journey-${type}`} data-reveal>
       <div className="journey-column-title">
         <span><Icon size={20} /></span>
         <div>
@@ -1010,14 +1361,16 @@ function Work() {
         <div className="projects-list">
           {portfolio.projects.map((project, index) => (
             <article className={`project-card project-${project.accent}`} data-reveal style={revealDelay(index * 90)} key={project.number}>
-              <div className="project-visual" aria-hidden="true">
+              <div className="project-visual">
                 <div className="project-window">
-                  <div className="project-window-bar"><i /><i /><i /><span>{project.number}.project</span></div>
+                  <div className="project-window-bar"><i /><i /><i /></div>
                   <div className="project-art">
                     <img
                       className="project-image"
                       src={assetPath(project.image)}
-                      alt=""
+                      alt={`${project.title} project preview`}
+                      loading="lazy"
+                      decoding="async"
                       onError={(event) => {
                         const image = event.currentTarget;
                         if (image.dataset.fallback) return;
@@ -1025,11 +1378,6 @@ function Work() {
                         image.src = assetPath(project.fallbackImage);
                       }}
                     />
-                    <span className="project-art-number">{project.number}</span>
-                    <i className="project-shape shape-one" />
-                    <i className="project-shape shape-two" />
-                    <i className="project-shape shape-three" />
-                    <div className="project-code-lines"><i /><i /><i /><i /></div>
                   </div>
                 </div>
               </div>
@@ -1041,11 +1389,11 @@ function Work() {
                   {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
                 </div>
                 <div className="project-links">
-                   {project.sourceUrl ? (
-                     <a href={project.sourceUrl} target="_blank" rel="noreferrer">
-                       <Github size={17} /> View source <ArrowUpRight size={15} />
-                     </a>
-                   ) : <span>Source unavailable</span>}
+                  {project.sourceUrl ? (
+                    <a href={project.sourceUrl} target="_blank" rel="noreferrer">
+                      <Github size={17} /> View source <ArrowUpRight size={15} />
+                    </a>
+                  ) : <span>Source unavailable</span>}
                   {project.liveUrl ? (
                     <a href={project.liveUrl} target="_blank" rel="noreferrer">
                       <ExternalLink size={17} /> Live project <ArrowUpRight size={15} />
@@ -1070,17 +1418,40 @@ type ContactProps = {
 function Contact({ onOpenAssistant }: ContactProps) {
   const [status, setStatus] = useState("");
   const [copied, setCopied] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     const name = String(form.get("name") ?? "").trim();
     const email = String(form.get("email") ?? "").trim();
-    const message = String(form.get("message") ?? "").trim();
-    const subject = encodeURIComponent(`Portfolio message from ${name}`);
-    const body = encodeURIComponent(`${message}\n\nFrom: ${name}\nReply to: ${email}`);
-    setStatus("Opening your email app...");
-    window.location.href = `mailto:${portfolio.email}?subject=${subject}&body=${body}`;
+    const endpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT || portfolio.formspreeEndpoint;
+
+    if (!endpoint) {
+      setStatus("Contact delivery is not configured yet. Add the Formspree endpoint first.");
+      return;
+    }
+
+    form.set("_subject", `Portfolio message from ${name}`);
+    form.set("_replyto", email);
+    setIsSending(true);
+    setStatus("Sending your message...");
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: form,
+      });
+      if (!response.ok) throw new Error("Message delivery failed");
+      formElement.reset();
+      setStatus("Message sent. Thank you for reaching out.");
+    } catch {
+      setStatus("Your message could not be sent. Please try again or use the social links.");
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const copyEmail = async () => {
@@ -1107,7 +1478,7 @@ function Contact({ onOpenAssistant }: ContactProps) {
           <div className="contact-details" data-reveal>
             <div className="contact-direct">
               <span className="contact-icon"><Mail size={20} /></span>
-              <div><small>Email me directly</small><a href={`mailto:${portfolio.email}`}>{portfolio.email}</a></div>
+              <div><small>Email me directly</small><span className="contact-email-value">{portfolio.email}</span></div>
               <button type="button" onClick={copyEmail} aria-label="Copy email address"><Copy size={17} /><span>{copied ? "Copied" : "Copy"}</span></button>
             </div>
             <button className="assistant-invite" type="button" onClick={onOpenAssistant}>
@@ -1137,10 +1508,10 @@ function Contact({ onOpenAssistant }: ContactProps) {
             <input id="contact-email" name="email" type="email" placeholder="you@example.com" required />
             <label htmlFor="contact-message">Your message</label>
             <textarea id="contact-message" name="message" rows={5} placeholder="Tell me about your idea or opportunity..." required />
-            <button className="button button-primary form-submit" type="submit">
-              Send message <Send size={17} />
+            <button className="button button-primary form-submit" type="submit" disabled={isSending}>
+              {isSending ? "Sending..." : "Send message"} <Send size={17} />
             </button>
-            <p className="form-note" aria-live="polite">{status || "This form opens your default email application."}</p>
+            <p className="form-note" aria-live="polite">{status || "Messages are delivered securely through the contact form."}</p>
           </form>
         </div>
       </div>

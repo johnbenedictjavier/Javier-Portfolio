@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { getEventsNewestFirst } from "../data/portfolio";
 import { getAssistantResponse } from "./assistant";
 
 describe("getAssistantResponse", () => {
@@ -53,6 +54,17 @@ describe("getAssistantResponse", () => {
     const response = getAssistantResponse("Which conferences have you attended?");
     expect(response).toContain("WOCEE");
     expect(response).toContain("PCTA");
+  });
+
+  it("orders events from newest to oldest", () => {
+    const events = getEventsNewestFirst();
+    expect(events.map((event) => event.shortTitle)).toEqual([
+      "AWS Builder Day Talk",
+      "AIDLC Workshop with Kiro",
+      "WOCEE",
+      "PCTA Philippine Tech Show",
+      "IoT Conference Philippines",
+    ]);
   });
 
   it("includes AI assistants in skill answers", () => {

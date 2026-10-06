@@ -27,8 +27,10 @@ export function Chatbot({ open, onOpenChange }: ChatbotProps) {
 
   useEffect(() => {
     if (open) {
-      window.setTimeout(() => inputRef.current?.focus(), 180);
+      const focusTimer = window.setTimeout(() => inputRef.current?.focus(), 180);
+      return () => window.clearTimeout(focusTimer);
     }
+    return undefined;
   }, [open]);
 
   useEffect(() => {
@@ -44,7 +46,11 @@ export function Chatbot({ open, onOpenChange }: ChatbotProps) {
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      if (responseTimer.current) window.clearTimeout(responseTimer.current);
+      if (responseTimer.current !== undefined) {
+        window.clearTimeout(responseTimer.current);
+        responseTimer.current = undefined;
+        setPending(false);
+      }
     };
   }, [onOpenChange, open]);
 
@@ -60,6 +66,7 @@ export function Chatbot({ open, onOpenChange }: ChatbotProps) {
     setPending(true);
 
     responseTimer.current = window.setTimeout(() => {
+      responseTimer.current = undefined;
       setMessages((current) => [
         ...current,
         {
@@ -78,7 +85,10 @@ export function Chatbot({ open, onOpenChange }: ChatbotProps) {
   };
 
   const resetChat = () => {
-    if (responseTimer.current) window.clearTimeout(responseTimer.current);
+    if (responseTimer.current !== undefined) {
+      window.clearTimeout(responseTimer.current);
+      responseTimer.current = undefined;
+    }
     setPending(false);
     setMessages([{ id: nextId.current++, role: "assistant", text: portfolio.assistant.welcome }]);
   };
@@ -88,6 +98,9 @@ export function Chatbot({ open, onOpenChange }: ChatbotProps) {
       <section
         className="chatbot-panel"
         id="portfolio-assistant"
+        role="dialog"
+        aria-modal="false"
+        aria-labelledby="portfolio-assistant-title"
         aria-label={`${portfolio.assistant.name} portfolio assistant`}
         aria-hidden={!open}
         inert={!open}
@@ -99,7 +112,7 @@ export function Chatbot({ open, onOpenChange }: ChatbotProps) {
               <i />
             </span>
             <span>
-              <strong>{portfolio.assistant.name}</strong>
+              <strong id="portfolio-assistant-title">{portfolio.assistant.name}</strong>
               <small><i /> Local portfolio guide</small>
             </span>
           </div>
@@ -113,7 +126,7 @@ export function Chatbot({ open, onOpenChange }: ChatbotProps) {
           </div>
         </header>
 
-        <div className="chatbot-messages" aria-live="polite">
+        <div className="chatbot-messages" aria-live="polite" aria-busy={pending}>
           {messages.map((message) => (
             <div className={`chat-message ${message.role}`} key={message.id}>
               {message.role === "assistant" && <Sparkles size={13} aria-hidden="true" />}

@@ -41,7 +41,7 @@ public/
 
 Use lowercase filenames exactly as shown. JPG, PNG, and WebP are supported, but the extension in `src/data/portfolio.ts` must match the actual file. For additional award cards, use names such as `recognition-02.jpg` and add the matching card data to the appropriate `awardGroups` entry.
 
-Each award and event has an `images` array in `src/data/portfolio.ts`. Add any number of image paths to that array to create a gallery. Set `proofUrl` to an image or PDF path when a certificate, ticket, or registration record is available. Empty arrays and proof links are handled automatically without broken controls.
+Each award and event has an `images` array in `src/data/portfolio.ts`. Add any number of image paths to that array to create a gallery; multi-image galleries rotate automatically every five seconds and can also be controlled manually. Opened images slowly pan across their scrollable frame while still supporting touch and mouse scrolling. Set `proofUrl` to an image or PDF path when a certificate, ticket, or registration record is available. Proof images remain scrollable so the full document can be read. Empty arrays and proof links are handled automatically without broken controls.
 
 Add `public/images/events/events-background.jpg` to replace the built-in illustrated Events and Conferences background. Project cards also include designed SVG fallbacks, so you can replace their `image` paths with screenshots whenever they are available.
 
@@ -66,7 +66,12 @@ npm run build
 
 ## Contact form
 
-GitHub Pages cannot process forms on its own. The message form validates the fields and opens the visitor's email application with a prepared message addressed to the `email` configured in `src/data/portfolio.ts`.
+The contact form sends messages through Formspree, so it does not open the visitor's email application. Create a Formspree form, then set its endpoint in one of these places:
+
+- Add the endpoint to `formspreeEndpoint` in `src/data/portfolio.ts`.
+- Or set `VITE_FORMSPREE_ENDPOINT` in the build environment.
+
+The endpoint looks like `https://formspree.io/f/your-form-id`. Formspree delivers submissions to the email address configured for that form. Do not put SMTP passwords or other private mail credentials in the frontend.
 
 ## Portfolio assistant
 
