@@ -135,6 +135,27 @@ export const portfolio = {
       fallbackImage: "images/awards/competition-placeholder.svg",
       cards: [
         {
+          date: "October 3–4, 2026",
+          title: "Build Over Nights: Kiro & Quick Hackathon 2026",
+          organization: "Amazon Web Services - Arthaland Century Pacific Tower",
+          description:
+            "Our team, NovaTech, emerged as champion under the Educational Crisis track of the Philippine-wide Build Over Nights: Kiro & Quick Hackathon 2026. We built Pairtive, a web app that identifies students' learning strengths and gaps through diagnostics, provides personalized learning paths through SkillGPS, and uses AI-powered matching to connect peers with complementary skills.",
+          image: "images/awards/build-over-nights.jpg",
+          images: [
+            "images/awards/build-over-nights.jpg",
+            "images/awards/build-over-nights2.jpg",
+            "images/awards/build-over-nights3.jpg",
+          ],
+          imageAlt: "Team NovaTech, Educational Crisis track champions, presenting Pairtive",
+          takeaways: [
+            "CHAMPION — Educational Crisis Track | Team NovaTech",
+            "Developed Pairtive using Kiro and Quick to support personalized learning and peer collaboration.",
+            "Strengthened teamwork, rapid prototyping, and pitching skills during an overnight hackathon.",
+          ],
+          proofUrl: "",
+          isPlaceholder: false,
+        },
+        {
           date: "September 2026",
           title: "JPCS Mini-Hackathon",
           organization: "Junior Philippine Computer Society - Lipa City Colleges",
@@ -297,6 +318,27 @@ export const portfolio = {
         "Explored ways to refine software solutions through AI-assisted workflows.",
       ],
       images: ["images/events/kiro.jpg","images/events/kiro2.jpg","images/events/kiro3.jpg"] as string[],
+      proofUrl: "",
+    },
+    {
+      year: "2026",
+      shortTitle: "AWS Builder Day Talk",
+      title: "AWS Builder Day Talk: Presenting Pairtive",
+      role: "Speaker & Hackathon Champion — Team NovaTech",
+      venue: "SMX Convention Center Aura",
+      date: "October 5, 2026",
+      tags: ["Public Speaking", "Hackathon Champion", "AI in Education"],
+      description:
+        "Presented Pairtive at AWS Builder Day after our team, NovaTech, emerged as champion under the Educational Crisis track of the Philippine-wide Build Over Nights: Kiro and Quick Hackathon. Pairtive is a web app that helps students identify their learning strengths and gaps through diagnostics, navigate personalized learning paths through SkillGPS, and connect with peers whose strengths complement their learning needs through AI-powered matching.",
+      takeaways: [
+        "Showcased how Pairtive connects learning diagnostics, personalized guidance, and peer collaboration.",
+        "Shared our team's experience building an education-focused solution using Kiro and Quick.",
+        "Strengthened my public speaking skills by presenting our winning solution to the AWS Builder Day audience.",
+      ],
+      images: [
+        "images/events/aws-builder-day.jpg",
+        "images/events/aws-builder-day2.jpg",
+      ] as string[],
       proofUrl: "",
     },
   ],
