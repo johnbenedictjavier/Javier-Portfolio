@@ -66,12 +66,12 @@ npm run build
 
 ## Contact form
 
-The contact form sends messages through Formspree, so it does not open the visitor's email application. Create a Formspree form, then set its endpoint in one of these places:
+The contact form sends messages through Formspree when an endpoint is configured. Create a Formspree form, then set its endpoint in one of these places:
 
 - Add the endpoint to `formspreeEndpoint` in `src/data/portfolio.ts`.
 - Or set `VITE_FORMSPREE_ENDPOINT` in the build environment.
 
-The endpoint looks like `https://formspree.io/f/your-form-id`. Formspree delivers submissions to the email address configured for that form. Do not put SMTP passwords or other private mail credentials in the frontend.
+The endpoint looks like `https://formspree.io/f/your-form-id`. Formspree delivers submissions to the email address configured for that form. If no endpoint is configured, the form opens the visitor's email application with a prepared message instead. Do not put SMTP passwords or other private mail credentials in the frontend.
 
 ## Portfolio assistant
 

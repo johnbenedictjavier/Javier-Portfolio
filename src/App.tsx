@@ -211,6 +211,7 @@ function AutoPanImage({ src, alt, className = "", onError }: AutoPanImageProps) 
   const [imageReady, setImageReady] = useState(false);
   const axis = useRef<"x" | "y">("y");
   const direction = useRef<1 | -1>(1);
+  const scrollPosition = useRef(0);
   const animationFrame = useRef<number | null>(null);
   const lastFrameTime = useRef<number | null>(null);
   const manualPauseUntil = useRef(0);
@@ -236,6 +237,7 @@ function AutoPanImage({ src, alt, className = "", onError }: AutoPanImageProps) 
     programmaticScrollUntil.current = performance.now() + 200;
     viewport.scrollLeft = 0;
     viewport.scrollTop = 0;
+    scrollPosition.current = 0;
     direction.current = 1;
     axis.current = viewport.scrollHeight - viewport.clientHeight >= viewport.scrollWidth - viewport.clientWidth ? "y" : "x";
     lastFrameTime.current = null;
@@ -270,13 +272,11 @@ function AutoPanImage({ src, alt, className = "", onError }: AutoPanImageProps) 
       if (performance.now() >= manualPauseUntil.current) {
         const horizontalOverflow = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
         const verticalOverflow = Math.max(0, viewport.scrollHeight - viewport.clientHeight);
-        const maximum = Math.max(horizontalOverflow, verticalOverflow);
-        if (maximum > 1) {
-          axis.current = verticalOverflow >= horizontalOverflow ? "y" : "x";
-          const current = axis.current === "y" ? viewport.scrollTop : viewport.scrollLeft;
-          // Keep the travel time consistent so long images do not crawl.
-          const pixelsPerMillisecond = maximum / 15000;
-          let next = current + (direction.current * elapsed * pixelsPerMillisecond);
+        const maximum = axis.current === "y" ? verticalOverflow : horizontalOverflow;
+        if (maximum > 0.5) {
+          // Keep short pans visible while avoiding a crawl on large images.
+          const pixelsPerMillisecond = Math.max(0.018, maximum / 10000);
+          let next = scrollPosition.current + (direction.current * elapsed * pixelsPerMillisecond);
           if (next >= maximum) {
             next = maximum;
             direction.current = -1;
@@ -284,7 +284,8 @@ function AutoPanImage({ src, alt, className = "", onError }: AutoPanImageProps) 
             next = 0;
             direction.current = 1;
           }
-          programmaticScrollUntil.current = performance.now() + 80;
+          scrollPosition.current = next;
+          programmaticScrollUntil.current = performance.now() + 120;
           if (axis.current === "y") viewport.scrollTop = next;
           else viewport.scrollLeft = next;
         }
@@ -309,7 +310,13 @@ function AutoPanImage({ src, alt, className = "", onError }: AutoPanImageProps) 
       onTouchStart={pauseForInteraction}
       onWheel={pauseForInteraction}
       onScroll={() => {
-        if (performance.now() >= programmaticScrollUntil.current) pauseForInteraction();
+        if (performance.now() >= programmaticScrollUntil.current) {
+          const viewport = viewportRef.current;
+          if (viewport) {
+            scrollPosition.current = axis.current === "y" ? viewport.scrollTop : viewport.scrollLeft;
+          }
+          pauseForInteraction();
+        }
       }}
     >
       <img ref={imageRef} src={src} alt={alt} onLoad={sizeImage} onError={onError} draggable={false} />
@@ -1552,10 +1559,14 @@ function Contact({ onOpenAssistant }: ContactProps) {
     const form = new FormData(formElement);
     const name = String(form.get("name") ?? "").trim();
     const email = String(form.get("email") ?? "").trim();
+    const message = String(form.get("message") ?? "").trim();
     const endpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT || portfolio.formspreeEndpoint;
 
     if (!endpoint) {
-      setStatus("Contact delivery is not configured yet. Add the Formspree endpoint first.");
+      const subject = encodeURIComponent(`Portfolio message from ${name}`);
+      const body = encodeURIComponent(`${message}\n\nFrom: ${name}\nReply to: ${email}`);
+      setStatus("Opening your email app...");
+      window.location.href = `mailto:${portfolio.email}?subject=${subject}&body=${body}`;
       return;
     }
 
@@ -1604,7 +1615,7 @@ function Contact({ onOpenAssistant }: ContactProps) {
           <div className="contact-details" data-reveal>
             <div className="contact-direct">
               <span className="contact-icon"><Mail size={20} /></span>
-              <div><small>Email me directly</small><span className="contact-email-value">{portfolio.email}</span></div>
+              <div><small>Email me directly</small><a className="contact-email-value" href={`mailto:${portfolio.email}`}>{portfolio.email}</a></div>
               <button type="button" onClick={copyEmail} aria-label="Copy email address"><Copy size={17} /><span>{copied ? "Copied" : "Copy"}</span></button>
             </div>
             <button className="assistant-invite" type="button" onClick={onOpenAssistant}>
@@ -1637,7 +1648,7 @@ function Contact({ onOpenAssistant }: ContactProps) {
             <button className="button button-primary form-submit" type="submit" disabled={isSending}>
               {isSending ? "Sending..." : "Send message"} <Send size={17} />
             </button>
-            <p className="form-note" aria-live="polite">{status || "Messages are delivered securely through the contact form."}</p>
+            <p className="form-note" aria-live="polite">{status || "Uses Formspree when configured, or opens your email app."}</p>
           </form>
         </div>
       </div>
