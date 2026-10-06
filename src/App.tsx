@@ -269,7 +269,9 @@ function AutoPanImage({ src, alt, className = "", onError }: AutoPanImageProps) 
           : viewport.scrollWidth - viewport.clientWidth;
         if (maximum > 1) {
           const current = axis.current === "y" ? viewport.scrollTop : viewport.scrollLeft;
-          let next = current + (direction.current * elapsed * 0.018);
+          // Keep short pans from completing too quickly while preserving the existing speed cap for long images.
+          const pixelsPerMillisecond = Math.min(0.018, maximum / 45000);
+          let next = current + (direction.current * elapsed * pixelsPerMillisecond);
           if (next >= maximum) {
             next = maximum;
             direction.current = -1;
@@ -307,6 +309,88 @@ function AutoPanImage({ src, alt, className = "", onError }: AutoPanImageProps) 
     >
       <img ref={imageRef} src={src} alt={alt} onLoad={sizeImage} onError={onError} draggable={false} />
     </div>
+  );
+}
+
+type CrossfadeImageProps = {
+  src: string;
+  alt: string;
+  fallbackSrc?: string;
+  className?: string;
+};
+
+function CrossfadeImage({ src, alt, fallbackSrc, className = "" }: CrossfadeImageProps) {
+  const [displayedSrc, setDisplayedSrc] = useState(src);
+  const [incomingSrc, setIncomingSrc] = useState<string | null>(null);
+  const [incomingVisible, setIncomingVisible] = useState(false);
+
+  useEffect(() => {
+    if (src === displayedSrc) return;
+    let cancelled = false;
+
+    const queueIncoming = (nextSrc: string) => {
+      if (cancelled) return;
+      setIncomingSrc(nextSrc);
+      setIncomingVisible(false);
+      window.requestAnimationFrame(() => {
+        if (!cancelled) setIncomingVisible(true);
+      });
+    };
+
+    const preload = new window.Image();
+    preload.onload = () => queueIncoming(src);
+    preload.onerror = () => {
+      if (!fallbackSrc || fallbackSrc === displayedSrc || src === fallbackSrc) return;
+      const fallback = new window.Image();
+      fallback.onload = () => queueIncoming(fallbackSrc);
+      fallback.src = fallbackSrc;
+    };
+    preload.src = src;
+
+    return () => {
+      cancelled = true;
+    };
+  }, [displayedSrc, fallbackSrc, src]);
+
+  useEffect(() => {
+    if (!incomingSrc || !incomingVisible) return;
+    const timer = window.setTimeout(() => {
+      setDisplayedSrc(incomingSrc);
+      setIncomingSrc(null);
+      setIncomingVisible(false);
+    }, 420);
+    return () => window.clearTimeout(timer);
+  }, [incomingSrc, incomingVisible]);
+
+  const handleError = (event: SyntheticEvent<HTMLImageElement>) => {
+    const image = event.currentTarget;
+    if (fallbackSrc && image.dataset.fallback !== "true") {
+      image.dataset.fallback = "true";
+      image.src = fallbackSrc;
+    }
+  };
+
+  return (
+    <>
+      <img
+        className={`crossfade-image crossfade-image-current ${className}`}
+        src={displayedSrc}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        onError={handleError}
+      />
+      {incomingSrc && (
+        <img
+          className={`crossfade-image crossfade-image-next ${incomingVisible ? "is-visible" : ""} ${className}`}
+          src={incomingSrc}
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          onError={handleError}
+        />
+      )}
+    </>
   );
 }
 
@@ -1011,18 +1095,10 @@ function AwardDeck({ group, index, onOpen }: AwardDeckProps) {
               key={`${group.id}-${card.title}`}
             >
               <span className="award-photo-wrap">
-                <img
-                  key={`${group.id}-${card.title}-${displayedImage}`}
+                <CrossfadeImage
                   src={assetPath(displayedImage)}
                   alt={card.imageAlt}
-                  loading="lazy"
-                  decoding="async"
-                  onError={(event) => {
-                    const image = event.currentTarget;
-                    if (image.dataset.fallback) return;
-                    image.dataset.fallback = "true";
-                    image.src = assetPath(group.fallbackImage);
-                  }}
+                  fallbackSrc={assetPath(group.fallbackImage)}
                 />
                 <span className="award-photo-date">{card.date}</span>
               </span>
@@ -1130,17 +1206,10 @@ function EventCard({ event, index, onOpen }: { event: EventItem; index: number; 
       <div className="event-year"><span>{event.year}</span><i /></div>
       <div className="event-card-content">
         <div className="event-card-media">
-          <img
-            key={`${event.title}-${activeImage}`}
+          <CrossfadeImage
             src={assetPath(displayedImage)}
             alt={`${event.title} event photo ${activeImage + 1}`}
-            loading="lazy"
-            decoding="async"
-            onError={(imageEvent) => {
-              if (imageEvent.currentTarget.dataset.fallback) return;
-              imageEvent.currentTarget.dataset.fallback = "true";
-              imageEvent.currentTarget.src = assetPath("images/events/events-background-placeholder.svg");
-            }}
+            fallbackSrc={assetPath("images/events/events-background-placeholder.svg")}
           />
           <span>{imageCount > 1 ? `${activeImage + 1} / ${imageCount}` : "Event photo"}</span>
         </div>
