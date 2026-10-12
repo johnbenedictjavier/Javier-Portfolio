@@ -371,13 +371,13 @@ export const portfolio = {
       startDate: "2026-10-10",
       year: "2026",
       shortTitle: "AppBuilder PH",
-      title: "App Builder Seminar featuring Mr. Bryl Lim",
-      role: "Seminar Participant",
+      title: "App Builder PH featuring Mr. Bryl Lim",
+      role: "Attendee",
       venue: "Cyberzone, SM Makati",
       date: "October 10, 2026",
       tags: ["App Development", "AI-Assisted Development", "Software Engineering"],
       description:
-        "Attended the AppBuilder PH seminar with Bryl Lim at Cyberzone, SM Makati, gaining insights into application development, artificial intelligence, and software engineering. The experience broadened my perspective on building applications and using AI tools to support the development process.",
+        "Attended the AppBuilder PH with Bryl Lim at Cyberzone, SM Makati, gaining insights into application development, artificial intelligence, and software engineering. The experience broadened my perspective on building applications and using AI tools to support the development process.",
       takeaways: [
         "Gained insights into AI-assisted application development.",
         "Deepened my understanding of the role of programming fundamentals when working with AI tools.",
