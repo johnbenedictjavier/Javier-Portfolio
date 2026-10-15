@@ -59,6 +59,7 @@ describe("getAssistantResponse", () => {
   it("orders events from newest to oldest", () => {
     const events = getEventsNewestFirst();
     expect(events.map((event) => event.shortTitle)).toEqual([
+      "AppBuilder PH",
       "AWS Builder Day Talk",
       "AIDLC Workshop with Kiro",
       "WOCEE",

@@ -305,7 +305,7 @@ export const portfolio = {
         "Observed current approaches to connectivity and digital transformation.",
       ],
       images: ["images/events/pcta.jpg","images/events/pcta1.jpg","images/events/pcta2.jpg","images/events/pcta3.jpg"] as string[],
-      proofUrl: "",
+      proofUrl: "images/events/pcta-cert.png",
     },
     {
       startDate: "2026-08-05",
