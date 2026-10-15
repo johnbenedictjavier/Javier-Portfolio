@@ -452,11 +452,18 @@ export const portfolio = {
   ],
   professionalExperience: [
     {
+  period: "October 3, 2026 – October 4, 2026",
+  role: "Project Lead & Product Designer",
+  organization: "Team NovaTech — PairTive",
+  detail:
+    "Led Team NovaTech in developing PairTive, an AI-powered educational web application, during the Build Over Nights: Kiro x Quick Hackathon 2026. Coordinated team responsibilities, guided product design, and helped integrate diagnostic assessments, personalized learning paths through SkillGPS, and AI-powered peer matching based on complementary strengths and learning gaps. Presented the solution with the team, earning Champion in the Educational Crisis Track. \nTechnologies: Supabase, Daily.co, AI Integration, Web Development. \nProject type: Hackathon Project.",
+},
+    {
       period: "March 19, 2025 – May 23, 2025",
       role: "Freelance Software Developer",
       organization: "Chicken Ordering & Management System — Client Project",
       detail:
-        "Developed a kiosk-style chicken ordering and management system for a client using Python, Flask, and HTML. Built the backend application logic with Flask and Python while using HTML to structure the user interface. The system incorporated CRUD (Create, Read, Update, Delete) operations for managing system data and provided a kiosk-inspired ordering experience. Technologies: Python, Flask, HTML, CRUD, Web Development. Project type: Client Project.",
+        "Developed a kiosk-style chicken ordering and management system for a client using Python, Flask, and HTML. Built the backend application logic with Flask and Python while using HTML to structure the user interface. The system incorporated CRUD (Create, Read, Update, Delete) operations for managing system data and provided a kiosk-inspired ordering experience. \nTechnologies: Python, Flask, HTML, CRUD, Web Development. \nProject type: Client Project.",
     },
   ],
   skillGroups: [
