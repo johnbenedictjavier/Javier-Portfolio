@@ -179,6 +179,7 @@ export function Chatbot({ open, onOpenChange }: ChatbotProps) {
       <button
         className="chatbot-toggle"
         type="button"
+        aria-label={open ? `Close ${portfolio.assistant.name}` : `Open ${portfolio.assistant.name}`}
         aria-expanded={open}
         aria-controls="portfolio-assistant"
         onClick={() => onOpenChange(!open)}
@@ -186,7 +187,6 @@ export function Chatbot({ open, onOpenChange }: ChatbotProps) {
         <span className="chatbot-toggle-icon">
           {open ? <X size={22} /> : <img className="chatbot-toggle-avatar" src={assistantAvatar} alt="" />}
         </span>
-        <span className="chatbot-toggle-label">{open ? "Close" : "Ask my AI"}</span>
         {!open && <i className="chatbot-notification" />}
       </button>
     </div>

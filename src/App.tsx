@@ -1557,11 +1557,46 @@ function Work() {
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [showProjectLibrary, setShowProjectLibrary] = useState(false);
   const projectLibraryTriggerRef = useRef<HTMLButtonElement>(null);
+  const projectPointerStart = useRef<{ x: number; y: number } | null>(null);
+  const suppressProjectClick = useRef(false);
   const activeProject = portfolio.projects[activeProjectIndex];
   const projectCount = portfolio.projects.length;
 
   const changeProject = (direction: number) => {
     setActiveProjectIndex((current) => (current + direction + portfolio.projects.length) % portfolio.projects.length);
+  };
+
+  const handleProjectPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    suppressProjectClick.current = false;
+    projectPointerStart.current = { x: event.clientX, y: event.clientY };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleProjectPointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const start = projectPointerStart.current;
+    projectPointerStart.current = null;
+    if (!start) return;
+
+    const distanceX = event.clientX - start.x;
+    const distanceY = event.clientY - start.y;
+    if (Math.abs(distanceX) < 48 || Math.abs(distanceX) <= Math.abs(distanceY)) return;
+
+    suppressProjectClick.current = true;
+    changeProject(distanceX < 0 ? 1 : -1);
+  };
+
+  const handleProjectPointerCancel = () => {
+    projectPointerStart.current = null;
+    suppressProjectClick.current = false;
+  };
+
+  const selectProjectCard = (index: number) => {
+    if (suppressProjectClick.current) {
+      suppressProjectClick.current = false;
+      return;
+    }
+    setActiveProjectIndex(index);
   };
 
   const selectProjectFromLibrary = (index: number) => {
@@ -1595,7 +1630,13 @@ function Work() {
           </div>
         </div>
         <div className="work-gallery" id="featured-projects" data-reveal>
-          <div className="work-stage" aria-label="Project gallery">
+          <div
+            className="work-stage"
+            aria-label="Project gallery"
+            onPointerDown={handleProjectPointerDown}
+            onPointerUp={handleProjectPointerUp}
+            onPointerCancel={handleProjectPointerCancel}
+          >
             {portfolio.projects.map((project, index) => {
               const rawOffset = index - activeProjectIndex;
               const half = Math.floor(projectCount / 2);
@@ -1618,7 +1659,7 @@ function Work() {
                   type="button"
                   style={cardStyle}
                   data-project-offset={offset}
-                  onClick={() => setActiveProjectIndex(index)}
+                  onClick={() => selectProjectCard(index)}
                   aria-label={`View ${project.title}`}
                   aria-current={index === activeProjectIndex ? "true" : undefined}
                   key={project.number}

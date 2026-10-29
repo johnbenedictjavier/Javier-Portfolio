@@ -99,6 +99,53 @@
   border-radius: 50%;
 }
 
+.chatbot-toggle {
+  width: 58px;
+  min-width: 58px;
+  height: 64px;
+  min-height: 48px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.chatbot-toggle:hover {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  transform: translateY(-3px);
+}
+
+.chatbot-toggle-icon {
+  width: 58px;
+  height: 64px;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.chatbot-toggle-avatar {
+  width: 58px;
+  height: 64px;
+  object-fit: contain;
+  object-position: center bottom;
+  transform: none;
+}
+
+.chatbot-toggle-label {
+  display: none;
+}
+
+.chatbot-notification {
+  top: 2px;
+  right: 1px;
+  left: auto;
+}
+
 .portrait-orbit,
 .portrait-corners,
 .portrait-scan,
@@ -169,6 +216,7 @@
 .work-stage {
   height: 420px;
   padding-top: 4px;
+  touch-action: pan-y;
 }
 
 .work-stage-card {
@@ -374,6 +422,18 @@
 }
 
 @media (max-width: 860px) {
+  .award-decks-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .award-deck,
+  .award-deck:last-child:nth-child(odd) {
+    width: min(100%, 520px);
+    max-width: 520px;
+    grid-column: auto;
+    justify-self: center;
+  }
+
   .work-section-heading .section-heading-row {
     grid-template-columns: 1fr;
     gap: 22px;
@@ -413,6 +473,61 @@
 }
 
 @media (max-width: 620px) {
+  .chatbot-toggle,
+  .chatbot-toggle-icon {
+    width: 52px;
+    min-width: 52px;
+    height: 58px;
+  }
+
+  .chatbot-toggle-avatar {
+    width: 52px;
+    height: 58px;
+  }
+
+  .principles-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .principle-card {
+    width: 100%;
+    min-width: 0;
+    padding: 13px 8px;
+  }
+
+  .principle-card h3 {
+    margin-top: 26px;
+    font-size: clamp(0.62rem, 3vw, 0.78rem);
+    overflow-wrap: anywhere;
+  }
+
+  .work-stage {
+    height: 270px;
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+
+  .work-stage-card {
+    width: 100%;
+    max-width: none;
+    height: 250px;
+  }
+
+  .work-stage-card:not(.is-active) {
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .event-card-content {
+    height: auto;
+    min-height: 0;
+  }
+
+  .event-card-body {
+    overflow: visible;
+  }
+
   .hero-portrait-column {
     width: 100%;
   }

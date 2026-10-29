@@ -475,7 +475,7 @@ export const portfolio = {
   ],
   professionalExperience: [
     {
-      period: "2026 - Present",
+      period: "October 25, 2026 - Present",
       role: "Web Developer",
       organization: "JPCS Non-Members Payment Site",
       detail:
