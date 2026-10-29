@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">Project preview placeholder</title>
+  <desc id="desc">A neutral placeholder for a project image that will be added later.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#1b1d23" />
+      <stop offset="1" stop-color="#0e1015" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#background)" />
+  <g fill="none" stroke="#f2f2ef" stroke-opacity=".12">
+    <path d="M0 140h1200M0 280h1200M0 420h1200M0 560h1200" />
+    <path d="M180 0v700M420 0v700M660 0v700M900 0v700" />
+  </g>
+  <rect x="350" y="190" width="500" height="320" rx="24" fill="#f2f2ef" fill-opacity=".06" stroke="#f2f2ef" stroke-opacity=".24" />
+  <path d="M480 350h240M600 270v160" stroke="#f2f2ef" stroke-opacity=".6" stroke-width="18" stroke-linecap="round" />
+  <text x="600" y="580" fill="#f2f2ef" fill-opacity=".68" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" letter-spacing="5">PROJECT PREVIEW</text>
+</svg>

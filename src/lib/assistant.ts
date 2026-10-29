@@ -17,7 +17,7 @@ const intents: readonly Intent[] = [
         .join("; ")}.`,
   },
   {
-    keywords: ["project", "projects", "portfolio", "built", "build", "work", "case study"],
+    keywords: ["project", "projects", "portfolio", "built", "build", "work", "case study", "pairtive", "himigora", "latequiz"],
     answer: () =>
       `Featured work includes ${portfolio.projects
         .map((project) => `${project.title} (${project.type})`)
@@ -38,14 +38,14 @@ const intents: readonly Intent[] = [
         .join(", ")}. You can find the responsibilities and impact in the Journey section.`,
   },
   {
-    keywords: ["event", "events", "conference", "conferences", "wocee", "pcta", "iot", "expo"],
+    keywords: ["event", "events", "conference", "conferences", "wocee", "pcta", "iot", "expo", "jpcs"],
     answer: () =>
       `Javier has attended ${getEventsNewestFirst()
         .map((event) => `${event.title} (${event.year})`)
         .join(", ")}. Open Events and Conferences to view the technologies explored and key takeaways.`,
   },
   {
-    keywords: ["experience", "professional experience", "internship", "employment"],
+    keywords: ["experience", "professional experience", "internship", "employment", "web developer", "payment site", "qr attendance"],
     answer: () =>
       portfolio.professionalExperience.length
         ? `Javier's professional experience includes ${portfolio.professionalExperience.map((item) => `${item.role} at ${item.organization}`).join(", ")}.`

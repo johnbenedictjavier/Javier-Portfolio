@@ -25,8 +25,8 @@ export const portfolio = {
   primaryCredential: dostSeiScholarship,
   location: "Lipa City, Batangas",
   email: "johnbenedictjavier15@gmail.com",
-  profileImage: "images/profile/john-benedict-javier.jpg",
-  profileFallbackImage: "https://avatars.githubusercontent.com/u/326827759?v=4",
+  profileImage: "images/profile/johnbenedictjavier-sharp.png",
+  profileFallbackImage: "images/profile/john-benedict-javier.jpg",
   profileAlt: "Portrait of John Benedict Javier",
   formspreeEndpoint: "",
   speakerHighlights: [
@@ -74,7 +74,7 @@ export const portfolio = {
     ],
   },
   stats: [
-    { value: "05", label: "Featured projects" },
+    { value: "09", label: "Featured projects" },
     { value: "27", label: "Skills and tools" },
     { value: "04", label: "Leadership roles" },
     { value: "04", label: "Recognitions & distinctions" },
@@ -391,6 +391,29 @@ export const portfolio = {
       ] as string[],
       proofUrl: "",
     },
+    {
+      startDate: "2026-10-29",
+      year: "2026",
+      shortTitle: "JPCS Talk",
+      title: "JPCS Talk: Presenting PairTive",
+      role: "Invited Speaker & Project Lead - Team NovaTech",
+      venue: "LCC Auditorium",
+      date: "October 29, 2026",
+      tags: ["Public Speaking", "PairTive", "Educational Technology", "Project Leadership"],
+      description:
+        "Invited to speak again as the project lead of Team NovaTech, presenting PairTive to CCTE students and explaining how the system responds to challenges in learning through diagnostics, SkillGPS, and AI-powered peer matching.",
+      takeaways: [
+        "Presented PairTive to fellow CCTE students in the LCC Auditorium.",
+        "Explained how diagnostics and SkillGPS turn learning gaps into clearer next steps.",
+        "Shared the value of teamwork, product thinking, and responsible AI in educational technology.",
+      ],
+      images: ["images/events/jpcs-talk-2026.jpg",
+        "images/events/jpcs-talk-2026-2.jpg",
+        "images/events/jpcs-talk-2026-3.jpg",
+        "images/events/jpcs-talk-2026-4.jpg",
+      ] as string[],
+      proofUrl: "",
+    },
   ],
   education: [
     {
@@ -452,6 +475,13 @@ export const portfolio = {
   ],
   professionalExperience: [
     {
+      period: "2026 - Present",
+      role: "Web Developer",
+      organization: "JPCS Non-Members Payment Site",
+      detail:
+        "Developed the JPCS-LCC non-members payment site with a public payment flow and an administrative dashboard for payment reports. The system also supports QR-powered attendance, clearer financial transparency, and privacy-aware handling of member and payment data.",
+    },
+    {
   period: "October 3, 2026 – October 4, 2026",
   role: "Project Lead & Product Designer",
   organization: "Team NovaTech — PairTive",
@@ -510,7 +540,7 @@ export const portfolio = {
         { name: "Vercel", icon: "vercel", color: "var(--text)" },
         { name: "Kiro", icon: "kiro", color: "#a98bff" },
         { name: "Figma", icon: "figma", color: "#f24e1e" },
-        { name: "Canva", icon: "canva", color: "#7d5cff" },
+        { name: "Canva", icon: "canva", color: "#00c4cc" },
       ],
     },
     {
@@ -534,6 +564,7 @@ export const portfolio = {
       number: "01",
       title: "Tech Revive",
       type: "Educational Pygame",
+      category: "technical",
       description:
         "Tech Revive is a unique educational game where players become skilled technicians fixing electronic devices. It teaches players how to use tools effectively while keeping the experience fun and informative.",
       tags: ["Python", "Pygame", "Game Development"],
@@ -547,6 +578,7 @@ export const portfolio = {
       number: "02",
       title: "ELFRESCO PH",
       type: "Web E-commerce Platform",
+      category: "digital",
       description:
         "ELFRESCO PH is a web-based e-commerce platform for a modern container-house business. Customers can explore house designs, review product details, select available options, and manage a shopping cart through an organized online interface.",
       tags: ["Web Development", "E-commerce", "Responsive UI"],
@@ -560,6 +592,7 @@ export const portfolio = {
       number: "03",
       title: "Laurel & Ladle",
       type: "Luxury Food Ordering System",
+      category: "digital",
       description:
         "Laurel & Ladle is an elegant food-ordering system with complete CRUD workflows for menu and order management, automatic price calculations, and a polished receipt-style confirmation for every completed order.",
       tags: ["CRUD", "Food Ordering", "Auto-calculation", "Responsive UI"],
@@ -573,6 +606,7 @@ export const portfolio = {
       number: "04",
       title: "Barangay Information System",
       type: "Community Information Platform",
+      category: "technical",
       description:
         "A community management system that handles CRUD operations for resident records, streamlines official document requests, and organizes public infrastructure concerns for clearer barangay services.",
       tags: ["CRUD", "Resident Records", "Document Requests", "Civic Tech"],
@@ -586,14 +620,71 @@ export const portfolio = {
       number: "05",
       title: "Payroll Management System",
       type: "Business Management System",
+      category: "technical",
       description:
         "A structured payroll platform for managing employee information, departments, positions, salary details, and related payroll records through dependable CRUD workflows.",
       tags: ["CRUD", "Payroll", "Employee Records", "Business Systems"],
       image: "images/projects/payroll.jpg",
       fallbackImage: "images/projects/payroll-management-system-placeholder.svg",
       sourceUrl: "",
-      liveUrl: "",
+      liveUrl: "https://paynexus-psi.vercel.app",
       accent: "blue",
+    },
+    {
+      number: "06",
+      title: "HimiGora",
+      type: "AI-assisted Karaoke Companion",
+      category: "digital",
+      description:
+        "HimiGora is a karaoke companion that stores favorite song numbers so users can quickly remember what they want to sing. It also provides AI-assisted search to help discover songs based on a user's preferences.",
+      tags: ["AI Search", "Karaoke", "Preference Matching", "Personal Utility"],
+      image: "images/projects/himigora.jpg",
+      fallbackImage: "images/projects/project-placeholder.svg",
+      sourceUrl: "",
+      liveUrl: "https://himigora.vercel.app",
+      accent: "cyan",
+    },
+    {
+      number: "07",
+      title: "LateQuiz",
+      type: "Digital Quiz Platform",
+      category: "digital",
+      description:
+        "LateQuiz is a digital quiz system for third-year Computer Science students at Lipa City Colleges. It changes the traditional process of taking late quizzes into a more organized digital experience for students and instructors.",
+      tags: ["Education", "Digital Assessment", "Quiz Management", "Student Experience"],
+      image: "images/projects/latequiz.jpg",
+      fallbackImage: "images/projects/project-placeholder.svg",
+      sourceUrl: "",
+      liveUrl: "https://latequiz.vercel.app",
+      accent: "blue",
+    },
+        {
+      number: "08",
+      title: "PairTive",
+      type: "AI-powered Educational System",
+      category: "technical",
+      description:
+        "PairTive is an educational support system that uses diagnostics to identify learning strengths and gaps, SkillGPS to guide students toward personalized learning paths, and AI-powered matching to connect peers with complementary skills. It was designed to respond to educational crisis through clearer support and collaboration.",
+      tags: ["Diagnostics", "SkillGPS", "AI Matching", "Educational Technology"],
+      image: "images/projects/pairtive.jpg",
+      fallbackImage: "images/projects/project-placeholder.svg",
+      sourceUrl: "",
+      liveUrl: "https://pairtive-ec.vercel.app",
+      accent: "violet",
+    },
+    {
+      number: "09",
+      title: "JPCS Payment Site",
+      type: "Event Payment System",
+      category: "technical",
+      description:
+        "The JPCS Payment Site is a payment system for upcoming JPCS-LCC events. It gives participants a clear public payment flow while helping organizers keep payment records organized for verification and reporting.",
+      tags: ["Payments", "Event Management", "Admin Reports", "Data Privacy"],
+      image: "images/projects/jpcs-payment-site.jpg",
+      fallbackImage: "images/projects/project-placeholder.svg",
+      sourceUrl: "",
+      liveUrl: "https://jpcs-nonmembers.vercel.app",
+      accent: "cyan",
     },
   ],
   socials: [
@@ -630,6 +721,7 @@ export const portfolio = {
   ],
   assistant: {
     name: "Javi AI",
+    avatarImage: "images/profile/mascot.png",
     welcome:
       "Hi! I'm Javier's portfolio assistant. Ask me about his skills, education, projects, awards, events, leadership, or how to get in touch.",
     suggestions: [

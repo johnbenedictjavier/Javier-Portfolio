@@ -36,6 +36,10 @@ describe("getAssistantResponse", () => {
     expect(response).toContain("Laurel & Ladle");
     expect(response).toContain("Barangay Information System");
     expect(response).toContain("Payroll Management System");
+    expect(response).toContain("PairTive");
+    expect(response).toContain("HimiGora");
+    expect(response).toContain("LateQuiz");
+    expect(response).toContain("JPCS Payment Site");
   });
 
   it("answers award questions without placeholder achievements", () => {
@@ -59,6 +63,7 @@ describe("getAssistantResponse", () => {
   it("orders events from newest to oldest", () => {
     const events = getEventsNewestFirst();
     expect(events.map((event) => event.shortTitle)).toEqual([
+      "JPCS Talk",
       "AppBuilder PH",
       "AWS Builder Day Talk",
       "AIDLC Workshop with Kiro",

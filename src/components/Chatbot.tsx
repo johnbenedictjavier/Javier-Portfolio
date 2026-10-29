@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Bot, MessageCircle, RotateCcw, Send, Sparkles, X } from "lucide-react";
+import { RotateCcw, Send, X } from "lucide-react";
 import { portfolio } from "../data/portfolio";
 import { getAssistantResponse } from "../lib/assistant";
 
@@ -15,6 +15,7 @@ type ChatbotProps = {
 };
 
 export function Chatbot({ open, onOpenChange }: ChatbotProps) {
+  const assistantAvatar = `${import.meta.env.BASE_URL}${portfolio.assistant.avatarImage}`;
   const [messages, setMessages] = useState<Message[]>([
     { id: 0, role: "assistant", text: portfolio.assistant.welcome },
   ]);
@@ -108,7 +109,7 @@ export function Chatbot({ open, onOpenChange }: ChatbotProps) {
         <header className="chatbot-header">
           <div className="chatbot-identity">
             <span className="chatbot-avatar" aria-hidden="true">
-              <Bot size={19} />
+              <img src={assistantAvatar} alt="" />
               <i />
             </span>
             <span>
@@ -129,7 +130,11 @@ export function Chatbot({ open, onOpenChange }: ChatbotProps) {
         <div className="chatbot-messages" aria-live="polite" aria-busy={pending}>
           {messages.map((message) => (
             <div className={`chat-message ${message.role}`} key={message.id}>
-              {message.role === "assistant" && <Sparkles size={13} aria-hidden="true" />}
+              {message.role === "assistant" && (
+                <span className="chat-message-avatar-wrap" aria-hidden="true">
+                  <img className="chat-message-avatar" src={assistantAvatar} alt="" />
+                </span>
+              )}
               <p>{message.text}</p>
             </div>
           ))}
@@ -179,7 +184,7 @@ export function Chatbot({ open, onOpenChange }: ChatbotProps) {
         onClick={() => onOpenChange(!open)}
       >
         <span className="chatbot-toggle-icon">
-          {open ? <X size={22} /> : <MessageCircle size={22} />}
+          {open ? <X size={22} /> : <img className="chatbot-toggle-avatar" src={assistantAvatar} alt="" />}
         </span>
         <span className="chatbot-toggle-label">{open ? "Close" : "Ask my AI"}</span>
         {!open && <i className="chatbot-notification" />}

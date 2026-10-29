@@ -4,7 +4,6 @@ import {
   useState,
   type CSSProperties,
   type FormEvent,
-  type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
   type SyntheticEvent,
@@ -42,7 +41,6 @@ import {
   MessageSquareText,
   MonitorSmartphone,
   Moon,
-  Palette,
   Send,
   Sparkles,
   Sun,
@@ -81,11 +79,11 @@ import { getEventsNewestFirst, portfolio } from "./data/portfolio";
 
 const navLinks = [
   { label: "About", href: "#about" },
-  { label: "Events", href: "#events" },
+  { label: "Awards", href: "#awards" },
+  { label: "Trainings", href: "#events" },
   { label: "Journey", href: "#journey" },
-  { label: "Skills", href: "#skills" },
+  { label: "What I Can Do", href: "#skills" },
   { label: "Work", href: "#work" },
-  { label: "Contact", href: "#contact" },
 ] as const;
 
 const socialIcons: Record<string, LucideIcon> = {
@@ -98,6 +96,26 @@ const socialIcons: Record<string, LucideIcon> = {
 };
 
 const skillIcons = [Code2, Boxes, TerminalSquare, Users, Bot];
+
+const CanvaIcon: IconType = ({ className, size = 30, title, ...props }) => (
+  <svg
+    className={className}
+    width={size}
+    height={size}
+    viewBox="0 0 32 32"
+    fill="none"
+    role={title ? "img" : undefined}
+    aria-hidden={title ? undefined : true}
+    {...props}
+  >
+    {title && <title>{title}</title>}
+    <circle cx="16" cy="16" r="15" fill="#00C4CC" />
+    <path
+      d="M21.7 10.7c-1.3-1.5-3.1-2.3-5.3-2.3-4.2 0-7.5 3.2-7.5 7.6s3.3 7.6 7.5 7.6c2.2 0 4-.8 5.3-2.3l-2.2-2.1c-.8.9-1.7 1.4-2.9 1.4-2.1 0-3.7-1.8-3.7-4.6s1.6-4.6 3.7-4.6c1.2 0 2.1.5 2.9 1.4l2.2-2.1Z"
+      fill="white"
+    />
+  </svg>
+);
 
 const technologyIcons: Record<string, LucideIcon | IconType> = {
   javascript: SiJavascript,
@@ -121,7 +139,7 @@ const technologyIcons: Record<string, LucideIcon | IconType> = {
   vercel: SiVercel,
   kiro: Sparkles,
   figma: SiFigma,
-  canva: Palette,
+  canva: CanvaIcon,
   chatgpt: BsOpenai,
   opencode: SiOpencode,
   claude: SiClaude,
@@ -134,6 +152,25 @@ const awardGroupIcons: Record<string, LucideIcon> = {
   competition: Trophy,
   academic: GraduationCap,
 };
+
+const heroPhotoImages = [
+  "images/awards/build-over-nights.jpg",
+  "images/events/aws-builder-day.jpg",
+  "images/awards/hackaton2.jpg",
+  "images/awards/dost1.jpg",
+  "images/events/aws-builder-day2.jpg",
+  "images/awards/build-over-nights2.jpg",
+  "images/awards/hackaton1.jpg",
+  "images/awards/deans.jpg",
+  "images/events/wocee.jpg",
+  "images/awards/build-over-nights3.jpg",
+  "images/awards/hackaton2-2.jpg",
+  "images/awards/academic-rank-1-2024.jpg",
+] as const;
+
+const HERO_PHOTO_INTERVAL = 8000;
+const HERO_PHOTO_INITIAL_DELAY = 1400;
+const HERO_PHOTO_STAGGER = 620;
 
 const assetPath = (path: string) =>
   path.startsWith("http") ? path : `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
@@ -172,31 +209,6 @@ type ExperienceDetail = {
   fallbackImage?: string;
   proofUrl?: string;
 };
-
-function OpeningSequence({ onComplete }: { onComplete: () => void }) {
-  useEffect(() => {
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const timer = window.setTimeout(onComplete, reducedMotion ? 600 : 3000);
-    return () => window.clearTimeout(timer);
-  }, [onComplete]);
-
-  return (
-    <div className="opening-sequence" role="dialog" aria-modal="true" aria-label="Portfolio introduction">
-      <div className="opening-quick-grid" aria-hidden="true" />
-      <div className="opening-quick-orb opening-quick-orb-one" aria-hidden="true" />
-      <div className="opening-quick-orb opening-quick-orb-two" aria-hidden="true" />
-      <div className="opening-quick-card">
-        <p className="opening-quick-kicker">A digital portfolio</p>
-        <div className="opening-quick-mark" aria-hidden="true"><span>&lt;</span>{portfolio.initials}<span>/&gt;</span></div>
-        <div className="opening-quick-rule" aria-hidden="true"><i /></div>
-        <h1>{portfolio.name}</h1>
-        <p className="opening-quick-role">Software engineering <span>/</span> game development</p>
-        <div className="opening-quick-progress" aria-hidden="true"><i /></div>
-      </div>
-      <button type="button" onClick={onComplete}>Skip intro</button>
-    </div>
-  );
-}
 
 type AutoPanImageProps = {
   src: string;
@@ -329,9 +341,10 @@ type CrossfadeImageProps = {
   alt: string;
   fallbackSrc?: string;
   className?: string;
+  loading?: "eager" | "lazy";
 };
 
-function CrossfadeImage({ src, alt, fallbackSrc, className = "" }: CrossfadeImageProps) {
+function CrossfadeImage({ src, alt, fallbackSrc, className = "", loading = "lazy" }: CrossfadeImageProps) {
   const [displayedSrc, setDisplayedSrc] = useState(src);
   const [incomingSrc, setIncomingSrc] = useState<string | null>(null);
   const [incomingVisible, setIncomingVisible] = useState(false);
@@ -388,7 +401,7 @@ function CrossfadeImage({ src, alt, fallbackSrc, className = "" }: CrossfadeImag
         className={`crossfade-image crossfade-image-current ${className}`}
         src={displayedSrc}
         alt={alt}
-        loading="lazy"
+        loading={loading}
         decoding="async"
         onError={handleError}
       />
@@ -403,6 +416,51 @@ function CrossfadeImage({ src, alt, fallbackSrc, className = "" }: CrossfadeImag
         />
       )}
     </>
+  );
+}
+
+function HeroPhotoTile({ image, index }: { image: (typeof heroPhotoImages)[number]; index: number }) {
+  const initialImageIndex = heroPhotoImages.indexOf(image);
+  const [imageIndex, setImageIndex] = useState(initialImageIndex === -1 ? index : initialImageIndex);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let interval: number | undefined;
+    const advanceImage = () => {
+      setImageIndex((current) => (current + 1) % heroPhotoImages.length);
+    };
+    const startDelay = HERO_PHOTO_INITIAL_DELAY + index * HERO_PHOTO_STAGGER;
+    const startTimer = window.setTimeout(() => {
+      advanceImage();
+      interval = window.setInterval(advanceImage, HERO_PHOTO_INTERVAL);
+    }, startDelay);
+
+    return () => {
+      window.clearTimeout(startTimer);
+      if (interval !== undefined) window.clearInterval(interval);
+    };
+  }, [index]);
+
+  return (
+    <div className={`hero-photo-tile hero-photo-tile-${index + 1}`}>
+      <CrossfadeImage
+        src={assetPath(heroPhotoImages[imageIndex])}
+        alt=""
+        loading={index < 6 ? "eager" : "lazy"}
+      />
+    </div>
+  );
+}
+
+function HeroPhotoWall() {
+  return (
+    <div className="hero-photo-wall" aria-hidden="true">
+      {heroPhotoImages.map((image, index) => (
+        <HeroPhotoTile image={image} index={index} key={image} />
+      ))}
+      <div className="hero-photo-wall-wash" />
+    </div>
   );
 }
 
@@ -604,18 +662,31 @@ function Header() {
   useEffect(() => {
     const sections = navLinks
       .map((link) => document.querySelector(link.href))
-      .filter((section): section is Element => Boolean(section));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible?.target.id) setActiveSection(visible.target.id);
-      },
-      { rootMargin: "-25% 0px -60%", threshold: [0.05, 0.25, 0.5] },
-    );
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
+      .filter((section): section is HTMLElement => section instanceof HTMLElement);
+    let ticking = false;
+
+    const updateActiveSection = () => {
+      const marker = window.scrollY + Math.min(180, window.innerHeight * 0.28);
+      const current = sections
+        .filter((section) => section.getBoundingClientRect().top + window.scrollY <= marker)
+        .at(-1);
+      setActiveSection(current?.id ?? "about");
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(updateActiveSection);
+    };
+
+    updateActiveSection();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -650,7 +721,7 @@ function Header() {
       localStorage.setItem("javier-portfolio-theme", nextTheme);
       document
         .querySelector('meta[name="theme-color"]')
-        ?.setAttribute("content", nextTheme === "dark" ? "#07111f" : "#f4f8fb");
+        ?.setAttribute("content", nextTheme === "dark" ? "#111217" : "#d9dade");
     };
     const transitionDocument = document as Document & {
       startViewTransition?: (update: () => void) => { finished: Promise<void> };
@@ -695,7 +766,7 @@ function Header() {
             <Moon className="moon-icon" size={17} />
           </button>
           <a className="header-contact" href="#contact">
-            Let's talk <ArrowUpRight size={15} />
+            Hire me <ArrowUpRight size={15} />
           </a>
           <button
             className="menu-toggle"
@@ -715,12 +786,6 @@ function Header() {
 function Portrait() {
   const portraitRef = useRef<HTMLDivElement>(null);
   const animationFrame = useRef<number | null>(null);
-  const highlightsRef = useRef<HTMLDivElement>(null);
-  const speakerDrag = useRef<SpeakerDragState | null>(null);
-  const [speakerPositions, setSpeakerPositions] = useState<SpeakerNotePosition[]>(() =>
-    portfolio.speakerHighlights.map(() => ({ x: 0, y: 0 })),
-  );
-  const [draggingSpeaker, setDraggingSpeaker] = useState<number | null>(null);
 
   const updateTilt = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== "mouse" || !portraitRef.current) return;
@@ -746,74 +811,6 @@ function Portrait() {
     portraitRef.current.style.setProperty("--shine-y", "50%");
   };
 
-  const beginSpeakerDrag = (event: ReactPointerEvent<HTMLElement>, index: number) => {
-    const isMouse = event.pointerType === "mouse";
-    const target = event.target;
-    const isHandle = target instanceof Element && Boolean(target.closest(".speaker-highlight-handle"));
-    if (!isMouse && !isHandle) return;
-
-    const position = speakerPositions[index] ?? { x: 0, y: 0 };
-    speakerDrag.current = {
-      index,
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startY: event.clientY,
-      x: position.x,
-      y: position.y,
-    };
-    event.currentTarget.setPointerCapture(event.pointerId);
-    setDraggingSpeaker(index);
-    event.preventDefault();
-  };
-
-  const constrainSpeakerPosition = (position: SpeakerNotePosition) => {
-    const bounds = highlightsRef.current?.getBoundingClientRect();
-    const maxX = bounds ? Math.max(70, bounds.width * 0.34) : 110;
-    const maxY = bounds ? Math.max(45, bounds.height * 0.42) : 80;
-    return {
-      x: Math.max(-maxX, Math.min(maxX, position.x)),
-      y: Math.max(-maxY, Math.min(maxY, position.y)),
-    };
-  };
-
-  const moveSpeaker = (event: ReactPointerEvent<HTMLElement>) => {
-    const drag = speakerDrag.current;
-    if (!drag || drag.pointerId !== event.pointerId) return;
-    const nextPosition = constrainSpeakerPosition({
-      x: drag.x + event.clientX - drag.startX,
-      y: drag.y + event.clientY - drag.startY,
-    });
-    setSpeakerPositions((current) => current.map((currentPosition, positionIndex) =>
-      positionIndex === drag.index ? nextPosition : currentPosition,
-    ));
-  };
-
-  const finishSpeakerDrag = (event: ReactPointerEvent<HTMLElement>) => {
-    const drag = speakerDrag.current;
-    if (!drag || drag.pointerId !== event.pointerId) return;
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-    speakerDrag.current = null;
-    setDraggingSpeaker(null);
-  };
-
-  const nudgeSpeaker = (event: ReactKeyboardEvent<HTMLButtonElement>, index: number) => {
-    const step = event.shiftKey ? 24 : 8;
-    const movement: Record<string, SpeakerNotePosition> = {
-      ArrowUp: { x: 0, y: -step },
-      ArrowDown: { x: 0, y: step },
-      ArrowLeft: { x: -step, y: 0 },
-      ArrowRight: { x: step, y: 0 },
-    };
-    const offset = movement[event.key];
-    if (!offset) return;
-    event.preventDefault();
-    setSpeakerPositions((current) => current.map((position, positionIndex) =>
-      positionIndex === index ? constrainSpeakerPosition({ x: position.x + offset.x, y: position.y + offset.y }) : position,
-    ));
-  };
-
   return (
     <div className="hero-portrait-column hero-enter hero-enter-portrait">
       <div className="portrait-stage" aria-label="Animated profile portrait">
@@ -834,7 +831,7 @@ function Portrait() {
                 const image = event.currentTarget;
                 if (!image.dataset.fallback) {
                   image.dataset.fallback = "github";
-                  image.src = portfolio.profileFallbackImage;
+                  image.src = assetPath(portfolio.profileFallbackImage);
                   return;
                 }
                 if (image.dataset.fallback === "github") {
@@ -857,68 +854,12 @@ function Portrait() {
         </div>
         <div className="portrait-coordinate" aria-hidden="true">14.5995° N<br />120.9842° E</div>
       </div>
-      <div className="speaker-highlights" aria-label="Public speaking highlights">
-        <div className="speaker-highlights-heading">
-          <span>Public speaking</span>
-          <i />
-          <small>03 moments</small>
-        </div>
-        <div className="speaker-highlights-grid" ref={highlightsRef}>
-          {portfolio.speakerHighlights.map((highlight, index) => {
-            const position = speakerPositions[index] ?? { x: 0, y: 0 };
-            const noteStyle = {
-              "--note-x": `${position.x}px`,
-              "--note-y": `${position.y}px`,
-              zIndex: draggingSpeaker === index ? 20 : undefined,
-            } as CSSProperties;
-
-            return (
-            <figure
-              className={`speaker-highlight ${draggingSpeaker === index ? "is-dragging" : ""}`}
-              style={noteStyle}
-              key={highlight.image}
-              onPointerDown={(event) => beginSpeakerDrag(event, index)}
-              onPointerMove={moveSpeaker}
-              onPointerUp={finishSpeakerDrag}
-              onPointerCancel={finishSpeakerDrag}
-            >
-              <button
-                className="speaker-highlight-handle"
-                type="button"
-                aria-label={`Move ${highlight.caption} sticky note`}
-                onKeyDown={(event) => nudgeSpeaker(event, index)}
-              >
-                <span aria-hidden="true" />
-                <span className="sr-only">Use arrow keys to move this note</span>
-              </button>
-              <div className="speaker-highlight-image">
-                <img src={assetPath(highlight.image)} alt={highlight.imageAlt} loading="lazy" decoding="async" />
-                <span>{highlight.label}</span>
-              </div>
-              <figcaption>{highlight.caption}</figcaption>
-            </figure>
-            );
-          })}
-        </div>
-      </div>
     </div>
   );
 }
 
 type HeroProps = {
   onOpenAssistant: () => void;
-};
-
-type SpeakerNotePosition = {
-  x: number;
-  y: number;
-};
-
-type SpeakerDragState = SpeakerNotePosition & {
-  index: number;
-  pointerId: number;
-  startX: number;
-  startY: number;
 };
 
 function Hero({ onOpenAssistant }: HeroProps) {
@@ -950,6 +891,13 @@ function Hero({ onOpenAssistant }: HeroProps) {
       <div className="hero-grid-bg" aria-hidden="true" />
       <div className="hero-glow hero-glow-one" aria-hidden="true" />
       <div className="hero-glow hero-glow-two" aria-hidden="true" />
+      <HeroPhotoWall />
+      <div className="hero-name-marquee" aria-hidden="true">
+        <div className="hero-name-track">
+          <span>{portfolio.name}</span>
+          <span>{portfolio.name}</span>
+        </div>
+      </div>
       <div className="hero-layout shell">
         <div className="hero-copy">
           <div className="availability-pill hero-enter hero-enter-one">
@@ -977,7 +925,10 @@ function Hero({ onOpenAssistant }: HeroProps) {
               Explore my work <ArrowDown size={17} />
             </a>
             <button className="button button-ghost" type="button" onClick={onOpenAssistant}>
-              <Bot size={18} /> Ask {portfolio.assistant.name}
+              <span className="assistant-button-avatar" aria-hidden="true">
+                <img src={assetPath(portfolio.assistant.avatarImage)} alt="" />
+              </span>
+              Ask {portfolio.assistant.name}
             </button>
           </div>
           <div className="hero-socials hero-enter hero-enter-seven" aria-label="Social links">
@@ -1407,6 +1358,126 @@ function Journey() {
   );
 }
 
+type ProjectCategory = "technical" | "digital";
+type PortfolioProject = (typeof portfolio.projects)[number];
+
+function ProjectLibraryModal({
+  onClose,
+  onSelect,
+}: {
+  onClose: () => void;
+  onSelect: (project: PortfolioProject) => void;
+}) {
+  const [activeCategory, setActiveCategory] = useState<ProjectCategory>("technical");
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const categoryProjects = portfolio.projects.filter((project) => project.category === activeCategory);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="project-library-modal-backdrop"
+      onPointerDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <section
+        className="project-library-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="project-library-modal-title"
+        onPointerDown={(event) => event.stopPropagation()}
+      >
+        <header className="project-library-modal-header">
+          <div>
+            <p className="section-eyebrow">Project library</p>
+            <h2 id="project-library-modal-title">Technical and digital work.</h2>
+          </div>
+          <button ref={closeButtonRef} className="project-library-modal-close" type="button" onClick={onClose} aria-label="Close project library">
+            <X size={20} />
+          </button>
+        </header>
+
+        <div className="project-library-tabs project-library-modal-tabs" role="tablist" aria-label="Project categories">
+          {(["technical", "digital"] as const).map((category) => {
+            const count = portfolio.projects.filter((project) => project.category === category).length;
+            const label = category === "technical" ? "Technical" : "Digital";
+            return (
+              <button
+                className={activeCategory === category ? "is-active" : ""}
+                type="button"
+                role="tab"
+                aria-selected={activeCategory === category}
+                aria-controls={`project-library-panel-${category}`}
+                onClick={() => setActiveCategory(category)}
+                key={category}
+              >
+                <span>{label}</span>
+                <small>{String(count).padStart(2, "0")}</small>
+              </button>
+            );
+          })}
+        </div>
+
+        <div
+          className="project-library-modal-list"
+          id={`project-library-panel-${activeCategory}`}
+          role="tabpanel"
+          aria-label={`${activeCategory} projects`}
+        >
+          {categoryProjects.map((project) => (
+            <article className="project-library-modal-item" key={project.number}>
+              <span className="project-library-number">{project.number}</span>
+              <div className="project-library-modal-preview">
+                <img
+                  src={assetPath(project.image)}
+                  alt={`${project.title} project preview`}
+                  loading="lazy"
+                  decoding="async"
+                  onError={(event) => {
+                    const image = event.currentTarget;
+                    if (image.dataset.fallback) return;
+                    image.dataset.fallback = "true";
+                    image.src = assetPath(project.fallbackImage);
+                  }}
+                />
+              </div>
+              <div className="project-library-content">
+                <div className="project-library-meta">
+                  <span>{project.type}</span>
+                  <span>{activeCategory}</span>
+                </div>
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+                <div className="project-library-tags">
+                  {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
+                </div>
+              </div>
+              <button className="project-library-link" type="button" onClick={() => onSelect(project)}>
+                View in gallery <ArrowUpRight size={16} />
+              </button>
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function Skills() {
   const [activeSkill, setActiveSkill] = useState<string | null>(null);
 
@@ -1483,62 +1554,137 @@ function Skills() {
 }
 
 function Work() {
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
+  const [showProjectLibrary, setShowProjectLibrary] = useState(false);
+  const projectLibraryTriggerRef = useRef<HTMLButtonElement>(null);
+  const activeProject = portfolio.projects[activeProjectIndex];
+  const projectCount = portfolio.projects.length;
+
+  const changeProject = (direction: number) => {
+    setActiveProjectIndex((current) => (current + direction + portfolio.projects.length) % portfolio.projects.length);
+  };
+
+  const selectProjectFromLibrary = (index: number) => {
+    setActiveProjectIndex(index);
+    setShowProjectLibrary(false);
+    window.requestAnimationFrame(() => projectLibraryTriggerRef.current?.focus());
+    document.getElementById("featured-projects")?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "center",
+    });
+  };
+
+  const closeProjectLibrary = () => {
+    setShowProjectLibrary(false);
+    window.requestAnimationFrame(() => projectLibraryTriggerRef.current?.focus());
+  };
+
   return (
     <section className="section work-section" id="work">
       <div className="shell">
-        <SectionHeading
-          eyebrow="Selected work"
-          title="Ideas shaped into experiences."
-          description="A selection of projects where technical decisions support a clear user need."
-        />
-        <div className="projects-list">
-          {portfolio.projects.map((project, index) => (
-            <article className={`project-card project-${project.accent}`} data-reveal style={revealDelay(index * 90)} key={project.number}>
-              <div className="project-visual">
-                <div className="project-window">
-                  <div className="project-window-bar"><i /><i /><i /></div>
-                  <div className="project-art">
-                    <img
-                      className="project-image"
-                      src={assetPath(project.image)}
-                      alt={`${project.title} project preview`}
-                      loading="lazy"
-                      decoding="async"
-                      onError={(event) => {
-                        const image = event.currentTarget;
-                        if (image.dataset.fallback) return;
-                        image.dataset.fallback = "true";
-                        image.src = assetPath(project.fallbackImage);
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="project-content">
-                <div className="project-meta"><span>Project / {project.number}</span><span>{project.type}</span></div>
-                <h3>{project.title}</h3>
-                <p>{project.description}</p>
-                <div className="project-tags">
-                  {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
-                </div>
-                <div className="project-links">
-                  {project.sourceUrl ? (
-                    <a href={project.sourceUrl} target="_blank" rel="noreferrer">
-                      <Github size={17} /> View source <ArrowUpRight size={15} />
-                    </a>
-                  ) : <span>Source unavailable</span>}
-                  {project.liveUrl ? (
-                    <a href={project.liveUrl} target="_blank" rel="noreferrer">
-                      <ExternalLink size={17} /> Live project <ArrowUpRight size={15} />
-                    </a>
-                  ) : (
-                    <span>Live link coming soon</span>
-                  )}
-                </div>
-              </div>
-            </article>
-          ))}
+        <div className="section-heading work-section-heading" data-reveal>
+          <p className="section-eyebrow"><span>//</span> Selected work</p>
+          <div className="section-heading-row">
+            <div className="work-heading-main">
+              <h2>Work Gallery</h2>
+              <p>A collection of systems, digital projects, and technical work I've built.</p>
+            </div>
+            <button className="work-more-link" type="button" ref={projectLibraryTriggerRef} onClick={() => setShowProjectLibrary(true)}>
+              View more projects <ArrowUpRight size={16} />
+            </button>
+          </div>
         </div>
+        <div className="work-gallery" id="featured-projects" data-reveal>
+          <div className="work-stage" aria-label="Project gallery">
+            {portfolio.projects.map((project, index) => {
+              const rawOffset = index - activeProjectIndex;
+              const half = Math.floor(projectCount / 2);
+              const offset = rawOffset > half
+                ? rawOffset - projectCount
+                : rawOffset < -half
+                  ? rawOffset + projectCount
+                  : rawOffset;
+              const depth = Math.abs(offset);
+              const isVisible = depth <= 2;
+              const cardStyle = {
+                "--project-offset": offset,
+                "--project-depth": depth,
+                zIndex: projectCount - depth,
+              } as CSSProperties;
+
+              return (
+                <button
+                  className={`work-stage-card ${index === activeProjectIndex ? "is-active" : ""} ${isVisible ? "" : "is-hidden"}`}
+                  type="button"
+                  style={cardStyle}
+                  data-project-offset={offset}
+                  onClick={() => setActiveProjectIndex(index)}
+                  aria-label={`View ${project.title}`}
+                  aria-current={index === activeProjectIndex ? "true" : undefined}
+                  key={project.number}
+                >
+                  <img
+                    src={assetPath(project.image)}
+                    alt={`${project.title} project preview`}
+                    loading={index === activeProjectIndex ? "eager" : "lazy"}
+                    decoding="async"
+                    onError={(event) => {
+                      const image = event.currentTarget;
+                      if (image.dataset.fallback) return;
+                      image.dataset.fallback = "true";
+                      image.src = assetPath(project.fallbackImage);
+                    }}
+                  />
+                  <span>{project.number}</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="work-gallery-controls">
+            <button type="button" onClick={() => changeProject(-1)} aria-label="Previous project"><ChevronLeft size={18} /></button>
+            <div className="work-gallery-dots" aria-label="Choose project">
+              {portfolio.projects.map((project, index) => (
+                <button
+                  className={index === activeProjectIndex ? "is-active" : ""}
+                  type="button"
+                  onClick={() => setActiveProjectIndex(index)}
+                  aria-label={`Show project ${project.number}: ${project.title}`}
+                  aria-current={index === activeProjectIndex ? "true" : undefined}
+                  key={project.number}
+                />
+              ))}
+            </div>
+            <button type="button" onClick={() => changeProject(1)} aria-label="Next project"><ChevronRight size={18} /></button>
+          </div>
+          <article className="work-project-copy" aria-live="polite">
+            <div className="project-meta"><span>Project / {activeProject.number}</span><span>{activeProject.type}</span></div>
+            <h3>{activeProject.title}</h3>
+            <p>{activeProject.description}</p>
+            <div className="project-tags">
+              {activeProject.tags.map((tag) => <span key={tag}>{tag}</span>)}
+            </div>
+            <div className="project-links">
+              {activeProject.sourceUrl ? (
+                <a href={activeProject.sourceUrl} target="_blank" rel="noreferrer">
+                  <Github size={17} /> View source <ArrowUpRight size={15} />
+                </a>
+              ) : <span>Source unavailable</span>}
+              {activeProject.liveUrl ? (
+                <a href={activeProject.liveUrl} target="_blank" rel="noreferrer">
+                  <ExternalLink size={17} /> Live project <ArrowUpRight size={15} />
+                </a>
+              ) : (
+                <span>Live link coming soon</span>
+              )}
+            </div>
+          </article>
+        </div>
+        {showProjectLibrary && (
+          <ProjectLibraryModal
+            onClose={closeProjectLibrary}
+            onSelect={(project) => selectProjectFromLibrary(portfolio.projects.findIndex((item) => item.number === project.number))}
+          />
+        )}
       </div>
     </section>
   );
@@ -1619,7 +1765,9 @@ function Contact({ onOpenAssistant }: ContactProps) {
               <button type="button" onClick={copyEmail} aria-label="Copy email address"><Copy size={17} /><span>{copied ? "Copied" : "Copy"}</span></button>
             </div>
             <button className="assistant-invite" type="button" onClick={onOpenAssistant}>
-              <span><Bot size={21} /></span>
+              <span className="assistant-button-avatar" aria-hidden="true">
+                <img src={assetPath(portfolio.assistant.avatarImage)} alt="" />
+              </span>
               <span><small>Need a quick answer?</small>Ask {portfolio.assistant.name} about me</span>
               <ArrowRight size={19} />
             </button>
@@ -1671,12 +1819,6 @@ function Footer() {
 export default function App() {
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [activeExperience, setActiveExperience] = useState<ExperienceDetail | null>(null);
-  const [showIntro, setShowIntro] = useState(() => sessionStorage.getItem("javier-intro-seen") !== "true");
-
-  const closeIntro = () => {
-    sessionStorage.setItem("javier-intro-seen", "true");
-    setShowIntro(false);
-  };
 
   useEffect(() => {
     const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
@@ -1724,7 +1866,6 @@ export default function App() {
   return (
     <>
       <a className="skip-link" href="#main-content">Skip to content</a>
-      {showIntro && <OpeningSequence onComplete={closeIntro} />}
       <Header />
       <main id="main-content">
         <Hero onOpenAssistant={() => setAssistantOpen(true)} />
